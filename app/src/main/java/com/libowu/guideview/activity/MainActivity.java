@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2019/07/30
  * 测试guideview
  */
-public class MainActivity extends Activity implements GuideViewClickCallBack {
+public class MainActivity extends AppCompatActivity implements GuideViewClickCallBack {
     private TextView textView,textViewTwo;
     private GuideView guide;
     private List<GuideBean> guides;
@@ -55,6 +55,8 @@ public class MainActivity extends Activity implements GuideViewClickCallBack {
         GuideView.Config.COLOR = Color.parseColor("#cc000000");
         //是否一屏显示多个控件说明
         GuideView.Config.OPENMORE = false;
+        //设置是否精确点击，即只有点击到对应的控件区域，才执行点击
+        GuideView.Config.CLICK_EXACT = true;
     }
 
     private void initView() {

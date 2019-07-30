@@ -147,7 +147,6 @@ public class GuideView extends View {
                 canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop()+guideBean.getMarginBottom(),paint);
             }
         }
-        //canvas.drawBitmap(createDstBitmap(width,height), 0, 0, paint);
     }
 
     /**
@@ -179,8 +178,16 @@ public class GuideView extends View {
                        guideViewClickCallBack.guideMoreClick(guideBeans);
                    }
                }else {
-                   //抬起手指时显示下一张引导，当索引值大于集合长度时，索引归零，并隐藏引导
-                   guideIndex++;
+                   if (Config.CLICK_EXACT){
+                       if (guideBean.getRect().contains((int)event.getX(),(int)event.getY())){
+                           //抬起手指时显示下一张引导，当索引值大于集合长度时，索引归零，并隐藏引导
+                           guideIndex++;
+                       }else {
+                           return true;
+                       }
+                   }else {
+                       guideIndex++;
+                   }
                    if (guideIndex >= guideBeans.size()){
                        closeGuide();
                        guideIndex = 0;
@@ -256,5 +263,11 @@ public class GuideView extends View {
          * 是否打开一个界面显示多个控件说明,默认是关闭的
          */
         public static boolean OPENMORE = false;
+
+        /**
+         * 点击到对应的控件时，才执行点击
+         * 一屏多个控件说明的设置这个值无效
+         */
+        public static boolean CLICK_EXACT = false;
     }
 }
