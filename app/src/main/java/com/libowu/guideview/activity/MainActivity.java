@@ -3,6 +3,7 @@ package com.libowu.guideview.activity;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.libowu.guideview.R;
 import com.libowu.guideview.bean.GuideBean;
+import com.libowu.guideview.callBack.GuideViewClickCallBack;
 import com.libowu.guideview.view.GuideView;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.List;
  * @date 2019/07/30
  * 测试guideview
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements GuideViewClickCallBack {
     private TextView textView,textViewTwo;
     private GuideView guide;
     private List<GuideBean> guides;
@@ -35,6 +37,7 @@ public class MainActivity extends Activity {
     }
 
     private void initListen() {
+        guide.setGuideViewClickCallBack(this);
         textViewTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,5 +71,20 @@ public class MainActivity extends Activity {
         guides.add(new GuideBean(R.mipmap.guide,this,textView));
         guides.add(new GuideBean(R.mipmap.xuankong_year,this,textViewTwo));
         guide.setGuideBeans(guides);
+    }
+
+    @Override
+    public void guideClick(GuideBean guideBean,int index) {
+        //如果想要在点击引导后执行什么动作，可以在这里执行
+    }
+
+    @Override
+    public void guideMoreClick(List<GuideBean> guideBeans) {
+
+    }
+
+    @Override
+    public void guideEndCallback() {
+        //如果想要在引导播放结束后做什么操作，可以在此进行
     }
 }

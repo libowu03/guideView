@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.libowu.guideview.bean.GuideBean;
+import com.libowu.guideview.callBack.GuideViewClickCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +32,12 @@ public class GuideView extends View {
     private List<GuideBean> guideBeans;
     private GuideBean guideBean;
     private int guideIndex;
+    private GuideViewClickCallBack guideViewClickCallBack;
 
     public GuideView(Context context){
         this(context,null);
     }
+
     public GuideView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -43,6 +46,15 @@ public class GuideView extends View {
         porterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
         rect = new Rect(0,0,0,0);
         guideBeans = new ArrayList<>();
+    }
+
+    /**
+     * 设置点击事件接口
+     * @param guideViewClickCallBack
+     */
+    public void setGuideViewClickCallBack(GuideViewClickCallBack guideViewClickCallBack){
+        this.guideViewClickCallBack = guideViewClickCallBack;
+        invalidate();
     }
 
     @Override
@@ -143,6 +155,9 @@ public class GuideView extends View {
      */
     public void closeGuide(){
         this.setVisibility(GONE);
+        if (guideViewClickCallBack != null){
+            guideViewClickCallBack.guideEndCallback();
+        }
     }
 
     @Override
@@ -159,16 +174,22 @@ public class GuideView extends View {
 
                 //如果是一屏显示多个控件说明，则点击后直接隐藏view
                if (Config.OPENMORE){
-                   this.setVisibility(GONE);
+                   closeGuide();
+                   if (guideViewClickCallBack != null){
+                       guideViewClickCallBack.guideMoreClick(guideBeans);
+                   }
                }else {
                    //抬起手指时显示下一张引导，当索引值大于集合长度时，索引归零，并隐藏引导
                    guideIndex++;
                    if (guideIndex >= guideBeans.size()){
-                       this.setVisibility(GONE);
+                       closeGuide();
                        guideIndex = 0;
                        return true;
                    }
                    guideBean = guideBeans.get(guideIndex);
+                   if (guideViewClickCallBack != null){
+                       guideViewClickCallBack.guideClick(guideBean,guideIndex);
+                   }
                    invalidate();
                }
                 break;
