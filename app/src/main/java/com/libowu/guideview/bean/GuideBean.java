@@ -13,7 +13,9 @@ public class GuideBean{
     private int img;
     private Bitmap bitmap;
     private Bitmap viewBitmap;
-    private int marginTop,marginBottom,marginLeft,marginRight;
+    private int marginTop,marginBottom,marginLeft;
+    private boolean isSimpleShape;
+    private boolean isTop;
 
     /**
      *
@@ -37,9 +39,8 @@ public class GuideBean{
      * @param img 要展示的说明图片
      * @param act 活动界面
      * @param view 先要出现高亮区的控件
-     * @param actionBarHeight 标题栏高度，这个构造方法使用与没有actionBar或actionBar是自定义的的界面
      */
-    public GuideBean(int img, Activity act, View view, int actionBarHeight) {
+    public GuideBean(int img, Activity act, View view ,int actionBarHeight) {
         Rect rect = new Rect();
         view.getGlobalVisibleRect(rect);
         rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act) - actionBarHeight;
@@ -51,6 +52,81 @@ public class GuideBean{
     }
 
     /**
+     *
+     * @param img 要展示的说明图片
+     * @param act 活动界面
+     * @param view 先要出现高亮区的控件
+     */
+    public GuideBean(int img, Activity act, View view,boolean isSimpleShape) {
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act) - GuideViewUtils.getInstance().getActionBarHeight(act);
+        rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act) - GuideViewUtils.getInstance().getActionBarHeight(act);
+        this.img = img;
+        bitmap = BitmapFactory.decodeResource(act.getResources(),img);
+        this.rect = rect;
+        this.viewBitmap = GuideViewUtils.loadBitmapFromView(view);
+        this.isSimpleShape = isSimpleShape;
+    }
+
+    /**
+     *
+     * @param img 要展示的说明图片
+     * @param act 活动界面
+     * @param view 先要出现高亮区的控件
+     */
+    public GuideBean(int img, Activity act, View view ,boolean isSimpleShape,int actionBarHeight) {
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act) - actionBarHeight;
+        rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act) - actionBarHeight;
+        this.img = img;
+        bitmap = BitmapFactory.decodeResource(act.getResources(),img);
+        this.rect = rect;
+        this.viewBitmap = GuideViewUtils.loadBitmapFromView(view);
+        this.isSimpleShape = isSimpleShape;
+    }
+
+    /**
+     *
+     * @param img 要展示的说明图片
+     * @param act 活动界面
+     * @param view 先要出现高亮区的控件
+     */
+    public GuideBean(int img, Activity act, View view,boolean isSimpleShape,boolean isTop) {
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act) - GuideViewUtils.getInstance().getActionBarHeight(act);
+        rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act) - GuideViewUtils.getInstance().getActionBarHeight(act);
+        this.img = img;
+        bitmap = BitmapFactory.decodeResource(act.getResources(),img);
+        this.rect = rect;
+        this.viewBitmap = GuideViewUtils.loadBitmapFromView(view);
+        this.isSimpleShape = isSimpleShape;
+        this.isTop = isTop;
+    }
+
+    /**
+     *
+     * @param img 要展示的说明图片
+     * @param act 活动界面
+     * @param view 先要出现高亮区的控件
+     * @param actionBarHeight 标题栏高度，这个构造方法使用与没有actionBar或actionBar是自定义的的界面
+     */
+    public GuideBean(int img, Activity act, View view,boolean isSimpleShape,boolean isTop, int actionBarHeight) {
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act) - actionBarHeight;
+        rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act) - actionBarHeight;
+        this.img = img;
+        bitmap = BitmapFactory.decodeResource(act.getResources(),img);
+        this.rect = rect;
+        this.viewBitmap = GuideViewUtils.loadBitmapFromView(view);
+        this.isSimpleShape = isSimpleShape;
+        this.isTop = isTop;
+    }
+
+    /**
      * 如果想设置说明图片与说明控件之间的距离，可以使用这个构造方法。默认情况是上边距为0，说明图片位于说明控件的中间位置
      * @param img 控件说明图片
      * @param act 活动
@@ -58,10 +134,9 @@ public class GuideBean{
      * @param actionBarHeight 标题栏高度(适合没有actionbar的界面或自定义标题栏的界面)
      * @param marginLeft 左边距
      * @param marginTop 上边距
-     * @param marginRight 右边距
      * @param marginBottom 下边距
      */
-    public GuideBean(int img,Activity act,View view,int actionBarHeight,int marginLeft,int marginTop,int marginRight,int marginBottom){
+    public GuideBean(int img,Activity act,View view,boolean isSimpleShape,boolean isTop,int actionBarHeight,int marginLeft,int marginTop,int marginBottom){
         Rect rect = new Rect();
         view.getGlobalVisibleRect(rect);
         rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act) - actionBarHeight;
@@ -72,8 +147,50 @@ public class GuideBean{
         this.viewBitmap = GuideViewUtils.loadBitmapFromView(view);
         this.marginLeft = marginLeft;
         this.marginTop = marginTop;
-        this.marginRight = marginTop;
         this.marginBottom = marginBottom;
+        this.isSimpleShape = isSimpleShape;
+        this.isTop = isTop;
+    }
+
+    /**
+     * 如果想设置说明图片与说明控件之间的距离，可以使用这个构造方法。默认情况是上边距为0，说明图片位于说明控件的中间位置
+     * @param img 控件说明图片
+     * @param act 活动
+     * @param view 想要被说明的控件
+     * @param marginLeft 左边距
+     * @param marginTop 上边距
+     * @param marginBottom 下边距
+     */
+    public GuideBean(int img,Activity act,View view,boolean isSimpleShape,boolean isTop,int marginLeft,int marginTop,int marginBottom){
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act) - GuideViewUtils.getInstance().getActionBarHeight(act);
+        rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act) - GuideViewUtils.getInstance().getActionBarHeight(act);
+        this.img = img;
+        bitmap = BitmapFactory.decodeResource(act.getResources(),img);
+        this.rect = rect;
+        this.viewBitmap = GuideViewUtils.loadBitmapFromView(view);
+        this.marginLeft = marginLeft;
+        this.marginTop = marginTop;
+        this.marginBottom = marginBottom;
+        this.isSimpleShape = isSimpleShape;
+        this.isTop = isTop;
+    }
+
+    public boolean isTop() {
+        return isTop;
+    }
+
+    public void setTop(boolean top) {
+        isTop = top;
+    }
+
+    public boolean isSimpleShape() {
+        return isSimpleShape;
+    }
+
+    public void setSimpleShape(boolean simpleShape) {
+        isSimpleShape = simpleShape;
     }
 
     public int getMarginTop() {
@@ -98,14 +215,6 @@ public class GuideBean{
 
     public void setMarginLeft(int marginLeft) {
         this.marginLeft = marginLeft;
-    }
-
-    public int getMarginRight() {
-        return marginRight;
-    }
-
-    public void setMarginRight(int marginRight) {
-        this.marginRight = marginRight;
     }
 
     public Bitmap getViewBitmap() {

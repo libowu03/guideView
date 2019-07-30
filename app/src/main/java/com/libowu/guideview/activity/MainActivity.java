@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         //设置遮罩层颜色
         GuideView.Config.COLOR = Color.parseColor("#cc000000");
         //是否一屏显示多个控件说明
-        GuideView.Config.OPENMORE = true;
+        GuideView.Config.OPENMORE = false;
     }
 
     private void initView() {

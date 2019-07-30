@@ -56,24 +56,23 @@ public class GuideView extends View {
             this.setVisibility(GONE);
             return;
         }
-       /* if (guideBean == null){
-            return;
-        }
-        int layerID = canvas.saveLayer(0, 0, getWidth(), getHeight(), paint, Canvas.ALL_SAVE_FLAG);
-        canvas.drawBitmap(createDstBitmap(width,height), 0, 0, paint);
-        paint.setXfermode(porterDuffXfermode);
-        canvas.drawBitmap(createSrcBitmap(width,height,guideBean.getRect()), 0, 0, paint);
-        paint.setXfermode(null);
-        canvas.drawBitmap(createSrcBitmap(width,height,rect),guideBean.getRect().left,guideBean.getRect().top,paint);
-        canvas.restoreToCount(layerID);
-        canvas.drawBitmap(createDstBitmap(width,height), 0, 0, paint);*/
        if (Config.OPENMORE){
            canvas.drawBitmap(createDstBitmap(width,height), 0, 0, paint);
            for (int i=0; i<guideBeans.size(); i++){
-               drawBuyView(canvas,guideBeans.get(i));
+               //是否是绘制简单的集合图像，不是就绘制要说明view的图像
+               if (!guideBeans.get(i).isSimpleShape()){
+                   drawBuyView(canvas,guideBeans.get(i));
+               }else {
+                  drawSimpleShapeView(canvas,guideBeans.get(i));
+               }
            }
        }else {
-           drawBuyView(canvas,guideBean);
+           if (!guideBean.isSimpleShape()){
+               drawBuyView(canvas,guideBean);
+           }else {
+               canvas.drawBitmap(createDstBitmap(width,height), 0, 0, paint);
+               drawSimpleShapeView(canvas,guideBean);
+           }
        }
     }
 
@@ -100,8 +99,45 @@ public class GuideView extends View {
         //说明图片的左边距离
         int targetCenter = centerLine - guideBean.getBitmap().getWidth()/2;
         if (guideBean.getBitmap() != null){
-            canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop(),paint);
+            if (guideBean.isTop()){
+                canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().top+guideBean.getMarginBottom()-guideBean.getBitmap().getHeight()+guideBean.getMarginBottom(),paint);
+            }else {
+                canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop()+guideBean.getMarginBottom(),paint);
+            }
         }
+    }
+
+
+    /**
+     * 高亮区使用基本几何图形绘制
+     * @param canvas
+     * @param guideBean
+     */
+    public void drawSimpleShapeView(Canvas canvas,GuideBean guideBean){
+        //int layerID = canvas.saveLayer(0, 0, getWidth(), getHeight(), paint, Canvas.ALL_SAVE_FLAG);
+        paint.setXfermode(porterDuffXfermode);
+        canvas.drawBitmap(createSrcBitmap(width,height,guideBean.getRect()), 0, 0, paint);
+        paint.setXfermode(null);
+        //canvas.restoreToCount(layerID);
+        //说明控件的中线坐标
+        int centerLine = guideBean.getRect().left+(guideBean.getRect().right-guideBean.getRect().left)/2;
+        //说明图片的左边距离
+        int targetCenter = centerLine - guideBean.getBitmap().getWidth()/2;
+        if (guideBean.getBitmap() != null){
+            if (guideBean.isTop()){
+                canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().top+guideBean.getMarginBottom()-guideBean.getBitmap().getHeight()+guideBean.getMarginBottom(),paint);
+            }else {
+                canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop()+guideBean.getMarginBottom(),paint);
+            }
+        }
+        //canvas.drawBitmap(createDstBitmap(width,height), 0, 0, paint);
+    }
+
+    /**
+     * 关闭引导图
+     */
+    public void closeGuide(){
+        this.setVisibility(GONE);
     }
 
     @Override
@@ -176,6 +212,7 @@ public class GuideView extends View {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint scrPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        scrPaint.setColor(Color.parseColor("#ec6941"));
         canvas.drawRect(rect, scrPaint);
         return bitmap;
     }
