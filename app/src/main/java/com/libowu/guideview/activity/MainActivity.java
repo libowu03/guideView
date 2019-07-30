@@ -1,11 +1,12 @@
 package com.libowu.guideview.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.libowu.guideview.R;
 import com.libowu.guideview.bean.GuideBean;
@@ -14,7 +15,12 @@ import com.libowu.guideview.view.GuideView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * @author libowu
+ * @date 2019/07/30
+ * 测试guideview
+ */
+public class MainActivity extends Activity {
     private TextView textView,textViewTwo;
     private GuideView guide;
     private List<GuideBean> guides;
@@ -26,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         initView();
         configGuideView();
         initListen();
-
     }
 
     private void initListen() {

@@ -17,6 +17,11 @@ import com.libowu.guideview.bean.GuideBean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author libowu
+ * @date 2019/07/30
+ * guideview的核心代码
+ */
 public class GuideView extends View {
     private Paint paint;
     private int width, height;

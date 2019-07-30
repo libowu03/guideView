@@ -8,6 +8,11 @@ import android.view.View;
 
 import com.libowu.guideview.utils.GuideViewUtils;
 
+/**
+ * @author libowu
+ * @date 2019/07/30
+ * 保存引导的基本属性，比如说明图片，控件图片，控件位置等
+ */
 public class GuideBean{
     private Rect rect;
     private int img;

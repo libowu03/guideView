@@ -5,11 +5,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.libowu.guideview.exception.GuideViewException;
 
+/**
+ * @author libowu
+ * @date 2019/07/30
+ * guideview的帮助类
+ */
 public class GuideViewUtils {
     //将px转换成dp
     public static int px2dip(Context context, float pxValue) {
@@ -44,18 +50,40 @@ public class GuideViewUtils {
      * @return
      */
     public int getActionBarHeight(Activity activity){
-        TypedValue tv = new TypedValue();
-        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, activity.getResources().getDisplayMetrics());
-            return actionBarHeight;
-        }else {
-            try{
-                throw new GuideViewException("获取actionBar高度度失败，可能是您的主题中不包含actionBar");
-            }catch (Exception e){
-                Log.e("[guideView]errorLog","reason:"+e.getLocalizedMessage());
+        if (activity instanceof AppCompatActivity){
+            if (((AppCompatActivity) activity).getSupportActionBar() != null){
+                return ((AppCompatActivity) activity).getSupportActionBar().getHeight();
+            }else {
+                return 0;
             }
-            return -1;
+        }else if (activity instanceof Activity){
+            if (activity.getActionBar() != null){
+                return activity.getActionBar().getHeight();
+            }else {
+                try{
+                    throw new GuideViewException("获取actionBar高度度失败，可能是您的主题中不包含actionBar");
+                }catch (Exception e){
+                    Log.e("[guideView]errorLog","reason:"+e.getLocalizedMessage());
+                }
+                return 0;
+            }
+        }else {
+            return 0;
         }
+
+//        下面注释的地方是可以获取到actionBar的高度，但是无论当前activity存不存在actionbar，此方法都可以获取得到
+//        TypedValue tv = new TypedValue();
+//        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+//            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, activity.getResources().getDisplayMetrics());
+//            return actionBarHeight;
+//        }else {
+//            try{
+//                throw new GuideViewException("获取actionBar高度度失败，可能是您的主题中不包含actionBar");
+//            }catch (Exception e){
+//                Log.e("[guideView]errorLog","reason:"+e.getLocalizedMessage());
+//            }
+//            return 0;
+//        }
     }
 
     /**
