@@ -1,19 +1,16 @@
-package com.libowu.guideview;
+package com.libowu.guideview.utils;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
-import androidx.appcompat.app.ActionBar;
+import com.libowu.guideview.exception.GuideViewException;
 
-/**
- * dp转px或px转dp的帮助类
- */
-public class ChangeDp {
-
+public class GuideViewUtils {
     //将px转换成dp
     public static int px2dip(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -42,16 +39,30 @@ public class ChangeDp {
     }
 
     /**
-     * 获取标题栏高度
+     * 获取 标题栏高度
+     * @param activity
+     * @return
      */
-    public int getActionBarHeight(ActionBar actionBar){
-        if (actionBar != null){
-            return actionBar.getHeight();
+    public int getActionBarHeight(Activity activity){
+        TypedValue tv = new TypedValue();
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, activity.getResources().getDisplayMetrics());
+            return actionBarHeight;
         }else {
+            try{
+                throw new GuideViewException("获取actionBar高度度失败，可能是您的主题中不包含actionBar");
+            }catch (Exception e){
+                Log.e("[guideView]errorLog","reason:"+e.getLocalizedMessage());
+            }
             return -1;
         }
     }
 
+    /**
+     * 获取view的图片
+     * @param v
+     * @return
+     */
     public static Bitmap loadBitmapFromView(View v) {
         if (v == null) {
             return null;
@@ -59,12 +70,18 @@ public class ChangeDp {
         Bitmap screenshot;
         screenshot = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(screenshot);
-        canvas.translate(-v.getScrollX(), -v.getScrollY());//我们在用滑动View获得它的Bitmap时候，获得的是整个View的区域（包括隐藏的），如果想得到当前区域，需要重新定位到当前可显示的区域
-        v.draw(canvas);// 将 view 画到画布上
+        //我们在用滑动View获得它的Bitmap时候，获得的是整个View的区域（包括隐藏的），如果想得到当前区域，需要重新定位到当前可显示的区域
+        canvas.translate(-v.getScrollX(), -v.getScrollY());
+        // 将 view 画到画布上
+        v.draw(canvas);
         return screenshot;
     }
 
-    public static ChangeDp getInstance(){
-        return new ChangeDp();
+    /**
+     * 获取实例对象
+     * @return
+     */
+    public static GuideViewUtils getInstance(){
+        return new GuideViewUtils();
     }
 }
