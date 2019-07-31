@@ -31,7 +31,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/test_two"
         android:background="@drawable/test"/>
-    <com.libowu.guideview.view.GuideView
+    <com.libowu.guide.view.GuideView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/guide"
