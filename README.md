@@ -68,37 +68,37 @@ dependencies {
 ```
 
 #### 构造方法说明
-1.GuideBean(int img, Activity act, View view)
-img:高亮区说明图片
-act:当前activity
-View:要被说明的控件
+1. GuideBean(int img, Activity act, View view)<br>
+img:高亮区说明图片<br>
+act:当前activity<br>
+View:要被说明的控件<br>
 
-2.GuideBean(int img, Activity act, View view ,int position)
-img:高亮区说明图片
-act:当前activity
-View:要被说明的控件
-position:控件说明图片相对于控件的位置
+2. GuideBean(int img, Activity act, View view ,int position)<br>
+img:高亮区说明图片<br>
+act:当前activity<br>
+View:要被说明的控件<br>
+position:控件说明图片相对于控件的位置<br>
 
-3.GuideBean(int img, Activity act, View view,boolean isSimpleShape,byte shape)
-img:高亮区说明图片
-act:当前activity
+3. GuideBean(int img, Activity act, View view,boolean isSimpleShape,byte shape)<br>
+img:高亮区说明图片<br>
+act:当前activity<br>
 View:要被说明的控件
-isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。
-shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状
+isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。<br>
+shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状<br>
 
-4.GuideBean(int img, Activity act, View view,boolean isSimpleShape,byte shape,int position)
-img:高亮区说明图片
-act:当前activity
-View:要被说明的控件
-isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。
-shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状
-position:控件说明图片相对于控件的位置
+4. GuideBean(int img, Activity act, View view,boolean isSimpleShape,byte shape,int position)<br>
+img:高亮区说明图片<br>
+act:当前activity<br>
+View:要被说明的控件<br>
+isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。<br>
+shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状<br>
+position:控件说明图片相对于控件的位置<br>
 
-5.GuideBean(int img,Activity act,View view,boolean isSimpleShape,byte shape,int position,int marginLeft,int marginRight,int marginTop,int marginBottom)
-img:高亮区说明图片
-act:当前activity
-View:要被说明的控件
-isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。
-shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状
-position:控件说明图片相对于控件的位置
-剩下的参数是设置上下左右的margin
+5. GuideBean(int img,Activity act,View view,boolean isSimpleShape,byte shape,int position,int marginLeft,int marginRight,int marginTop,int marginBottom)<br>
+img:高亮区说明图片<br>
+act:当前activity<br>
+View:要被说明的控件<br>
+isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。<br>
+shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状<br>
+position:控件说明图片相对于控件的位置<br>
+剩下的参数是设置上下左右的margin<br>
