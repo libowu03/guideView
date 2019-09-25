@@ -401,13 +401,12 @@ public class GuideView extends View {
                         //获取控件位置信息
                         Rect rect = new Rect();
                         if (guideBeans.get(i).getTargetView() != null){
-                            //使用getGlobalVisibleRect在viewpager中会存在异常，故改用getLocationInWindow方式获取信息
-                            //guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
+                            //由于未知原因，安卓4.4使用getLocationInWindow测绘时左右会出现问题，但是上下坐标没问题
+                            // 而使用getGlobalVisibleRect又会出现viewpager中上下又问题，左右坐标没问题，最终为了解决此问题只能两个结合使用了
+                            guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
                             int[] local = new int[2];
                             guideBeans.get(i).getTargetView().getLocationInWindow(local);
-                            rect.left = local[0];
                             rect.top = local[1];
-                            rect.right = local[0]+guideBeans.get(i).getTargetView().getWidth();
                             rect.bottom = local[1]+guideBeans.get(i).getTargetView().getHeight();
                         }else {
                             rect = guideBeans.get(i).getRect();
