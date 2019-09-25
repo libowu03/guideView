@@ -1,7 +1,7 @@
 # guideView
 
 #### 介绍
-此依赖的目的是为大部分view添加新手引导。目前activity，fragment的任意view都可以使用此依赖来制作新手引导。新手引导的高亮区支持控件本身的形状，圆形，矩形，椭圆形。
+此依赖的目的是为大部分view添加新手引导。目前activity，fragment的任意view都可以使用此依赖来制作新手引导。新手引导的高亮区支持控件本身的形状，圆形，矩形，椭圆形。<br>
 ![](https://images.gitee.com/uploads/images/2019/0806/145419_c5ce617d_1951678.gif)<br>
 ![](https://images.gitee.com/uploads/images/2019/0806/145222_ade564b4_1951678.gif)
 
