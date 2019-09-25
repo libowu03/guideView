@@ -13,7 +13,6 @@ import android.view.View;
  */
 public class GuideBean {
     private Rect rect;
-    private int img;
     private Bitmap bitmap;
     private Bitmap viewBitmap;
     private int marginTop;
@@ -38,7 +37,6 @@ public class GuideBean {
         if (act == null || act.isFinishing()){
             return;
         }
-        GuideBean.this.img = img;
         bitmap = BitmapFactory.decodeResource(act.getResources(),img);
         this.targetView = view;
     }
@@ -48,13 +46,13 @@ public class GuideBean {
      * @param simpleRect 要绘制的区域
      * @param act 活动界面
      */
-    public GuideBean(int img,final Rect simpleRect, final Activity act) {
+    public GuideBean(int img, final Activity act,final Rect simpleRect) {
         if (act == null || act.isFinishing()){
             return;
         }
         this.rect = simpleRect;
         this.isSimpleRect = true;
-        this.img = img;
+        bitmap = BitmapFactory.decodeResource(act.getResources(),img);
     }
 
 
@@ -77,6 +75,11 @@ public class GuideBean {
 
     public GuideBean setTextAlign(int textAlign) {
         this.textAlign = textAlign;
+        return this;
+    }
+
+    public GuideBean setRect(Rect rect){
+        this.rect = rect;
         return this;
     }
 
@@ -170,13 +173,5 @@ public class GuideBean {
         return rect;
     }
 
-    public GuideBean setRect(Rect rect) {
-        this.rect = rect;
-        return this;
-    }
-
-    public int getImg() {
-        return img;
-    }
 
 }
