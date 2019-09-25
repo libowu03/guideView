@@ -2,7 +2,8 @@
 
 #### 介绍
 此依赖的目的是为大部分view添加新手引导。目前activity，fragment的任意view都可以使用此依赖来制作新手引导。新手引导的高亮区支持控件本身的形状，圆形，矩形，椭圆形。
-
+![](https://images.gitee.com/uploads/images/2019/0806/145419_c5ce617d_1951678.gif "基本几何图形高亮区")<br>
+![](https://images.gitee.com/uploads/images/2019/0806/145222_ade564b4_1951678.gif "控件本身形状高亮区")
 
 #### 安装教程
 ```
@@ -101,12 +102,3 @@ isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本
 shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状
 position:控件说明图片相对于控件的位置
 剩下的参数是设置上下左右的margin
-
-#### 码云特技
-
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
