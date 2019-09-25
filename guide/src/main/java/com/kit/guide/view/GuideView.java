@@ -414,7 +414,6 @@ public class GuideView extends View {
                             rect = guideBeans.get(i).getRect();
                         }
                         setRectInfo(rect);
-                        Log.e("日志",rect.left+"，"+rect.right);
 
                         //获取控件图片信息
                         if (guideBeans.get(i).getTargetView() != null){
@@ -441,15 +440,17 @@ public class GuideView extends View {
     public void setRectInfo(Rect rect){
         rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act);
         rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act);
-        rect.left = Math.abs(rect.left);
-        rect.right = Math.abs(rect.right);
+        rect.left = Math.min(Math.abs(rect.left),Math.abs(rect.right));
+        rect.right = Math.max(Math.abs(rect.left),Math.abs(rect.right));
         //如果是viewpager使用这个组件时，可能导致距离不对，导致绘制的高亮区在屏幕之外显示了，这时候需要去除viewpager的影响。
         if (rect.left/act.getResources().getDisplayMetrics().widthPixels > 0){
-            int sourceLeft = rect.left;
-            rect.left = rect.left - (rect.left/act.getResources().getDisplayMetrics().widthPixels)*act.getResources().getDisplayMetrics().widthPixels;
-            rect.right = rect.left+(rect.right-sourceLeft);
-            rect.left = Math.abs(rect.left);
-            rect.right = Math.abs(rect.right);
+            int viewWidth = rect.right - rect.left;
+            int screenNum = (rect.left/act.getResources().getDisplayMetrics().widthPixels);
+            int screenWidth = act.getResources().getDisplayMetrics().widthPixels;
+            rect.left = rect.left - screenNum*screenWidth;
+            rect.right = rect.left + viewWidth;
+            rect.left = Math.min(Math.abs(rect.left),Math.abs(rect.right));
+            rect.right = Math.max(Math.abs(rect.left),Math.abs(rect.right));
         }
 
     }

@@ -105,8 +105,6 @@ public class CustomFragment extends Fragment {
         GuideBean a = new GuideBean(R.mipmap.guide,getActivity(),test_go);
         GuideBean c = new GuideBean(R.mipmap.guide,getActivity(),test_three);
         guides.add(b);
-        guides.add(a);
-        guides.add(c);
         //设置高亮区弹窗,传入的view为activity或fragment的主界面的view，activity可以通过getWindow().getDecorView()的方式获取，fragment可以在onViewCreated中获取到，用于判断主view是否可以获取到控件的位置参数了。
         guideDialog = new GuideDialog(view);
         //设置高亮集合
@@ -114,7 +112,7 @@ public class CustomFragment extends Fragment {
         //设置是否启用精确点击（true时只有点击高亮区时才执行下一步操作，默认为false）
         guideDialog.setExactClick(false);
         //是否启用一个屏幕内显示多个高亮区（true时一个屏幕内将显示出高亮集合中的所有内容，默认为false）
-        guideDialog.setOpenMore(true);
+        guideDialog.setOpenMore(false);
         //设置高亮区点击事件的监听器
         guideDialog.setGuideListener(new GuideViewClickCallBack() {
             @Override
