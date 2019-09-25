@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--高亮控件属性-->
+    <declare-styleable name="GuideView">
+        <attr name="maskColor" format="color"/>
+        <attr name="openMore" format="boolean"/>
+        <attr name="clickExact" format="boolean"/>
+        <attr name="heightLightPadding" format="dimension"/>
+        <attr name="guideTextColor" format="color"/>
+        <attr name="guideTextSize" format="dimension"/>
+    </declare-styleable>
+
+    <!--pagerCard控件属性-->
+    <declare-styleable name="PagerCardView">
+        <attr name="pagerCardTextColor" format="color"/>
+        <attr name="pagerCardTextSize" format="dimension"/>
+        <attr name="seIndicatorColor" format="color"/>
+        <attr name="unSeIndicatorColor" format="color"/>
+        <attr name="pagerCardImgHeight" format="dimension"/>
+        <attr name="pagerCardImgWidth" format="dimension"/>
+    </declare-styleable>
+</resources>
