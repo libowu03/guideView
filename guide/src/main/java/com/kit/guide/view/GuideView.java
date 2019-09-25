@@ -407,6 +407,8 @@ public class GuideView extends View {
                             int[] local = new int[2];
                             guideBeans.get(i).getTargetView().getLocationInWindow(local);
                             rect.top = local[1];
+                          /*  rect.left = local[0];
+                            rect.right = local[0]+guideBeans.get(i).getTargetView().getWidth();*/
                             rect.bottom = local[1]+guideBeans.get(i).getTargetView().getHeight();
                         }else {
                             rect = guideBeans.get(i).getRect();

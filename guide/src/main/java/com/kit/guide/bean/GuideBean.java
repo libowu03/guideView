@@ -38,11 +38,23 @@ public class GuideBean {
         if (act == null || act.isFinishing()){
             return;
         }
-        Rect rect = new Rect();
         GuideBean.this.img = img;
         bitmap = BitmapFactory.decodeResource(act.getResources(),img);
-        GuideBean.this.rect = rect;
         this.targetView = view;
+    }
+
+    /**
+     * @param img 要展示的说明图片
+     * @param simpleRect 要绘制的区域
+     * @param act 活动界面
+     */
+    public GuideBean(int img,final Rect simpleRect, final Activity act) {
+        if (act == null || act.isFinishing()){
+            return;
+        }
+        this.rect = simpleRect;
+        this.isSimpleRect = true;
+        this.img = img;
     }
 
 
