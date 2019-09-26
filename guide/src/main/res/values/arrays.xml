@@ -16,7 +16,21 @@
         <attr name="pagerCardTextSize" format="dimension"/>
         <attr name="seIndicatorColor" format="color"/>
         <attr name="unSeIndicatorColor" format="color"/>
+        <attr name="indicatorWidth" format="dimension"/>
+        <attr name="indicatorHeight" format="dimension"/>
         <attr name="pagerCardImgHeight" format="dimension"/>
         <attr name="pagerCardImgWidth" format="dimension"/>
+        <attr name="pagerCardRedPointTextSize" format="dimension"/>
+        <attr name="pagerCardRedPointTextColor" format="color"/>
+        <attr name="pagerCardRedPointHeight" format="dimension"/>
+        <attr name="pagerCardRedPointWidth" format="dimension"/>
+        <attr name="pagerCardRedPointColor" format="color"/>
+        <attr name="needIndicator" format="boolean"/>
+        <attr name="pagerCardImgType">
+            <enum name="CIRCLE" value="0"/>
+            <enum name="ROUND_RECT" value="1"/>
+            <enum name="RECT" value="2"/>
+        </attr>
+        <attr name="imgCorner" format="dimension"/>
     </declare-styleable>
 </resources>

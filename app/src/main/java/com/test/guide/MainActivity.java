@@ -27,7 +27,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements GuideViewClickCallBack, View.OnClickListener, PagerCardView.PagerCardListener<PagerCardBean> {
     private TabLayout tab;
     private ViewPager viewpager;
-    private PagerCardView pagerCardView;
     private List<Fragment> fragments;
 
     @Override
@@ -46,19 +45,6 @@ public class MainActivity extends AppCompatActivity implements GuideViewClickCal
         tab.addTab(tab.newTab().setText("测试"));
         viewpager.setOffscreenPageLimit(3);
         tab.setupWithViewPager(viewpager);
-
-/*        pagerCardView = findViewById(R.id.cardview);
-        List<PagerCardBean> bean = new ArrayList<>();
-        bean.add(new PagerCardBean("灵机文化","https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569418221253&di=1770a74bb77874862ef83b5d0dd9deea&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201511%2F14%2F20151114095852_2KEvG.jpeg",false,""));
-        bean.add(new PagerCardBean("灵机文化烦恼多卡能否大口径",""+R.mipmap.default_pet,false,""));
-        bean.add(new PagerCardBean("灵机文化",""+R.mipmap.default_pet,false,""));
-        bean.add(new PagerCardBean("灵机文化",""+R.mipmap.default_pet,true,""));
-        bean.add(new PagerCardBean("灵机文化",""+R.mipmap.default_pet,false,""));
-        bean.add(new PagerCardBean("灵机文化",""+R.mipmap.default_pet,false,""));
-        bean.add(new PagerCardBean("灵机文化",""+R.mipmap.default_pet,true,""));
-        bean.add(new PagerCardBean("灵机文化",""+R.mipmap.default_pet,false,""));
-        bean.add(new PagerCardBean("灵机文化",""+R.mipmap.default_pet,false,""));
-        pagerCardView.setCardContent(bean,getSupportFragmentManager(),2,4,this);*/
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

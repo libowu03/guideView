@@ -18,6 +18,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
     private RecyclerView pagerCardContent;
     private List<T> contentList;
     private CardPagerAdapter.ClickPagerCardListener pagerCardListener;
+    private PagerCardAttribute attribute;
 
     @Nullable
     @Override
@@ -41,6 +42,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         pagerCardContent = view.findViewById(R.id.pagerCardContent);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),colNum);
         CardPagerAdapter pagerContentAdapter = new CardPagerAdapter();
+        pagerContentAdapter.setPagerCardAttribute(attribute);
         pagerContentAdapter.setContent(contentList);
         pagerContentAdapter.setCardListener(this);
         pagerCardContent.setLayoutManager(layoutManager);
@@ -70,5 +72,9 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         if (pagerCardListener != null){
             pagerCardListener.onClickPagerCardListener(pagerCardBean,index);
         }
+    }
+
+    public void setAttribute(PagerCardAttribute attribute){
+        this.attribute = attribute;
     }
 }

@@ -7,19 +7,11 @@
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:id="@+id/tab" />
+        android:id="@+id/tab"
+        android:visibility="visible"/>
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/viewpager" />
-
-    <com.kit.pagerCard.PagerCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cardview"
-        app:seIndicatorColor="#636363"
-        app:unSeIndicatorColor="#232323"
-        app:pagerCardTextColor="#000000"
-        app:pagerCardTextSize="16dp"
-        android:visibility="gone"/>
+        android:id="@+id/viewpager"
+        android:visibility="visible"/>
 </LinearLayout>
