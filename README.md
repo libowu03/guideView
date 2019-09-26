@@ -23,19 +23,20 @@ dependencies {
 #### 使用说明
 使用代码如下：
 ```
- //新手集合必须添加，其他可不需要可不设置
- List<GuideBean> guideBeans = new ArrayList<>();
- guideBeans.add(new GuideBean(R.drawable.guide/*新手引导图片*/,this/*activity*/,menuBtn/*要说明的view*/));
- GuideDialog guideDialog = new GuideDialog(getWindow().getDecorView()/*activity或fragment的主view*/);
- guideDialog.setGuideBeans(guideBeans);
- //设置高亮区弹窗,传入的view为activity或fragment的主界面的view，activity可以通过getWindow().getDecorView()的方式获取，fragment可以在  onViewCreated中获取到，用于判断主view是否可以获取到控件的位置参数了。
+ //将要说明的控件添加到集合中
+guides = new ArrayList<>();
+//GuideBean的构造方法比较多，后面会提到各个构造方法的作用
+guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two));
+guides.add( new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.RECT).setPadding(20));
+guides.add(new GuideBean(R.mipmap.guide,getActivity(),new Rect(0,0,getResources().getDisplayMetrics().widthPixels,200)));
+//设置高亮区弹窗,传入的view为activity或fragment的主界面的view，activity可以通过getWindow().getDecorView()的方式获取，fragment可以在onViewCreated中获取到，用于判断主view是否可以获取到控件的位置参数了。
         guideDialog = new GuideDialog(view);
         //设置高亮集合
         guideDialog.setGuideBeans(guides);
         //设置是否启用精确点击（true时只有点击高亮区时才执行下一步操作，默认为false）
         guideDialog.setExactClick(false);
         //是否启用一个屏幕内显示多个高亮区（true时一个屏幕内将显示出高亮集合中的所有内容，默认为false）
-        guideDialog.setOpenMore(true);
+        guideDialog.setOpenMore(false);
         //设置高亮区点击事件的监听器
         guideDialog.setGuideListener(new GuideViewClickCallBack() {
             @Override
@@ -54,17 +55,16 @@ dependencies {
             }
 
         });
-        //如果要显示字体，这个可以设置显示字体的颜色（目前只针对直接传入rect的有效，通过view获取的rect无效）
- guideDialog.setGuideTextColor(Color.RED);
- //设置字体大小（目前只针对直接传入rect的有效，通过view获取的rect无效）
- guideDialog.setGuideTextSize(20);
- //设置高亮区的padding（只针对简单几何图形的高亮区有效，如果高亮区为某个view的图形，此设置无效）
- guideDialog.setHeightLightPadding(20);
- //设置高亮区遮罩层的样色,默认值为#cc000000
- guideDialog.setMarkColor(Color.parseColor("#DD000000"));
- //执行显示高亮控件
- guideDialog.show(getFragmentManager(),getClass().getName());
- guideDialog.show(getSupportFragmentManager(),getClass().getName());
+//如果要显示字体，这个可以设置显示字体的颜色（目前只针对直接传入rect的有效，通过view获取的rect无效）
+guideDialog.setGuideTextColor(Color.RED);
+//设置字体大小（目前只针对直接传入rect的有效，通过view获取的rect无效）
+guideDialog.setGuideTextSize(20);
+//设置高亮区的padding（只针对简单几何图形的高亮区有效，如果高亮区为某个view的图形，此设置无效）
+guideDialog.setHeightLightPadding(20);
+//设置高亮区遮罩层的样色,默认值为#cc000000
+guideDialog.setMarkColor(Color.parseColor("#DD000000"));
+//执行显示高亮控件
+guideDialog.show(getFragmentManager(),getClass().getName());
 ```
 
 #### 构造方法说明
@@ -73,32 +73,9 @@ img:高亮区说明图片<br>
 act:当前activity<br>
 View:要被说明的控件<br>
 
-2. GuideBean(int img, Activity act, View view ,int position)<br>
+2. GuideBean(int img, final Activity act,final Rect simpleRect)
 img:高亮区说明图片<br>
 act:当前activity<br>
-View:要被说明的控件<br>
-position:控件说明图片相对于控件的位置<br>
+simpleRect:自由绘制的矩形<br>
 
-3. GuideBean(int img, Activity act, View view,boolean isSimpleShape,byte shape)<br>
-img:高亮区说明图片<br>
-act:当前activity<br>
-View:要被说明的控件
-isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。<br>
-shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状<br>
 
-4. GuideBean(int img, Activity act, View view,boolean isSimpleShape,byte shape,int position)<br>
-img:高亮区说明图片<br>
-act:当前activity<br>
-View:要被说明的控件<br>
-isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。<br>
-shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状<br>
-position:控件说明图片相对于控件的位置<br>
-
-5. GuideBean(int img,Activity act,View view,boolean isSimpleShape,byte shape,int position,int marginLeft,int marginRight,int marginTop,int marginBottom)<br>
-img:高亮区说明图片<br>
-act:当前activity<br>
-View:要被说明的控件<br>
-isSimpleShape:高亮区是否需要显示基本几何图形。默认不是基本几何图形。<br>
-shape：如果是基本几何图形的高亮区，则这里定义基本几何图形的形状<br>
-position:控件说明图片相对于控件的位置<br>
-剩下的参数是设置上下左右的margin<br>
