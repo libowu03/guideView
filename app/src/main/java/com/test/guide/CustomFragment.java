@@ -103,7 +103,7 @@ public class CustomFragment extends Fragment {
         guides = new ArrayList<>();
         //GuideBean的构造方法比较多，后面会提到各个构造方法的作用
         GuideBean b = new GuideBean(R.mipmap.guide,getActivity(),test_two);
-        GuideBean a = new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.CIRCLE);
+        GuideBean a = new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.RECT).setPadding(20);
         GuideBean c = new GuideBean(R.mipmap.guide,getActivity(),new Rect(0,0,getResources().getDisplayMetrics().widthPixels,200));
         guides.add(b);
         guides.add(a);

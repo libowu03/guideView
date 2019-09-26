@@ -225,12 +225,10 @@ public class GuideView extends View {
      * @param guideBean
      */
     public void drawSimpleShapeView(Canvas canvas,GuideBean guideBean){
-        //int layerID = canvas.saveLayer(0, 0, getWidth(), getHeight(), paint, Canvas.ALL_SAVE_FLAG);
         setPadding(guideBean);
         paint.setXfermode(porterDuffXfermode);
         canvas.drawBitmap(createSrcBitmap(width,height,guideBean.getRect()), 0, 0, paint);
         paint.setXfermode(null);
-        //canvas.restoreToCount(layerID);
         //说明控件的中线坐标
         int centerLine = guideBean.getRect().left+(guideBean.getRect().right-guideBean.getRect().left)/2;
         //说明图片的左边距离
@@ -280,7 +278,6 @@ public class GuideView extends View {
             }else {
                 canvas.drawBitmap(guideBean.getBitmap(),width - guideBean.getBitmap().getWidth() - Config.DEFAULT_MARGIN,guideBean.getRect().bottom+guideBean.getMarginTop(),paint);
             }
-            //canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop(),paint);
         }else {
             canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop()+guideBean.getMarginBottom(),paint);
         }
@@ -295,15 +292,6 @@ public class GuideView extends View {
         if (guideViewClickCallBack != null){
             guideViewClickCallBack.guideEndCallback();
         }
-    }
-
-    /**
-     * 销毁高亮集合，下次无法直接调用showGuide（）方法进行显示，必须重新添加高亮集合。
-     */
-    public void destoryGuide(){
-        this.setVisibility(GONE);
-        guideBeans.clear();
-        guideViewClickCallBack.guideEndCallback();
     }
 
     /**
@@ -375,17 +363,6 @@ public class GuideView extends View {
         guideBean.getRect().bottom = guideBean.getRect().bottom + heightLightPadding;
         guideBean.getRect().right = guideBean.getRect().right + heightLightPadding;
         guideBean.getRect().top = guideBean.getRect().top - heightLightPadding;
-    }
-
-    /**
-     * 显示高亮区，点击后立即显示
-     */
-    public void showGuide(){
-        this.setVisibility(VISIBLE);
-        if (guideBeans != null && guideBeans.size() !=0){
-            guideBean = guideBeans.get(0);
-        }
-        invalidate();
     }
 
     /**
@@ -511,16 +488,24 @@ public class GuideView extends View {
         scrPaint.setColor(Color.parseColor("#ec6941"));
         //更具不同的传入形状绘制对应形状的高亮区
         if (Config.RECT == guideBean.getShape()){
+            rect.left = rect.left - guideBean.getPadding();
+            rect.right = rect.right + guideBean.getPadding();
+            rect.bottom = rect.bottom + guideBean.getPadding();
+            rect.top = rect.top - guideBean.getPadding();
             canvas.drawRect(rect, scrPaint);
         }else if (Config.CIRCLE == guideBean.getShape()){
-            canvas.drawCircle(guideBean.getRect().left+guideBean.getRect().width()/2,guideBean.getRect().top+guideBean.getRect().width()/2,Math.max(guideBean.getRect().width(),guideBean.getRect().width())/2, scrPaint);
+            canvas.drawCircle(guideBean.getRect().left+guideBean.getRect().width()/2-guideBean.getPadding(),guideBean.getRect().top+guideBean.getRect().width()/2-4*guideBean.getPadding(),Math.max(guideBean.getRect().width(),guideBean.getRect().width())/2+2*guideBean.getPadding(), scrPaint);
         }else if (Config.ROUNDED_RECT == guideBean.getShape()){
-            RectF rectF = new RectF(rect.left,rect.top,rect.right,rect.bottom);
+            RectF rectF = new RectF(rect.left-guideBean.getPadding(),rect.top-guideBean.getPadding(),rect.right+guideBean.getPadding(),rect.bottom+guideBean.getPadding());
             canvas.drawRoundRect(rectF, Config.ROUNDED_RECT_VALUE, Config.ROUNDED_RECT_VALUE,scrPaint);
         }else if (Config.OVAL == guideBean.getShape()){
-            RectF rectF = new RectF(rect.left,rect.top,rect.right,rect.bottom);
+            RectF rectF = new RectF(rect.left-guideBean.getPadding(),rect.top-guideBean.getPadding(),rect.right+guideBean.getPadding(),rect.bottom+guideBean.getPadding());
             canvas.drawOval(rectF,scrPaint);
         }else {
+            rect.left = rect.left - guideBean.getPadding();
+            rect.right = rect.right + guideBean.getPadding();
+            rect.bottom = rect.bottom + guideBean.getPadding();
+            rect.top = rect.top - guideBean.getPadding();
             canvas.drawRect(rect, scrPaint);
         }
         return bitmap;

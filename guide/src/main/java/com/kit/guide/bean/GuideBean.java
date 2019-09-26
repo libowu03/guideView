@@ -26,6 +26,7 @@ public class GuideBean {
     private String text;
     private int textAlign;
     private View targetView;
+    private int padding;
 
     /**
      *
@@ -58,6 +59,15 @@ public class GuideBean {
 
     public boolean isSimpleRect() {
         return isSimpleRect;
+    }
+
+    public int getPadding() {
+        return padding;
+    }
+
+    public GuideBean setPadding(int padding) {
+        this.padding = padding;
+        return this;
     }
 
     public GuideBean setSimpleRect(boolean simpleRect) {
