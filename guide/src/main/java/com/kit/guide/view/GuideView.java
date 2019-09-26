@@ -438,19 +438,19 @@ public class GuideView extends View {
      * @param rect 控件的矩阵
      */
     public void setRectInfo(Rect rect){
+        Rect tempRect = new Rect(rect.left,rect.top,rect.right,rect.bottom);
         rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act);
         rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act);
-        rect.left = Math.min(Math.abs(rect.left),Math.abs(rect.right));
-        rect.right = Math.max(Math.abs(rect.left),Math.abs(rect.right));
-        //如果是viewpager使用这个组件时，可能导致距离不对，导致绘制的高亮区在屏幕之外显示了，这时候需要去除viewpager的影响。
-        if (rect.left/act.getResources().getDisplayMetrics().widthPixels > 0){
-            int viewWidth = rect.right - rect.left;
-            int screenNum = (rect.left/act.getResources().getDisplayMetrics().widthPixels);
-            int screenWidth = act.getResources().getDisplayMetrics().widthPixels;
-            rect.left = rect.left - screenNum*screenWidth;
-            rect.right = rect.left + viewWidth;
-            rect.left = Math.min(Math.abs(rect.left),Math.abs(rect.right));
-            rect.right = Math.max(Math.abs(rect.left),Math.abs(rect.right));
+        //如果是小于0，说明属于其他页面的viewpager
+        if (tempRect.left < 0){
+            //获取屏幕宽度
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            //计算viewpager页数
+            int screenNum = Math.abs((int)(((Math.abs(rect.left) / (screenWidth*1f)))+0.99)) ;
+            //获取view的宽度
+            int width = Math.abs(tempRect.right - tempRect.left);
+            rect.left = screenNum * screenWidth - Math.abs(rect.left);
+            rect.right = rect.left + width;
         }
 
     }
