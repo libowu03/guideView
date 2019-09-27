@@ -6,33 +6,61 @@ package com.kit.pagerCard;
  * @date 2019/09/27
  */
 public class PagerCardAttribute {
+    //图片高度
     private int imageHeight;
+    //图片宽度
     private int imageWidth;
+    //右上角字体大小
     private int redPointTextSize;
+    //右上角字体颜色
     private int redPointTextColor;
+    //右上角红点宽度
     private int redPointSizeWidth;
+    //右上角红点高度
     private int redPointSizeHeight;
+    //标题文字大小
     private int titleTextSize;
+    //标题文字颜色
     private int titleTextColor;
+    //指示器未选中颜色
     private int unSeIndicatorColor;
+    //指示器选中颜色
     private int seIndicatorColor;
+    //指示器宽度
     private int unSeIndicatorWidth;
+    //指示器高度
     private int seIndicatorHeight;
+    //图片显示类型，包括圆形，圆角矩形，矩形
     private int imgType;
+    //图片圆角弧度，针对圆角矩形有效
     private int imgCorner;
+    //是否需要显示指示器
     private boolean needIndicator;
+    //显示内容是否可以垂直滑动
     private boolean canScrollVertically;
+    //宫格分割线高度
     private int itemDecorationWeight;
+    //宫格分割线颜色
     private int itemDecorationColor;
+    //每个宫格的左边margin
     private int itemMarginLeft;
+    //每个宫格的右边margin
     private int itemMarginRight;
+    //每个宫格的上边margin
     private int itemMarginTop;
+    //每个宫格的下边margin
     private int itemMarginBottom;
+    //每个宫格的margin
     private int itemMargin;
+    //每个宫格的padding
     private int itemPadding;
+    //每个宫格的左边padding
     private int itemPaddingLeft;
+    //每个宫格的上边padding
     private int itemPaddingTop;
+    //每个宫格的右边padding
     private int itemPaddingRight;
+    //每个宫格的下边padding
     private int itemPaddingBottom;
 
     public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,

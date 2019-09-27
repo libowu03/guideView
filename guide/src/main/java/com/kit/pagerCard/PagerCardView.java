@@ -53,6 +53,16 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     public PagerCardView(Context context,AttributeSet attributeSet,int defStyleAttr){
         super(context, attributeSet,0);
         view = LayoutInflater.from(context).inflate(R.layout.view_pagecard,this,true);
+        initAttr(context,attributeSet,defStyleAttr);
+    }
+
+    /**
+     * 获取xml属性
+     * @param context
+     * @param attributeSet
+     * @param defStyleAttr
+     */
+    private void initAttr(Context context,AttributeSet attributeSet,int defStyleAttr) {
         TypedArray attr = context.getTheme().obtainStyledAttributes(attributeSet, R.styleable.PagerCardView, defStyleAttr, 0);
         //获取未选中指示器颜色
         unSeIndicatorColor = attr.getColor(R.styleable.PagerCardView_unSeIndicatorColor, Color.parseColor("#cccccc"));
@@ -274,6 +284,10 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         }
     }
 
+    /**
+     * pagerCard的动作监听
+     * @param <T>
+     */
     public interface PagerCardListener<T extends PagerCardBean>{
         void onItemClickListener(T pagerCardBean, int itemIndex, int currentPagerIndex);
         void onPagerSelect(int currentPagerIndex);
@@ -281,14 +295,27 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
     }
 
+    /**
+     * 更新某一页中的内容
+     * @param pagerNum 要更新内容的所在页码
+     */
     public void updatePagerContent(int pagerNum){
 
     }
 
+    /**
+     * 设置当前的pager
+     * @param pagerNum 页码
+     */
     public void setCurrentPager(int pagerNum){
         setCurrentPager(pagerNum,false);
     }
 
+    /**
+     * 设置当前的pager
+     * @param pagerNum 页码
+     * @param smoothScroll 是否启用滑动动画
+     */
     public void setCurrentPager(int pagerNum,boolean smoothScroll){
         if (pager2 != null){
             pager2.setCurrentItem(pagerNum,smoothScroll);

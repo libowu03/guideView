@@ -25,7 +25,7 @@
         app:indicatorWidth="5dp"
         app:pagerCardImgType="ROUND_RECT"
         app:imgCorner="16dp"
-        app:itemMargin="0dp"
+        app:itemMarginBottom="20dp"
         app:canScrollVertically="false"
         android:background="@color/white"
         android:paddingBottom="6dp"/>
