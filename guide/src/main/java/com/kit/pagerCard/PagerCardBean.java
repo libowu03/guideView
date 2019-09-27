@@ -2,6 +2,8 @@ package com.kit.pagerCard;
 
 /**
  * pagerCard的数据内容，如果需要自定义，请继承自此类
+ * @author libowu
+ * @date 2019/09/27
  */
 public class PagerCardBean {
     /**

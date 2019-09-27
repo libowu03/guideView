@@ -4,6 +4,11 @@ import com.kit.guide.bean.GuideBean;
 
 import java.util.List;
 
+/**
+ * 新手引导监听器
+ * @author libowu
+ * @date 2019/07/27
+ */
 public interface GuideViewClickCallBack {
     /**
      * 引导点击事件

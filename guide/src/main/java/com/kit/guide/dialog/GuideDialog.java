@@ -22,6 +22,11 @@ import com.kit.guide.view.GuideView;
 
 import java.util.List;
 
+/**
+ * 显示新手引导的dialog
+ * @author libowu
+ * @date 2019/09/27
+ */
 @SuppressLint("ValidFragment")
 public class GuideDialog extends DialogFragment {
     /**

@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * 选择测试功能的活动
+ * @author libowu
+ * @date 2019/09/27
+ */
 public class SelectMenuActivity extends AppCompatActivity {
     private TextView sendToGuide;
     private TextView sendToPagerCard;

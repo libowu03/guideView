@@ -2,6 +2,8 @@ package com.kit.pagerCard;
 
 /**
  * 存放pagerCard的基本属性，比如图片大小，字体大小，红点背景等
+ * @author libowu
+ * @date 2019/09/27
  */
 public class PagerCardAttribute {
     private int imageHeight;

@@ -5,6 +5,11 @@ import android.support.v4.app.DialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 新手引导dialog的管理类,用于防止多个dialog同时显示的尴尬局面
+ * @author libowu
+ * @date 2019/09/27
+ */
 public class DialogManager {
     private static List<DialogFragment> list = new ArrayList<>();
 

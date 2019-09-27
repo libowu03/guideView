@@ -7,6 +7,11 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * 一个自定义的viewpager，目的是适应recyclerview的高度，防止一个fragment把整个屏幕沾满
+ * @author libowu
+ * @date 2019/09/27
+ */
 public class SelfViewPagerView extends ViewPager {
     /**
      * 条目列数

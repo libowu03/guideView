@@ -17,6 +17,12 @@ import com.kit.guide.utils.GuideViewUtils;
 
 import java.util.List;
 
+/**
+ * pagerCard的fragment，每个fragment中主要由一个recyclerview组成
+ * @author libowu
+ * @date 2019/09/27
+ * @param <T>
+ */
 public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment implements CardPagerAdapter.ClickPagerCardListener<T> {
     private RecyclerView pagerCardContent;
     private List<T> contentList;

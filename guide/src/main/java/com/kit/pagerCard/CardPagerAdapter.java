@@ -19,6 +19,12 @@ import com.kit.guide.utils.GuideViewUtils;
 
 import java.util.List;
 
+/**
+ * pagerCard的recyclerview适配器
+ * @author libowu
+ * @date 2019/09/27
+ * @param <T>
+ */
 public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adapter{
     private List<T> content;
     private ClickPagerCardListener cardListener;

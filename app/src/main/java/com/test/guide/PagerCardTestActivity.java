@@ -10,6 +10,11 @@ import com.kit.pagerCard.PagerCardView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * pagerCard的测试类
+ * @author libowu
+ * @date 2019/09/27
+ */
 public class PagerCardTestActivity extends AppCompatActivity implements PagerCardView.PagerCardListener {
     private PagerCardView pagerCardView;
 
@@ -19,49 +24,14 @@ public class PagerCardTestActivity extends AppCompatActivity implements PagerCar
         setContentView(R.layout.activity_pager_card_test);
         pagerCardView = findViewById(R.id.cardview);
         List<PagerCardBean> bean = new ArrayList<>();
-        bean.add(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569418221253&di=1770a74bb77874862ef83b5d0dd9deea&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201511%2F14%2F20151114095852_2KEvG.jpeg").setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("3"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setShowRedPoint(true));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("4"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("3"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setShowRedPoint(true));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("4"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("3"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setShowRedPoint(true));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("4"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("3"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setShowRedPoint(true));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("4"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("4"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("3"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setShowRedPoint(true));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试").setRedPointText("4"));
-        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setName("测试"));
+        bean.add(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569418221253&di=1770a74bb77874862ef83b5d0dd9deea&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201511%2F14%2F20151114095852_2KEvG.jpeg"));
+        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setRedPointText("3"));
+        bean.add(new PagerCardBean(""+R.mipmap.default_pet));
+        bean.add(new PagerCardBean(""+R.mipmap.default_pet));
+        bean.add(new PagerCardBean(""+R.mipmap.default_pet));
+        bean.add(new PagerCardBean(""+R.mipmap.default_pet));
+        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setShowRedPoint(true));
+        bean.add(new PagerCardBean(""+R.mipmap.default_pet).setRedPointText("4"));
         pagerCardView.setCardContent(bean,getSupportFragmentManager(),2,4,this);
         //pagerCardView.setCurrentPager(1);
     }

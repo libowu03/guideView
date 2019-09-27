@@ -22,6 +22,12 @@ import com.kit.guide.utils.GuideViewUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * pagerCard的容器，容器里有一个viewpager和若干个textview组成，textview用于指示器的显示
+ * @author libowu
+ * @date 2019/09/27
+ * @param <T>
+ */
 public class PagerCardView<T extends PagerCardBean> extends LinearLayout implements CardPagerAdapter.ClickPagerCardListener<T> {
     protected View view;
     protected LinearLayout indicator;

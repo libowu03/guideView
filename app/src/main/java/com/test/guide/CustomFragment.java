@@ -23,6 +23,11 @@ import com.kit.guide.view.GuideView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 测试新手引导的活动
+ * @author libowu
+ * @date 2019/09/27
+ */
 public class CustomFragment extends Fragment {
     private TextView test,test_two,test_three;
     private LinearLayout test_go;

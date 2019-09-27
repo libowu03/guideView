@@ -6,6 +6,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
+/**
+ * viewpager的适配器
+ * @author libowu
+ * @date 2019/09/27
+ */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> list;
 
