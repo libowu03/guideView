@@ -40,7 +40,25 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         }
         int colNum = bundle.getInt("col",4);
         pagerCardContent = view.findViewById(R.id.pagerCardContent);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),colNum);
+        GridLayoutManager layoutManager = null;
+        //设置recyclerview是否可垂直滑动
+        if (attribute != null){
+            if (attribute.isCanScrollVertically()){
+                layoutManager = new GridLayoutManager(getActivity(),colNum);
+            }else {
+                layoutManager = new GridLayoutManager(getActivity(),colNum){
+                    @Override
+                    public boolean canScrollVertically() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean canScrollHorizontally() {
+                        return false;
+                    }
+                };
+            }
+        }
         CardPagerAdapter pagerContentAdapter = new CardPagerAdapter();
         pagerContentAdapter.setPagerCardAttribute(attribute);
         pagerContentAdapter.setContent(contentList);

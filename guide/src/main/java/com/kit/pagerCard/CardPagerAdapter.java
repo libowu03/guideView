@@ -39,7 +39,6 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
         if (pagerCardAttribute != null){
             //设置红点属性
             cpa.redPoint.setTextSize(GuideViewUtils.px2dip(context,pagerCardAttribute.getRedPointTextSize()));
-            Log.e("日志","获取的颜色为："+pagerCardAttribute.getTitleTextColor());
             cpa.redPoint.setTextColor(pagerCardAttribute.getRedPointTextColor());
             if (pagerCardBean.getRedPointText() == null || pagerCardBean.getRedPointText().isEmpty()){
                 ConstraintLayout.LayoutParams cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -90,7 +89,7 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
            loadImage(imgId,requestOptions,cpa,pagerCardBean);
         }else if (pagerCardAttribute.getImgType() == 1){
             //绘制圆角矩形图片
-            loadImage(imgId,RequestOptions.bitmapTransform(new RoundedCorners(pagerCardAttribute.getImgCorner()*4)),cpa,pagerCardBean);
+            loadImage(imgId,RequestOptions.bitmapTransform(new RoundedCorners(pagerCardAttribute.getImgCorner())),cpa,pagerCardBean);
         }else if (pagerCardAttribute.getImgType() == 2){
             //加载矩形图片直接加载即可
             loadImage(imgId,null,cpa,pagerCardBean);

@@ -45,10 +45,6 @@ public class GuideDialog extends DialogFragment {
      */
     private boolean openMore;
     /**
-     * 高亮区的padding，紧对基本几何图形的高亮区起作用
-     */
-    private int heightLightPadding;
-    /**
      * 高亮区文字颜色
      */
     private int guideTextColor;
@@ -180,7 +176,6 @@ public class GuideDialog extends DialogFragment {
     private void initData() {
         markColor = Color.parseColor("#cc000000");
         openMore = false;
-        heightLightPadding = 10;
         guideTextColor = Color.parseColor("#333333");
         guideTextSize = 20;
      }
@@ -209,13 +204,6 @@ public class GuideDialog extends DialogFragment {
         this.openMore = openMore;
     }
 
-    /**
-     * 设置高亮区的padding，紧对简单集合图像高亮区有效
-     * @param heightLightPadding
-     */
-    public void setHeightLightPadding(int heightLightPadding) {
-        this.heightLightPadding = heightLightPadding;
-    }
 
     /**
      * 设置要显示字体的颜色

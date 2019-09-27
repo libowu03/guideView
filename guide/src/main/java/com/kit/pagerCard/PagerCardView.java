@@ -78,7 +78,9 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         int imgCorner = (int) attr.getDimension(R.styleable.PagerCardView_imgCorner,GuideViewUtils.dip2px(getContext(),6));
         //是否需要显示指示器
         needIndicator = attr.getBoolean(R.styleable.PagerCardView_needIndicator,true);
-        attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,10,10,imgType,imgCorner,needIndicator);
+        //是否启用上下滑动
+        boolean canScrollVertically = attr.getBoolean(R.styleable.PagerCardView_canScrollVertically,false);
+        attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,10,10,imgType,imgCorner,needIndicator,canScrollVertically);
         attr.recycle();
     }
 
@@ -104,7 +106,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         indicator = view.findViewById(R.id.pagerCardIndicator);
         indicator.removeAllViews();
         indicatorList = new ArrayList<>();
-        if (content.size() <= rowNum*colNum){
+        if (content.size() <= rowNum*colNum || rowNum == -1){
             PagerCardContentFragment fragment = makeFragment(colNum);
             fragment.setFragmentList(content);
             fragments.add(fragment);
@@ -171,8 +173,11 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                 }
             }
         });
-        Log.e("日志","viewpager页数为："+fragments.size());
-        pager2.setRow(rowNum,colNum,content.size());
+        if (rowNum == -1){
+            pager2.setRow(rowNum,colNum,content.size(),true);
+        }else {
+            pager2.setRow(rowNum,colNum,content.size(),false);
+        }
         pager2.setAdapter(pagerAdapter);
         pager2.setPageMargin(GuideViewUtils.dip2px(getContext(),0));
     }
@@ -242,7 +247,19 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
     }
 
-    public void updateContent(){
+    public void updatePagerContent(int pagerNum){
 
+    }
+
+    public void setCurrentPager(int pagerNum){
+        setCurrentPager(pagerNum,false);
+    }
+
+    public void setCurrentPager(int pagerNum,boolean smoothScroll){
+        if (pager2 != null){
+            pager2.setCurrentItem(pagerNum,smoothScroll);
+        }else {
+            Log.e("KitError","PagerCard：viewpager can not be null");
+        }
     }
 }

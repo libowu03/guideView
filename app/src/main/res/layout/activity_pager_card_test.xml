@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.test.guide.PagerCardTestActivity">
     <com.kit.pagerCard.PagerCardView
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardview"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -16,10 +16,11 @@
         app:pagerCardImgHeight="60dp"
         app:seIndicatorColor="#320053"
         app:unSeIndicatorColor="#949097"
-        app:pagerCardTextColor="#000000"
+        app:pagerCardTextColor="@color/colorAccent"
         app:pagerCardTextSize="16dp"
         app:indicatorHeight="5dp"
         app:indicatorWidth="5dp"
-        app:pagerCardImgType="RECT"
-        app:imgCorner="56dp" />
+        app:pagerCardImgType="ROUND_RECT"
+        app:imgCorner="16dp"
+        app:canScrollVertically="false"/>
 </android.support.constraint.ConstraintLayout>

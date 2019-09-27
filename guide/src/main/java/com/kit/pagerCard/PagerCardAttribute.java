@@ -19,8 +19,10 @@ public class PagerCardAttribute {
     private int imgType;
     private int imgCorner;
     private boolean needIndicator;
+    private boolean canScrollVertically;
 
-    public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize, int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,boolean needIndicator) {
+    public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,
+                              int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,boolean needIndicator,boolean canScrollVertically) {
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.redPointTextSize = redPointTextSize;
@@ -36,6 +38,15 @@ public class PagerCardAttribute {
         this.imgType = imgTyoe;
         this.imgCorner = imgCorner;
         this.needIndicator = needIndicator;
+        this.canScrollVertically = canScrollVertically;
+    }
+
+    public boolean isCanScrollVertically() {
+        return canScrollVertically;
+    }
+
+    public void setCanScrollVertically(boolean canScrollVertically) {
+        this.canScrollVertically = canScrollVertically;
     }
 
     public boolean isNeedIndicator() {
