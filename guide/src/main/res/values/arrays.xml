@@ -33,6 +33,11 @@
         <attr name="itemMarginTop" format="dimension"/>
         <attr name="itemMarginBottom" format="dimension"/>
         <attr name="itemMargin" format="dimension"/>
+        <attr name="itemPadding" format="dimension"/>
+        <attr name="itemPaddingLeft" format="dimension"/>
+        <attr name="itemPaddingRight" format="dimension"/>
+        <attr name="itemPaddingTop" format="dimension"/>
+        <attr name="itemPaddingBottom" format="dimension"/>
         <attr name="pagerCardImgType">
             <enum name="CIRCLE" value="0"/>
             <enum name="ROUND_RECT" value="1"/>

@@ -100,11 +100,21 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         int itemMarginBottom = (int) attr.getDimension(R.styleable.PagerCardView_itemMarginBottom,0);
         //获取margin
         int itemMargin = (int) attr.getDimension(R.styleable.PagerCardView_itemMargin,0);
+        //获取左边的padding
+        int itemPaddingLeft = (int) attr.getDimension(R.styleable.PagerCardView_itemPaddingLeft,0);
+        //获取右边的padding
+        int itemPaddingRight = (int) attr.getDimension(R.styleable.PagerCardView_itemPaddingRight,0);
+        //获取顶部的padding
+        int itemPaddingTop = (int) attr.getDimension(R.styleable.PagerCardView_itemPaddingTop,0);
+        //获取底部的padding
+        int itemPaddingBottom = (int) attr.getDimension(R.styleable.PagerCardView_itemPaddingBottom,0);
+        //获取padding
+        int itemPadding = (int) attr.getDimension(R.styleable.PagerCardView_itemPadding,0);
 
         attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,
                 redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,
                 10,10,imgType,imgCorner,needIndicator,canScrollVertically,itemDecorationColor,itemDecorationWeight,
-                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin);
+                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin,itemPadding,itemPaddingLeft,itemPaddingTop,itemPaddingRight,itemPaddingBottom);
         attr.recycle();
     }
 

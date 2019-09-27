@@ -29,11 +29,16 @@ public class PagerCardAttribute {
     private int itemMarginTop;
     private int itemMarginBottom;
     private int itemMargin;
+    private int itemPadding;
+    private int itemPaddingLeft;
+    private int itemPaddingTop;
+    private int itemPaddingRight;
+    private int itemPaddingBottom;
 
     public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,
                               int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,
                               boolean needIndicator,boolean canScrollVertically,int itemDecorationColor,int itemDecorationWeight,
-                              int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin) {
+                              int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin,int itemPadding,int itemPaddingLeft,int itemPaddingTop,int itemPaddingRight,int itemPaddingBottom) {
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.redPointTextSize = redPointTextSize;
@@ -58,6 +63,51 @@ public class PagerCardAttribute {
         this.itemMarginTop = itemMarginTop;
         this.itemMarginBottom = itemMarginBottom;
         this.itemMargin = itemMargin;
+        this.itemPadding = itemPadding;
+        this.itemPaddingLeft = itemPaddingLeft;
+        this.itemPaddingTop = itemPaddingTop;
+        this.itemPaddingRight = itemPaddingRight;
+        this.itemPaddingBottom = itemPaddingBottom;
+    }
+
+    public int getItemPadding() {
+        return itemPadding;
+    }
+
+    public void setItemPadding(int itemPadding) {
+        this.itemPadding = itemPadding;
+    }
+
+    public int getItemPaddingLeft() {
+        return itemPaddingLeft;
+    }
+
+    public void setItemPaddingLeft(int itemPaddingLeft) {
+        this.itemPaddingLeft = itemPaddingLeft;
+    }
+
+    public int getItemPaddingTop() {
+        return itemPaddingTop;
+    }
+
+    public void setItemPaddingTop(int itemPaddingTop) {
+        this.itemPaddingTop = itemPaddingTop;
+    }
+
+    public int getItemPaddingRight() {
+        return itemPaddingRight;
+    }
+
+    public void setItemPaddingRight(int itemPaddingRight) {
+        this.itemPaddingRight = itemPaddingRight;
+    }
+
+    public int getItemPaddingBottom() {
+        return itemPaddingBottom;
+    }
+
+    public void setItemPaddingBottom(int itemPaddingBottom) {
+        this.itemPaddingBottom = itemPaddingBottom;
     }
 
     public int getItemMarginLeft() {
