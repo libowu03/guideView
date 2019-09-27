@@ -3,12 +3,14 @@ package com.kit.pagerCard;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +45,23 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
         Cpa cpa = (Cpa) viewHolder;
         final T pagerCardBean = content.get(i);
         if (pagerCardAttribute != null){
+            //设置item的margin
+            GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) cpa.itemView.getLayoutParams();
+           if (params != null){
+               if (pagerCardAttribute.getItemMargin() != 0){
+                   params.leftMargin = pagerCardAttribute.getItemMargin();
+                   params.rightMargin = pagerCardAttribute.getItemMargin();
+                   params.topMargin = pagerCardAttribute.getItemMargin();
+                   params.bottomMargin = pagerCardAttribute.getItemMargin();
+               }else {
+                   params.leftMargin = pagerCardAttribute.getItemMarginLeft();
+                   params.rightMargin = pagerCardAttribute.getItemMarginRight();
+                   params.topMargin = pagerCardAttribute.getItemMarginTop();
+                   params.bottomMargin = pagerCardAttribute.getItemMarginBottom();
+               }
+               cpa.itemView.setLayoutParams(params);
+           }
+
             //设置红点属性
             cpa.redPoint.setTextSize(GuideViewUtils.px2dip(context,pagerCardAttribute.getRedPointTextSize()));
             cpa.redPoint.setTextColor(pagerCardAttribute.getRedPointTextColor());

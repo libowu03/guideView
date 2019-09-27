@@ -28,6 +28,11 @@
         <attr name="needIndicator" format="boolean"/>
         <attr name="itemDecorationColor" format="color"/>
         <attr name="itemDecorationWeight" format="dimension"/>
+        <attr name="itemMarginLeft" format="dimension"/>
+        <attr name="itemMarginRight" format="dimension"/>
+        <attr name="itemMarginTop" format="dimension"/>
+        <attr name="itemMarginBottom" format="dimension"/>
+        <attr name="itemMargin" format="dimension"/>
         <attr name="pagerCardImgType">
             <enum name="CIRCLE" value="0"/>
             <enum name="ROUND_RECT" value="1"/>

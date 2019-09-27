@@ -90,9 +90,21 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         int itemDecorationWeight = (int) attr.getDimension(R.styleable.PagerCardView_itemDecorationWeight,-1);
         //获取分割线颜色
         int itemDecorationColor = attr.getColor(R.styleable.PagerCardView_itemDecorationColor,Color.parseColor("#EBEBEB"));
+        //获取左边的margin
+        int itemMarginLeft = (int) attr.getDimension(R.styleable.PagerCardView_itemMarginLeft,0);
+        //获取右边的margin
+        int itemMarginRight = (int) attr.getDimension(R.styleable.PagerCardView_itemMarginRight,0);
+        //获取顶部的margin
+        int itemMarginTop = (int) attr.getDimension(R.styleable.PagerCardView_itemMarginTop,0);
+        //获取底部的margin
+        int itemMarginBottom = (int) attr.getDimension(R.styleable.PagerCardView_itemMarginBottom,0);
+        //获取margin
+        int itemMargin = (int) attr.getDimension(R.styleable.PagerCardView_itemMargin,0);
+
         attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,
                 redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,
-                10,10,imgType,imgCorner,needIndicator,canScrollVertically,itemDecorationColor,itemDecorationWeight);
+                10,10,imgType,imgCorner,needIndicator,canScrollVertically,itemDecorationColor,itemDecorationWeight,
+                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin);
         attr.recycle();
     }
 

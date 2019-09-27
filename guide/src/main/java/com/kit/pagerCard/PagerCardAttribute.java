@@ -24,10 +24,16 @@ public class PagerCardAttribute {
     private boolean canScrollVertically;
     private int itemDecorationWeight;
     private int itemDecorationColor;
+    private int itemMarginLeft;
+    private int itemMarginRight;
+    private int itemMarginTop;
+    private int itemMarginBottom;
+    private int itemMargin;
 
     public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,
                               int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,
-                              boolean needIndicator,boolean canScrollVertically,int itemDecorationColor,int itemDecorationWeight) {
+                              boolean needIndicator,boolean canScrollVertically,int itemDecorationColor,int itemDecorationWeight,
+                              int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin) {
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.redPointTextSize = redPointTextSize;
@@ -46,6 +52,52 @@ public class PagerCardAttribute {
         this.canScrollVertically = canScrollVertically;
         this.itemDecorationColor = itemDecorationColor;
         this.itemDecorationWeight = itemDecorationWeight;
+
+        this.itemMarginLeft = itemMarginLeft;
+        this.itemMarginRight = itemMarginRight;
+        this.itemMarginTop = itemMarginTop;
+        this.itemMarginBottom = itemMarginBottom;
+        this.itemMargin = itemMargin;
+    }
+
+    public int getItemMarginLeft() {
+        return itemMarginLeft;
+    }
+
+    public void setItemMarginLeft(int itemMarginLeft) {
+        this.itemMarginLeft = itemMarginLeft;
+    }
+
+    public int getItemMarginRight() {
+        return itemMarginRight;
+    }
+
+    public void setItemMarginRight(int itemMarginRight) {
+        this.itemMarginRight = itemMarginRight;
+    }
+
+    public int getItemMarginTop() {
+        return itemMarginTop;
+    }
+
+    public void setItemMarginTop(int itemMarginTop) {
+        this.itemMarginTop = itemMarginTop;
+    }
+
+    public int getItemMarginBottom() {
+        return itemMarginBottom;
+    }
+
+    public void setItemMarginBottom(int itemMarginBottom) {
+        this.itemMarginBottom = itemMarginBottom;
+    }
+
+    public int getItemMargin() {
+        return itemMargin;
+    }
+
+    public void setItemMargin(int itemMargin) {
+        this.itemMargin = itemMargin;
     }
 
     public int getItemDecorationWeight() {

@@ -82,7 +82,6 @@ public class PagerCardGridDivider extends RecyclerView.ItemDecoration {
     // 绘制水平线
     public void drawHorizontal(Canvas c, RecyclerView parent) {
         int childCount = parent.getChildCount();
-        Log.e("日志","childCount数量为："+childCount);
         for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
@@ -175,7 +174,7 @@ public class PagerCardGridDivider extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
         int spanCount = getSpanCount(parent);
         int childCount = parent.getAdapter().getItemCount();
-        if (isLastRaw(parent, itemPosition, spanCount, childCount))// 如果是最后一行，则不需要绘制底部
+      /*  if (isLastRaw(parent, itemPosition, spanCount, childCount))// 如果是最后一行，则不需要绘制底部
         {
             outRect.set(0, 0, mDividerHeight, 0);
         } else if (isLastColum(parent, itemPosition, spanCount, childCount))// 如果是最后一列，则不需要绘制右边
@@ -183,7 +182,8 @@ public class PagerCardGridDivider extends RecyclerView.ItemDecoration {
             outRect.set(0, 0, 0, mDividerHeight);
         } else {
             outRect.set(0, 0, mDividerHeight, mDividerHeight);
-        }
+        }*/
+        outRect.set(0, 0, mDividerHeight, mDividerHeight);
     }
 }
 
