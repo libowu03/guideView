@@ -1,16 +1,19 @@
 package com.kit.pagerCard;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.kit.guide.R;
+import com.kit.guide.utils.GuideViewUtils;
 
 import java.util.List;
 
@@ -38,7 +41,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         if (bundle == null){
             return;
         }
-        int colNum = bundle.getInt("col",4);
+        final int colNum = bundle.getInt("col",4);
         pagerCardContent = view.findViewById(R.id.pagerCardContent);
         GridLayoutManager layoutManager = null;
         //设置recyclerview是否可垂直滑动
@@ -63,6 +66,9 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         pagerContentAdapter.setPagerCardAttribute(attribute);
         pagerContentAdapter.setContent(contentList);
         pagerContentAdapter.setCardListener(this);
+        if (attribute.getItemDecorationWeight() != -1){
+            pagerCardContent.addItemDecoration(new PagerCardGridDivider(getContext(),attribute.getItemDecorationWeight(),attribute.getItemDecorationColor(),colNum));
+        }
         pagerCardContent.setLayoutManager(layoutManager);
         pagerCardContent.setAdapter(pagerContentAdapter);
     }

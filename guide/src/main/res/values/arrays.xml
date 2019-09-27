@@ -26,6 +26,8 @@
         <attr name="pagerCardRedPointWidth" format="dimension"/>
         <attr name="pagerCardRedPointColor" format="color"/>
         <attr name="needIndicator" format="boolean"/>
+        <attr name="itemDecorationColor" format="color"/>
+        <attr name="itemDecorationWeight" format="dimension"/>
         <attr name="pagerCardImgType">
             <enum name="CIRCLE" value="0"/>
             <enum name="ROUND_RECT" value="1"/>

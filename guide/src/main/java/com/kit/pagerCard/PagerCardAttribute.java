@@ -20,9 +20,12 @@ public class PagerCardAttribute {
     private int imgCorner;
     private boolean needIndicator;
     private boolean canScrollVertically;
+    private int itemDecorationWeight;
+    private int itemDecorationColor;
 
     public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,
-                              int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,boolean needIndicator,boolean canScrollVertically) {
+                              int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,
+                              boolean needIndicator,boolean canScrollVertically,int itemDecorationColor,int itemDecorationWeight) {
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.redPointTextSize = redPointTextSize;
@@ -39,6 +42,24 @@ public class PagerCardAttribute {
         this.imgCorner = imgCorner;
         this.needIndicator = needIndicator;
         this.canScrollVertically = canScrollVertically;
+        this.itemDecorationColor = itemDecorationColor;
+        this.itemDecorationWeight = itemDecorationWeight;
+    }
+
+    public int getItemDecorationWeight() {
+        return itemDecorationWeight;
+    }
+
+    public void setItemDecorationWeight(int itemDecorationWeight) {
+        this.itemDecorationWeight = itemDecorationWeight;
+    }
+
+    public int getItemDecorationColor() {
+        return itemDecorationColor;
+    }
+
+    public void setItemDecorationColor(int itemDecorationColor) {
+        this.itemDecorationColor = itemDecorationColor;
     }
 
     public boolean isCanScrollVertically() {

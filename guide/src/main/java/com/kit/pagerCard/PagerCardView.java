@@ -80,7 +80,13 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         needIndicator = attr.getBoolean(R.styleable.PagerCardView_needIndicator,true);
         //是否启用上下滑动
         boolean canScrollVertically = attr.getBoolean(R.styleable.PagerCardView_canScrollVertically,false);
-        attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,10,10,imgType,imgCorner,needIndicator,canScrollVertically);
+        //获取分割线宽度
+        int itemDecorationWeight = (int) attr.getDimension(R.styleable.PagerCardView_itemDecorationWeight,-1);
+        //获取分割线颜色
+        int itemDecorationColor = attr.getColor(R.styleable.PagerCardView_itemDecorationColor,Color.parseColor("#EBEBEB"));
+        attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,
+                redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,
+                10,10,imgType,imgCorner,needIndicator,canScrollVertically,itemDecorationColor,itemDecorationWeight);
         attr.recycle();
     }
 
