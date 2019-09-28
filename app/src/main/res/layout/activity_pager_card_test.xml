@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.test.guide.PagerCardTestActivity">
+    tools:context="com.test.guide.PagerCardTestActivity"
+    android:orientation="vertical">
     <com.kit.pagerCard.PagerCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,8 +24,17 @@
         app:pagerCardImgType="ROUND_RECT"
         app:imgCorner="16dp"
         app:itemMargin="20dp"
-        app:canScrollVertically="true"
         android:background="@color/transparent"
         app:itemBg="@color/transparent"
         android:paddingBottom="6dp"/>
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="减"
+        android:id="@+id/update"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="加"
+        android:id="@+id/pro"/>
+</LinearLayout>

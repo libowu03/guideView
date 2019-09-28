@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.load.resource.gif.GifDrawableResource;
 import com.kit.guide.R;
 import com.kit.guide.utils.GuideViewUtils;
+import com.kit.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +157,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         this.colm = colNum;
         this.pagerCardListener = pagerCardListener;
         if (fragmentManager == null || content == null || content.size() == 0 || rowNum == 0|| colNum == 0){
-            Log.e("日志","参数错误");
+            LogUtils.i("kitMessage","参数错误");
             return;
         }
         fragments = new ArrayList<>();
@@ -201,7 +202,10 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             }
 
         }
-        //fragments.remove(0);
+        /*if (fragments.size() > 1){
+            fragments.add(0,fragments.get(fragments.size()-1));
+            fragments.add(fragments.size()-1,fragments.get(0));
+        }*/
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(fragmentManager,fragments);
         pager2 = view.findViewById(R.id.pagerCard);
         pager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -221,6 +225,11 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             @Override
             public void onPageSelected(int position) {
                 changeIndicator(position);
+                /*if (fragments.size() > 1){
+                    if (position == fragments.size()-1){
+
+                    }
+                }*/
             }
 
             @Override
@@ -231,9 +240,9 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             }
         });
         if (rowNum == -1){
-            pager2.setRow(rowNum,colNum,content.size(),true);
+            pager2.setRow(rowNum,colNum,content.size(),true,attribute);
         }else {
-            pager2.setRow(rowNum,colNum,content.size(),false);
+            pager2.setRow(rowNum,colNum,content.size(),false,attribute);
         }
         pager2.setAdapter(pagerAdapter);
         pager2.setPageMargin(GuideViewUtils.dip2px(getContext(),0));
@@ -330,15 +339,15 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      */
     public boolean updatePagerCardList(int pagerNum,List<T> contentList){
         if (fragments == null){
-            Log.i("kitMessage","请在更新页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
+            LogUtils.i("kitMessage","请在更新页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
             return false;
         }else {
             if (pagerNum >= fragments.size()){
-                Log.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
+                LogUtils.i("kitMessage","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
                 return false;
             }
             if (contentList.size() > row*colm){
-                Log.e("kitMessage","更新集合长度不允许超过当前页面被定义的长度，即在调用setCardContent方法时，传入的rowNum和colNum决定了页面可显示的最大内容，更新的内容长度不允许超过rowNum*colNum");
+                LogUtils.i("kitMessage","更新集合长度不允许超过当前页面被定义的长度，即在调用setCardContent方法时，传入的rowNum和colNum决定了页面可显示的最大内容，更新的内容长度不允许超过rowNum*colNum");
                 return false;
             }
             ((PagerCardContentFragment)fragments.get(pagerNum)).updatePagerCardList(contentList);
@@ -353,13 +362,31 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      */
     public List<T> getPagerList(int index){
         if (fragments == null){
-            Log.i("kitMessage","请在获取页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
+            LogUtils.i("kitMessage","请在获取页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
             return null;
         }else {
             if (index >= fragments.size()){
-                Log.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
+                LogUtils.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
             }
-            return ((PagerCardContentFragment)fragments.get(index)).getPagerContentList();
+            //复制一份数据出来，如果直接返回源数据，调用者就可以直接给源数据内容进行修改了，而不需要经过updatePagerCardList方法，这是不允许的，如果允许updatePagerCardList中的判断也就没有意义了。
+            List<T> pagerList = new ArrayList<>();
+            List<T> source = ((PagerCardContentFragment)fragments.get(index)).getPagerContentList();
+            for (int i=0; i< source.size(); i++){
+                pagerList.add(source.get(i));
+            }
+            return pagerList;
+        }
+    }
+
+    /**
+     * 获取有多少页内容
+     * @return
+     */
+    public int getPagerSize(){
+        if (fragments != null){
+            return fragments.size();
+        }else {
+            return 0;
         }
     }
 
@@ -372,7 +399,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         if (pager2 != null){
             pager2.setCurrentItem(pagerNum,smoothScroll);
         }else {
-            Log.e("KitError","PagerCard：viewpager can not be null");
+            LogUtils.e("KitError","PagerCard：viewpager can not be null");
         }
     }
 }

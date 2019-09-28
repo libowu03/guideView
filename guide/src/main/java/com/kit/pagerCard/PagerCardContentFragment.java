@@ -111,6 +111,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
      */
     public void updatePagerCardList(List<T> pagerCardList){
         this.contentList = pagerCardList;
+        Log.e("日志","源地址为："+contentList.hashCode());
         pagerContentAdapter.setContent(pagerCardList);
     }
 
