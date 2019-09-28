@@ -52,6 +52,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     private Handler handler;
     private int playDuration;
     private boolean isPausePlay;
+    private List<T> pagerCardBeans;
 
 
     public PagerCardView(Context context) {
@@ -65,6 +66,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     public PagerCardView(Context context,AttributeSet attributeSet,int defStyleAttr){
         super(context, attributeSet,0);
         view = LayoutInflater.from(context).inflate(R.layout.view_pagecard,this,true);
+        pagerCardBeans = new ArrayList<>();
         initAttr(context,attributeSet,defStyleAttr);
     }
 
@@ -530,5 +532,36 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         }else {
             LogUtils.e("KitError","PagerCard：viewpager can not be null");
         }
+    }
+
+    /**
+     * 通过链式调用的方式添加内容
+     * @param item
+     * @return
+     */
+    public PagerCardView<T> addContent(T item){
+        pagerCardBeans.add(item);
+        return this;
+    }
+
+    /**
+     * 设置内容
+     * @param fragmentManager
+     * @param rowNum
+     * @param colNum
+     */
+    public void build(FragmentManager fragmentManager, int rowNum, int colNum){
+        setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum);
+    }
+
+    /**
+     * 设置内容
+     * @param fragmentManager
+     * @param rowNum
+     * @param colNum
+     * @param pagerCardListener
+     */
+    public void build(FragmentManager fragmentManager, int rowNum, int colNum,PagerCardListener pagerCardListener){
+        setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum,pagerCardListener);
     }
 }
