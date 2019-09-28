@@ -79,7 +79,7 @@ public class PagerCardTestActivity extends AppCompatActivity implements PagerCar
 
     @Override
     public void onItemClickListener(PagerCardBean pagerCardBean, int itemIndex, int currentPagerIndex) {
-        Toast.makeText(this,"在第："+currentPagerIndex+"页的第"+itemIndex+"项发生点击",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"在第："+currentPagerIndex+"页的第"+itemIndex+"项发生点击",Toast.LENGTH_SHORT).show();
     }
 
     @Override

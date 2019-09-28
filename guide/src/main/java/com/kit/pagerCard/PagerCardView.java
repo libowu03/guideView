@@ -237,14 +237,11 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         pager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                changeIndicator(position);
+                //changeIndicator(position);
                 if (positionOffset < 0.5f){
-                    changeIndicator(position);
+                    changeIndicator(position,positionOffset,positionOffsetPixels);
                 }else {
-                    changeIndicator(position+1);
-                }
-                if (PagerCardView.this.pagerCardListener != null){
-                    PagerCardView.this.pagerCardListener.onPageScrolled(position,positionOffset,positionOffsetPixels);
+                    changeIndicator(position+1,positionOffset,positionOffsetPixels);
                 }
 
 
@@ -259,14 +256,27 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
 
             @Override
             public void onPageSelected(int position) {
-                changeIndicator(position);
+                changeIndicator(position,0,0);
                 if (fragments.size() > 1 && enableInfinite){
                     if (position == fragments.size()-1){
-                        LogUtils.e("日志","最大值position为："+position);
                         pager2.setCurrentItem(1,false);
                     }else if (position == 0){
-                        LogUtils.e("日志","最小值position为："+position);
                         pager2.setCurrentItem(fragments.size()-2,false);
+                    }
+
+                    if (position ==1){
+                        position = 0;
+                    }else if (position == fragments.size() - 1){
+                        position = 0;
+                    }else {
+                        position = position -1;
+                    }
+                    if ( PagerCardView.this.pagerCardListener != null ){
+                        PagerCardView.this.pagerCardListener.onPagerSelect(position);
+                    }
+                }else {
+                    if ( PagerCardView.this.pagerCardListener != null ){
+                        PagerCardView.this.pagerCardListener.onPagerSelect(position);
                     }
                 }
             }
@@ -328,11 +338,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * 改变指示器选中状态
      * @param position
      */
-    protected void changeIndicator(int position){
-        if (PagerCardView.this.pagerCardListener != null){
-            PagerCardView.this.pagerCardListener.onPagerSelect(position);
-        }
-
+    protected void changeIndicator(int position,float positionOffset,int positionOffsetPixels){
         if (fragments.size() > 1 && enableInfinite){
             if (position ==1){
                 position = 0;
@@ -341,6 +347,14 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             }else {
                 position = position -1;
             }
+        }
+
+        if (PagerCardView.this.pagerCardListener != null){
+            PagerCardView.this.pagerCardListener.onPageScrolled(position,positionOffset,positionOffsetPixels);
+        }
+
+        if (PagerCardView.this.pagerCardListener != null){
+            PagerCardView.this.pagerCardListener.onPagerSelect(position);
         }
 
         if (position < 0 || position >= indicatorList.size()){
@@ -389,7 +403,17 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     @Override
     public void onClickPagerCardListener(T pagerCardBean, int index) {
         if (pagerCardListener != null){
-            pagerCardListener.onItemClickListener(pagerCardBean,index,pager2.getCurrentItem());
+            int position = pager2.getCurrentItem();
+            if (enableInfinite && fragments.size() > 1){
+                if (position ==1){
+                    position = 0;
+                }else if (position == fragments.size() - 1){
+                    position = 0;
+                }else {
+                    position = position -1;
+                }
+            }
+            pagerCardListener.onItemClickListener(pagerCardBean,index,position);
         }
     }
 
@@ -425,6 +449,9 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param pagerNum
      */
     public boolean updatePagerCardList(int pagerNum,List<T> contentList){
+        if (enableInfinite && fragments.size() > 1){
+            pagerNum = pagerNum + 1;
+        }
         if (fragments == null){
             LogUtils.i("kitMessage","请在更新页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
             return false;
@@ -484,7 +511,11 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      */
     public void setCurrentPager(int pagerNum,boolean smoothScroll){
         if (pager2 != null){
-            pager2.setCurrentItem(pagerNum+1,smoothScroll);
+            if (enableInfinite && fragments.size() > 1){
+                pager2.setCurrentItem(pagerNum+1,smoothScroll);
+            }else {
+                pager2.setCurrentItem(pagerNum,smoothScroll);
+            }
         }else {
             LogUtils.e("KitError","PagerCard：viewpager can not be null");
         }
