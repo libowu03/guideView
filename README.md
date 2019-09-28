@@ -5,6 +5,10 @@
 ![](https://images.gitee.com/uploads/images/2019/0806/145419_c5ce617d_1951678.gif)
 ![](https://images.gitee.com/uploads/images/2019/0806/145222_ade564b4_1951678.gif)
 
+#### 主要模块
+1. 新手引导的高亮控件
+2. pagerCard控件，一个简单好用的宫格控件
+
 #### 安装教程
 ```
 allprojects {
