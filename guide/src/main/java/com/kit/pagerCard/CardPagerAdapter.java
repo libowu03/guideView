@@ -72,7 +72,6 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
                if (pagerCardAttribute.getItemPadding() != 0){
                    cpa.itemView.setPadding(pagerCardAttribute.getItemPadding(),pagerCardAttribute.getItemPadding(),pagerCardAttribute.getItemPadding(),pagerCardAttribute.getItemPadding());
                }else {
-                   //int left, int top, int right, int bottom
                    cpa.itemView.setPadding(pagerCardAttribute.getItemPaddingLeft(),pagerCardAttribute.getItemPaddingTop(),pagerCardAttribute.getItemPaddingRight(),pagerCardAttribute.getItemPaddingBottom());
                }
                cpa.itemView.setLayoutParams(params);

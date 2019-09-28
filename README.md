@@ -135,4 +135,9 @@ img:高亮区说明图片<br>
 act:当前activity<br>
 simpleRect:自由绘制的矩形<br>
 
+#### 更新历史说明
+* v1.0.3
+  + pagerCard的xml添加自定义属性
+  + pagerCard添加无限循环和自动滑动功能
+
 
