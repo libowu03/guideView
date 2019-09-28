@@ -74,7 +74,7 @@ guideDialog.show(getFragmentManager(),getClass().getName());
 #### pagerCard使用说明
 * xml属性介绍
 |属性名称|属性作用|
-|:-------:|:--------:|
+|-------|--------|
 |pagerCardTextColor|标题颜色|
 |pagerCardTextSize|标题字体大小|
 |seIndicatorColor|选中的指示器颜色|
