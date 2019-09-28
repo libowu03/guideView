@@ -73,16 +73,40 @@ guideDialog.show(getFragmentManager(),getClass().getName());
 
 #### pagerCard使用说明
 * xml属性介绍
-<table>
-<tr>
-<tb>属性名称</tb>
-<tb>属性作用</tb>
-</tr>
-<tr>
-<tb>属性名称</tb>
-<tb>属性作用</tb>
-</tr>
-</table>
+|属性名称|属性作用|
+|:-------|--------:|
+|pagerCardTextColor|标题颜色|
+|pagerCardTextSize|标题字体大小|
+|seIndicatorColor|选中的指示器颜色|
+|unSeIndicatorColor|未选中的指示器颜色|
+|indicatorWidth|指示器宽度|
+|indicatorHeight|指示器高度|
+|pagerCardImgHeight|图片高度|
+|pagerCardImgWidth|图片宽度|
+|pagerCardRedPointTextSize|右上角文字大小|
+|pagerCardRedPointTextColor|右上角文字颜色|
+|pagerCardRedPointHeight|右上角红点高度|
+|pagerCardRedPointWidth|右上角红点宽度|
+|pagerCardRedPointColor|右上角红点颜色|
+|needIndicator|是否显示指示器,默认需要|
+|itemDecorationColor|分割线颜色|
+|itemDecorationWeight|分割线高度|
+|itemMarginLeft|左边距|
+|itemMarginRight|右边距|
+|itemMarginTop|上边距|
+|itemMarginBottom|下边距|
+|itemMargin|边距|
+|itemPadding|内边距|
+|itemPaddingTop|上边内边距|
+|itemPaddingBottom|下边内边距|
+|itemPaddingRight|右边内边距|
+|itemPaddingLeft|左边内边距|
+|itemBg|宫格背景|
+|enableInfinite|是否支持无限循环|
+|playDuration|自动播放时间|
+|pagerCardImgType|图片显示类型(CIRCLE:圆形，ROUND_CIRCLE:圆角矩形，RECT:矩形)|
+|canScrollVertically|是否支持内容滑动，默认不支持)|
+|imgCorner|图片圆角弧度（仅对pagerCardImgType使用ROUND_CIRCLE的情况生效）|
 
 * 示例代码如下：
 ```
