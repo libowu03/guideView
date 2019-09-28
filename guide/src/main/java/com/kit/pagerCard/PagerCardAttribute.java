@@ -68,12 +68,17 @@ public class PagerCardAttribute {
     private int itemBackgrounColor;
     //每个九宫格的背景图片
     private Drawable itemBackgrounResource;
+    //支持无限循环
+    private boolean enableInfinite;
+    //自动播放时间间隔
+    private int playDuration;
 
 
     public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,
                               int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,
                               boolean needIndicator,boolean canScrollVertically,int itemDecorationColor,int itemDecorationWeight,
-                              int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin,int itemPadding,int itemPaddingLeft,int itemPaddingTop,int itemPaddingRight,int itemPaddingBottom,int itemBackgrounColor,Drawable itemBackgrounResource) {
+                              int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin,int itemPadding,int itemPaddingLeft,int itemPaddingTop,int itemPaddingRight,int itemPaddingBottom,int itemBackgrounColor,Drawable itemBackgrounResource,
+                              boolean enableInfinite,int playDuration) {
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.redPointTextSize = redPointTextSize;
@@ -105,6 +110,8 @@ public class PagerCardAttribute {
         this.itemPaddingBottom = itemPaddingBottom;
         this.itemBackgrounColor = itemBackgrounColor;
         this.itemBackgrounResource = itemBackgrounResource;
+        this.enableInfinite = enableInfinite;
+        this.playDuration = playDuration;
     }
 
     public int getItemBackgrounColor() {

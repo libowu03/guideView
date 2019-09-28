@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,8 @@ import com.kit.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * pagerCard的容器，容器里有一个viewpager和若干个textview组成，textview用于指示器的显示
@@ -44,6 +47,11 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     private int seIndicatorColor, unSeIndicatorColor,pagerCardTextColor,pagerCardTextSize;
     private boolean needIndicator;
     private int colm,row;
+    private boolean enableInfinite;
+    private Timer timer;
+    private Handler handler;
+    private int playDuration;
+    private boolean isPausePlay;
 
 
     public PagerCardView(Context context) {
@@ -70,13 +78,13 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     private void initAttr(Context context, AttributeSet attributeSet, int defStyleAttr) {
         TypedArray attr = context.getTheme().obtainStyledAttributes(attributeSet, R.styleable.PagerCardView, defStyleAttr, 0);
         //获取未选中指示器颜色
-        unSeIndicatorColor = attr.getColor(R.styleable.PagerCardView_unSeIndicatorColor, Color.parseColor("#cccccc"));
+        unSeIndicatorColor = attr.getColor(R.styleable.PagerCardView_unSeIndicatorColor, getContext().getResources().getColor(R.color.unSeIndicatorColor));
         //获取选中指示器颜色
-        seIndicatorColor = attr.getColor(R.styleable.PagerCardView_seIndicatorColor,Color.parseColor("#000000"));
+        seIndicatorColor = attr.getColor(R.styleable.PagerCardView_seIndicatorColor,getContext().getResources().getColor(R.color.seIndicatorColor));
         //指示器高度
-        indicatorHeight = (int) attr.getDimension(R.styleable.PagerCardView_indicatorHeight,GuideViewUtils.dip2px(getContext(),5));
+        indicatorHeight = (int) attr.getDimension(R.styleable.PagerCardView_indicatorHeight,getContext().getResources().getDimension(R.dimen.indicatorHeight));
         //指示器宽度
-        indicatorWidth = (int) attr.getDimension(R.styleable.PagerCardView_indicatorWidth,GuideViewUtils.dip2px(getContext(),5));
+        indicatorWidth = (int) attr.getDimension(R.styleable.PagerCardView_indicatorWidth,getContext().getResources().getDimension(R.dimen.indicatorWidth));
         //pagerCard标题颜色
         int pagerCardTextColor = attr.getColor(R.styleable.PagerCardView_pagerCardTextColor,Color.BLACK);
         //pagerCard标题大小
@@ -86,17 +94,17 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         //pagerCard图片高度
         int imgHeight = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardImgHeight,-1);
         //pagerCard空点宽度
-        int redPointWidht = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardRedPointWidth,GuideViewUtils.dip2px(getContext(),6));
+        int redPointWidht = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardRedPointWidth,getContext().getResources().getDimension(R.dimen.redPointWidht));
         //pagerCard红点高度
-        int redPointHeight = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardRedPointHeight,GuideViewUtils.dip2px(getContext(),6));
+        int redPointHeight = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardRedPointHeight,getContext().getResources().getDimension(R.dimen.redPointHeight));
         //pagerCard红点颜色背景
         int redPointBackground = attr.getColor(R.styleable.PagerCardView_pagerCardRedPointTextColor,Color.RED);
         //红点字体颜色
-        int redPointTextSize = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardRedPointTextSize,GuideViewUtils.dip2px(getContext(),10));
+        int redPointTextSize = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardRedPointTextSize,getContext().getResources().getDimension(R.dimen.redPointTextSize));
         //获取图片类型
         int imgType = attr.getInt(R.styleable.PagerCardView_pagerCardImgType,0);
         //获取圆角矩形的圆角弧度
-        int imgCorner = (int) attr.getDimension(R.styleable.PagerCardView_imgCorner,GuideViewUtils.dip2px(getContext(),6));
+        int imgCorner = (int) attr.getDimension(R.styleable.PagerCardView_imgCorner,getContext().getResources().getDimension(R.dimen.imgCorner));
         //是否需要显示指示器
         needIndicator = attr.getBoolean(R.styleable.PagerCardView_needIndicator,true);
         //是否启用上下滑动
@@ -104,7 +112,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         //获取分割线宽度
         int itemDecorationWeight = (int) attr.getDimension(R.styleable.PagerCardView_itemDecorationWeight,-1);
         //获取分割线颜色
-        int itemDecorationColor = attr.getColor(R.styleable.PagerCardView_itemDecorationColor,Color.parseColor("#EBEBEB"));
+        int itemDecorationColor = attr.getColor(R.styleable.PagerCardView_itemDecorationColor,getContext().getResources().getColor(R.color.itemDecorationColor));
         //获取左边的margin
         int itemMarginLeft = (int) attr.getDimension(R.styleable.PagerCardView_itemMarginLeft,0);
         //获取右边的margin
@@ -132,11 +140,17 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         if (itemBackgroundResource == null){
             itemBackgroundColor = attr.getColor(R.styleable.PagerCardView_itemBg,Color.TRANSPARENT);
         }
+        //获取是否支持无限循环
+        enableInfinite = attr.getBoolean(R.styleable.PagerCardView_enableInfinite,false);
+        //自动播放时间
+        playDuration = attr.getInteger(R.styleable.PagerCardView_playDuration,0);
 
         attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,
                 redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,
                 10,10,imgType,imgCorner,needIndicator,canScrollVertically,itemDecorationColor,itemDecorationWeight,
-                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin,itemPadding,itemPaddingLeft,itemPaddingTop,itemPaddingRight,itemPaddingBottom,itemBackgroundColor,itemBackgroundResource);
+                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin,itemPadding,itemPaddingLeft,itemPaddingTop,itemPaddingRight,itemPaddingBottom,itemBackgroundColor,itemBackgroundResource,enableInfinite,playDuration);
+        timer = new Timer();
+        handler = new Handler();
         attr.recycle();
     }
 
@@ -191,6 +205,15 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                 PagerCardContentFragment fragment = makeFragment(colNum);
                 fragment.setFragmentList(result);
                 fragments.add(fragment);
+
+                if (enableInfinite){
+                    //在首尾多添加一项，用于无限循环,在后面还需要调换一下位置。
+                    if (i == 0 || i == length-1){
+                        PagerCardContentFragment fragmentCpOne = makeFragment(colNum);
+                        fragmentCpOne.setFragmentList(result);
+                        fragments.add(fragmentCpOne);
+                    }
+                }
             }
 
             //设置指示器第零个为选中状态
@@ -200,12 +223,15 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                 GradientDrawable gifDrawableResource = (GradientDrawable)indicatorList.get(0).getBackground();
                 gifDrawableResource.setColor(seIndicatorColor);
             }
-
         }
-        /*if (fragments.size() > 1){
-            fragments.add(0,fragments.get(fragments.size()-1));
-            fragments.add(fragments.size()-1,fragments.get(0));
-        }*/
+
+        //对第一项和最后一项进行位置调换
+        if (fragments.size() > 1 && enableInfinite){
+            PagerCardContentFragment one = (PagerCardContentFragment) fragments.get(0);
+            fragments.set(0,fragments.get(fragments.size()-1));
+            fragments.set(fragments.size()-1,one);
+        }
+
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(fragmentManager,fragments);
         pager2 = view.findViewById(R.id.pagerCard);
         pager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -220,16 +246,27 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                 if (PagerCardView.this.pagerCardListener != null){
                     PagerCardView.this.pagerCardListener.onPageScrolled(position,positionOffset,positionOffsetPixels);
                 }
+
+                if (fragments.size() > 1 && enableInfinite){
+                    if (position == fragments.size()-1 && positionOffset == 0){
+                        pager2.setCurrentItem(1,false);
+                    }else if (position == 0 && positionOffset == 0){
+                        pager2.setCurrentItem(fragments.size()-2,false);
+                    }
+                }
+
+                //活动期间不允许定时器改变页面
+                if (positionOffset != 0){
+                    isPausePlay = true;
+                }else {
+                    isPausePlay = false;
+                }
             }
 
             @Override
             public void onPageSelected(int position) {
                 changeIndicator(position);
-                /*if (fragments.size() > 1){
-                    if (position == fragments.size()-1){
 
-                    }
-                }*/
             }
 
             @Override
@@ -245,7 +282,44 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             pager2.setRow(rowNum,colNum,content.size(),false,attribute);
         }
         pager2.setAdapter(pagerAdapter);
+        if (enableInfinite){
+            if (fragments.size() > 1){
+                pager2.setCurrentItem(1,false);
+            }
+        }
         pager2.setPageMargin(GuideViewUtils.dip2px(getContext(),0));
+
+        //只有支持无限循环和页数大于1页才允许打开自动播放,且自动播放速度必须大于500毫秒
+       if (enableInfinite && fragments.size() > 1 && playDuration > 500){
+           //设置定时器进行自动播放
+           timer.schedule(new TimerTask() {
+               @Override
+               public void run() {
+                   handler.post(new Runnable() {
+                       @Override
+                       public void run() {
+                           if (!isPausePlay){
+                               int position  = pager2.getCurrentItem() + 1;
+                               if (position == fragments.size()-1){
+                                   pager2.setCurrentItem(1,false);
+                               }else if (position == 0){
+                                   pager2.setCurrentItem(fragments.size()-2,false);
+                               }else {
+                                   pager2.setCurrentItem(position,true);
+                               }
+                           }
+                       }
+                   });
+               }
+           },1000,playDuration);
+       }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.e("日志","界面移除");
+        timer.cancel();
     }
 
     /**
@@ -256,6 +330,17 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         if (PagerCardView.this.pagerCardListener != null){
             PagerCardView.this.pagerCardListener.onPagerSelect(position);
         }
+
+        if (fragments.size() > 1 && enableInfinite){
+            if (position ==1){
+                position = 0;
+            }else if (position == fragments.size() - 1){
+                position = 0;
+            }else {
+                position = position -1;
+            }
+        }
+
         if (position < 0 || position >= indicatorList.size()){
             return;
         }
@@ -397,7 +482,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      */
     public void setCurrentPager(int pagerNum,boolean smoothScroll){
         if (pager2 != null){
-            pager2.setCurrentItem(pagerNum,smoothScroll);
+            pager2.setCurrentItem(pagerNum+1,smoothScroll);
         }else {
             LogUtils.e("KitError","PagerCard：viewpager can not be null");
         }

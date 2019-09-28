@@ -39,6 +39,8 @@
         <attr name="itemPaddingTop" format="dimension"/>
         <attr name="itemPaddingBottom" format="dimension"/>
         <attr name="itemBg" format="reference|color"/>
+        <attr name="enableInfinite" format="boolean"/>
+        <attr name="playDuration" format="integer"/>
         <attr name="pagerCardImgType">
             <enum name="CIRCLE" value="0"/>
             <enum name="ROUND_RECT" value="1"/>

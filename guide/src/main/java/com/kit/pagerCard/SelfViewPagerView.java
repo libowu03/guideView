@@ -54,7 +54,6 @@ public class SelfViewPagerView extends ViewPager {
                 child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
                 if (list != null && list.getChildCount() != 0){
                     View firstChild = list.getChildAt(0);
-                    Log.e("日志","孩子高度为："+firstChild.getHeight()+",行数为："+row+",margin的值为："+attribute.getItemMargin());
                     heightMeasureSpec = MeasureSpec.makeMeasureSpec(firstChild.getHeight()*row + attribute.getItemMargin()*(row*2), MeasureSpec.EXACTLY);
                     PagerCardTempData.pagerCardHeight = heightMeasureSpec;
                 }else {
