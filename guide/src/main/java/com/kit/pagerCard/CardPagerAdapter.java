@@ -1,7 +1,9 @@
 package com.kit.pagerCard;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,11 +42,19 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
         return new Cpa(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card_pager,viewGroup,false));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         Cpa cpa = (Cpa) viewHolder;
         final T pagerCardBean = content.get(i);
         if (pagerCardAttribute != null){
+            //设置item背景色,如果存在resource，优先设置resource，没有则设置背景色
+            if (pagerCardAttribute.getItemBackgrounResource() != null){
+                cpa.itemView.setBackground(pagerCardAttribute.getItemBackgrounResource());
+            }else {
+                cpa.itemView.setBackgroundColor(pagerCardAttribute.getItemBackgrounColor());
+            }
+
             //设置item的margin
             GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) cpa.itemView.getLayoutParams();
            if (params != null){

@@ -28,6 +28,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
     private List<T> contentList;
     private CardPagerAdapter.ClickPagerCardListener pagerCardListener;
     private PagerCardAttribute attribute;
+    private CardPagerAdapter pagerContentAdapter;
 
     @Nullable
     @Override
@@ -68,7 +69,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
                 };
             }
         }
-        CardPagerAdapter pagerContentAdapter = new CardPagerAdapter();
+        pagerContentAdapter = new CardPagerAdapter();
         pagerContentAdapter.setPagerCardAttribute(attribute);
         pagerContentAdapter.setContent(contentList);
         pagerContentAdapter.setCardListener(this);
@@ -102,6 +103,39 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         if (pagerCardListener != null){
             pagerCardListener.onClickPagerCardListener(pagerCardBean,index);
         }
+    }
+
+    /**
+     * 更新界面数据
+     * @param pagerCardList
+     */
+    public void updatePagerCardList(List<T> pagerCardList){
+        this.contentList = pagerCardList;
+        pagerContentAdapter.setContent(pagerCardList);
+    }
+
+    /**
+     * 获取适配器
+     * @return
+     */
+    public  CardPagerAdapter getPagerCardAdapter(){
+        return pagerContentAdapter;
+    }
+
+    /**
+     * 获取转载数据的recyclerview
+     * @return
+     */
+    public RecyclerView getPagerCardRecycler(){
+        return pagerCardContent;
+    }
+
+    /**
+     * 获取当前界面的数据
+     * @return
+     */
+    public List<T>  getPagerContentList(){
+        return contentList;
     }
 
     public void setAttribute(PagerCardAttribute attribute){

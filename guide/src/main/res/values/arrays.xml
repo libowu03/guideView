@@ -38,6 +38,7 @@
         <attr name="itemPaddingRight" format="dimension"/>
         <attr name="itemPaddingTop" format="dimension"/>
         <attr name="itemPaddingBottom" format="dimension"/>
+        <attr name="itemBg" format="reference|color"/>
         <attr name="pagerCardImgType">
             <enum name="CIRCLE" value="0"/>
             <enum name="ROUND_RECT" value="1"/>

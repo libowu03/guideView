@@ -1,8 +1,10 @@
 package com.kit.pagerCard;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -62,7 +64,8 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param attributeSet
      * @param defStyleAttr
      */
-    private void initAttr(Context context,AttributeSet attributeSet,int defStyleAttr) {
+    @SuppressLint("ResourceAsColor")
+    private void initAttr(Context context, AttributeSet attributeSet, int defStyleAttr) {
         TypedArray attr = context.getTheme().obtainStyledAttributes(attributeSet, R.styleable.PagerCardView, defStyleAttr, 0);
         //获取未选中指示器颜色
         unSeIndicatorColor = attr.getColor(R.styleable.PagerCardView_unSeIndicatorColor, Color.parseColor("#cccccc"));
@@ -120,11 +123,18 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         int itemPaddingBottom = (int) attr.getDimension(R.styleable.PagerCardView_itemPaddingBottom,0);
         //获取padding
         int itemPadding = (int) attr.getDimension(R.styleable.PagerCardView_itemPadding,0);
+        //获取每个宫格的背景resource资源
+        Drawable itemBackgroundResource = attr.getDrawable(R.styleable.PagerCardView_itemBg);
+        //获取每个宫格背景色
+        int itemBackgroundColor = Color.WHITE;
+        if (itemBackgroundResource == null){
+            itemBackgroundColor = attr.getColor(R.styleable.PagerCardView_itemBg,Color.TRANSPARENT);
+        }
 
         attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,
                 redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,
                 10,10,imgType,imgCorner,needIndicator,canScrollVertically,itemDecorationColor,itemDecorationWeight,
-                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin,itemPadding,itemPaddingLeft,itemPaddingTop,itemPaddingRight,itemPaddingBottom);
+                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin,itemPadding,itemPaddingLeft,itemPaddingTop,itemPaddingRight,itemPaddingBottom,itemBackgroundColor,itemBackgroundResource);
         attr.recycle();
     }
 
@@ -299,7 +309,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * 更新某一页中的内容
      * @param pagerNum 要更新内容的所在页码
      */
-    public void updatePagerContent(int pagerNum){
+    public void updatePagerContent(int pagerNum,List<T> updateContent){
 
     }
 
@@ -309,6 +319,38 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      */
     public void setCurrentPager(int pagerNum){
         setCurrentPager(pagerNum,false);
+    }
+
+    /**
+     * 更新pagerNum页面的数据
+     * @param pagerNum
+     */
+    public void updatePagerCardList(int pagerNum){
+        if (fragments == null){
+            Log.i("kitMessage","请在更新页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
+        }else {
+            if (pagerNum >= fragments.size()){
+                Log.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
+            }
+            ((PagerCardContentFragment)fragments.get(pagerNum)).getPagerContentList();
+        }
+    }
+
+    /**
+     * 获取某页中的所有内容
+     * @param index
+     * @return
+     */
+    public List<T> getPagerList(int index){
+        if (fragments == null){
+            Log.i("kitMessage","请在获取页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
+            return null;
+        }else {
+            if (index >= fragments.size()){
+                Log.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
+            }
+            return ((PagerCardContentFragment)fragments.get(index)).getPagerContentList();
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.kit.pagerCard;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * 存放pagerCard的基本属性，比如图片大小，字体大小，红点背景等
  * @author libowu
@@ -62,11 +64,16 @@ public class PagerCardAttribute {
     private int itemPaddingRight;
     //每个宫格的下边padding
     private int itemPaddingBottom;
+    //每个宫格的背景色
+    private int itemBackgrounColor;
+    //每个九宫格的背景图片
+    private Drawable itemBackgrounResource;
+
 
     public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,
                               int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,
                               boolean needIndicator,boolean canScrollVertically,int itemDecorationColor,int itemDecorationWeight,
-                              int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin,int itemPadding,int itemPaddingLeft,int itemPaddingTop,int itemPaddingRight,int itemPaddingBottom) {
+                              int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin,int itemPadding,int itemPaddingLeft,int itemPaddingTop,int itemPaddingRight,int itemPaddingBottom,int itemBackgrounColor,Drawable itemBackgrounResource) {
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.redPointTextSize = redPointTextSize;
@@ -96,6 +103,24 @@ public class PagerCardAttribute {
         this.itemPaddingTop = itemPaddingTop;
         this.itemPaddingRight = itemPaddingRight;
         this.itemPaddingBottom = itemPaddingBottom;
+        this.itemBackgrounColor = itemBackgrounColor;
+        this.itemBackgrounResource = itemBackgrounResource;
+    }
+
+    public int getItemBackgrounColor() {
+        return itemBackgrounColor;
+    }
+
+    public void setItemBackgrounColor(int itemBackgrounColor) {
+        this.itemBackgrounColor = itemBackgrounColor;
+    }
+
+    public Drawable getItemBackgrounResource() {
+        return itemBackgrounResource;
+    }
+
+    public void setItemBackgrounResource(Drawable itemBackgrounResource) {
+        this.itemBackgrounResource = itemBackgrounResource;
     }
 
     public int getItemPadding() {
