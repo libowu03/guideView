@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="indicatorHeight">5</dimen>
-    <dimen name="indicatorWidth">5</dimen>
-    <dimen name="redPointWidht">6</dimen>
-    <dimen name="redPointHeight">6</dimen>
-    <dimen name="redPointTextSize">10</dimen>
-    <dimen name="imgCorner">10</dimen>
+    <dimen name="indicatorHeight">5dp</dimen>
+    <dimen name="indicatorWidth">5dp</dimen>
+    <dimen name="redPointWidht">6dp</dimen>
+    <dimen name="redPointHeight">6dp</dimen>
+    <dimen name="redPointTextSize">10dp</dimen>
+    <dimen name="imgCorner">10dp</dimen>
 </resources>

@@ -247,13 +247,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                     PagerCardView.this.pagerCardListener.onPageScrolled(position,positionOffset,positionOffsetPixels);
                 }
 
-                if (fragments.size() > 1 && enableInfinite){
-                    if (position == fragments.size()-1 && positionOffset == 0){
-                        pager2.setCurrentItem(1,false);
-                    }else if (position == 0 && positionOffset == 0){
-                        pager2.setCurrentItem(fragments.size()-2,false);
-                    }
-                }
+
 
                 //活动期间不允许定时器改变页面
                 if (positionOffset != 0){
@@ -266,7 +260,15 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             @Override
             public void onPageSelected(int position) {
                 changeIndicator(position);
-
+                if (fragments.size() > 1 && enableInfinite){
+                    if (position == fragments.size()-1){
+                        LogUtils.e("日志","最大值position为："+position);
+                        pager2.setCurrentItem(1,false);
+                    }else if (position == 0){
+                        LogUtils.e("日志","最小值position为："+position);
+                        pager2.setCurrentItem(fragments.size()-2,false);
+                    }
+                }
             }
 
             @Override
