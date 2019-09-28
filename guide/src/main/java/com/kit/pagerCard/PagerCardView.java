@@ -42,6 +42,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     private int indicatorWidth,indicatorHeight;
     private int seIndicatorColor, unSeIndicatorColor,pagerCardTextColor,pagerCardTextSize;
     private boolean needIndicator;
+    private int colm,row;
 
 
     public PagerCardView(Context context) {
@@ -151,6 +152,8 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param pagerCardListener 内容的点击监听器
      */
     public void setCardContent(List<T> content, FragmentManager fragmentManager, int rowNum, int colNum, final PagerCardListener pagerCardListener){
+        this.row = rowNum;
+        this.colm = colNum;
         this.pagerCardListener = pagerCardListener;
         if (fragmentManager == null || content == null || content.size() == 0 || rowNum == 0|| colNum == 0){
             Log.e("日志","参数错误");
@@ -325,14 +328,21 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * 更新pagerNum页面的数据
      * @param pagerNum
      */
-    public void updatePagerCardList(int pagerNum){
+    public boolean updatePagerCardList(int pagerNum,List<T> contentList){
         if (fragments == null){
             Log.i("kitMessage","请在更新页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
+            return false;
         }else {
             if (pagerNum >= fragments.size()){
                 Log.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
+                return false;
             }
-            ((PagerCardContentFragment)fragments.get(pagerNum)).getPagerContentList();
+            if (contentList.size() > row*colm){
+                Log.e("kitMessage","更新集合长度不允许超过当前页面被定义的长度，即在调用setCardContent方法时，传入的rowNum和colNum决定了页面可显示的最大内容，更新的内容长度不允许超过rowNum*colNum");
+                return false;
+            }
+            ((PagerCardContentFragment)fragments.get(pagerNum)).updatePagerCardList(contentList);
+            return true;
         }
     }
 
