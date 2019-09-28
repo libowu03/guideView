@@ -12,41 +12,76 @@
 
     <!--pagerCard控件属性-->
     <declare-styleable name="PagerCardView">
+        <!--标题颜色-->
         <attr name="pagerCardTextColor" format="color"/>
+        <!--标题字体大小-->
         <attr name="pagerCardTextSize" format="dimension"/>
+        <!--选中的指示器颜色-->
         <attr name="seIndicatorColor" format="color"/>
+        <!--未选中的指示器颜色-->
         <attr name="unSeIndicatorColor" format="color"/>
+        <!--指示器宽度-->
         <attr name="indicatorWidth" format="dimension"/>
+        <!--指示器高度-->
         <attr name="indicatorHeight" format="dimension"/>
+        <!--图片高度-->
         <attr name="pagerCardImgHeight" format="dimension"/>
+        <!--图片宽度-->
         <attr name="pagerCardImgWidth" format="dimension"/>
+        <!--右上角文字大小-->
         <attr name="pagerCardRedPointTextSize" format="dimension"/>
+        <!--右上角文字颜色-->
         <attr name="pagerCardRedPointTextColor" format="color"/>
+        <!--右上角红点高度-->
         <attr name="pagerCardRedPointHeight" format="dimension"/>
+        <!--右上角红点宽度-->
         <attr name="pagerCardRedPointWidth" format="dimension"/>
+        <!--右上角红点颜色-->
         <attr name="pagerCardRedPointColor" format="color"/>
+        <!--是否显示指示器,默认需要-->
         <attr name="needIndicator" format="boolean"/>
+        <!--分割线颜色-->
         <attr name="itemDecorationColor" format="color"/>
+        <!--分割线高度-->
         <attr name="itemDecorationWeight" format="dimension"/>
+        <!--左边距-->
         <attr name="itemMarginLeft" format="dimension"/>
+        <!--右边距-->
         <attr name="itemMarginRight" format="dimension"/>
+        <!--上边距-->
         <attr name="itemMarginTop" format="dimension"/>
+        <!--下边距-->
         <attr name="itemMarginBottom" format="dimension"/>
+        <!--边距-->
         <attr name="itemMargin" format="dimension"/>
+        <!--内边距-->
         <attr name="itemPadding" format="dimension"/>
+        <!--左边内边距-->
         <attr name="itemPaddingLeft" format="dimension"/>
+        <!--右边内边距-->
         <attr name="itemPaddingRight" format="dimension"/>
+        <!--上边内边距-->
         <attr name="itemPaddingTop" format="dimension"/>
+        <!--下边内边距-->
         <attr name="itemPaddingBottom" format="dimension"/>
+        <!--宫格背景-->
         <attr name="itemBg" format="reference|color"/>
+        <!--是否支持无限循环-->
         <attr name="enableInfinite" format="boolean"/>
+        <!--自动播放时间-->
         <attr name="playDuration" format="integer"/>
+        <!--图片显示类型-->
         <attr name="pagerCardImgType">
+            <!--圆形图片-->
             <enum name="CIRCLE" value="0"/>
+            <!--圆角形图片-->
             <enum name="ROUND_RECT" value="1"/>
+            <!--矩形图片-->
             <enum name="RECT" value="2"/>
         </attr>
+        <!--是否支持内容滑动，默认不支持-->
         <attr name="canScrollVertically" format="boolean"/>
+        <!--图片圆角弧度-->
         <attr name="imgCorner" format="dimension"/>
     </declare-styleable>
 </resources>

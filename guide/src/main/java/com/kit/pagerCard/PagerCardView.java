@@ -154,6 +154,13 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         attr.recycle();
     }
 
+    /**
+     * 设置页面数据
+     * @param content 页面内容
+     * @param fragmentManager fragment管理器
+     * @param rowNum 行数
+     * @param colNum 列数
+     */
     public void setCardContent(List<T> content, FragmentManager fragmentManager, int rowNum, int colNum){
         setCardContent(content,fragmentManager,rowNum,colNum,null);
     }
@@ -330,7 +337,6 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.e("日志","界面移除");
         timer.cancel();
     }
 
@@ -400,6 +406,11 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         return cardContentFragment;
     }
 
+    /**
+     * 条目点击事件
+     * @param pagerCardBean
+     * @param index
+     */
     @Override
     public void onClickPagerCardListener(T pagerCardBean, int index) {
         if (pagerCardListener != null){

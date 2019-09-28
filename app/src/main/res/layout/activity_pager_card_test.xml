@@ -23,7 +23,7 @@
         app:indicatorWidth="5dp"
         app:pagerCardImgType="ROUND_RECT"
         app:imgCorner="16dp"
-        app:itemMargin="20dp"
+        app:itemMargin="10dp"
         android:background="@color/transparent"
         app:itemBg="@color/transparent"
         android:paddingBottom="6dp"/>
