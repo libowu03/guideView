@@ -222,14 +222,14 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                     }
                 }
             }
+        }
 
-            //设置指示器第零个为选中状态
-            if (indicatorList.size() != 0){
-                oldIndicatorIndex = 0;
-                indicatorList.get(0).setBackgroundResource(R.drawable.indicator_bg);
-                GradientDrawable gifDrawableResource = (GradientDrawable)indicatorList.get(0).getBackground();
-                gifDrawableResource.setColor(seIndicatorColor);
-            }
+        //设置指示器第零个为选中状态
+        if (indicatorList.size() != 0){
+            oldIndicatorIndex = 0;
+            indicatorList.get(0).setBackgroundResource(R.drawable.indicator_bg);
+            GradientDrawable gifDrawableResource = (GradientDrawable)indicatorList.get(0).getBackground();
+            gifDrawableResource.setColor(seIndicatorColor);
         }
 
         //对第一项和最后一项进行位置调换

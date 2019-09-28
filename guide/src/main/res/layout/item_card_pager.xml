@@ -38,6 +38,6 @@
         android:textStyle="bold"
         android:textColor="@color/colorAccent"
         android:textSize="10dp"
-        android:background="@drawable/indicator_bg"
+        android:background="@drawable/pagercard_redpoint"
         android:id="@+id/redPoint"/>
 </android.support.constraint.ConstraintLayout>
