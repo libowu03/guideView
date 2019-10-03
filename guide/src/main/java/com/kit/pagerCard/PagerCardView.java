@@ -6,13 +6,16 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +56,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     private int playDuration;
     private boolean isPausePlay;
     private List<T> pagerCardBeans;
+    private AttributeSet attributeSet;
 
 
     public PagerCardView(Context context) {
@@ -63,11 +67,13 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         this(context,attrs,0);
     }
 
-    public PagerCardView(Context context,AttributeSet attributeSet,int defStyleAttr){
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public PagerCardView(Context context, AttributeSet attributeSet, int defStyleAttr){
         super(context, attributeSet,0);
-        view = LayoutInflater.from(context).inflate(R.layout.view_pagecard,this,true);
+        this.attributeSet = attributeSet;
         pagerCardBeans = new ArrayList<>();
         initAttr(context,attributeSet,defStyleAttr);
+        initView();
     }
 
     /**
@@ -163,6 +169,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param rowNum 行数
      * @param colNum 列数
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setCardContent(List<T> content, FragmentManager fragmentManager, int rowNum, int colNum){
         setCardContent(content,fragmentManager,rowNum,colNum,null);
     }
@@ -175,6 +182,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param colNum 列数
      * @param pagerCardListener 内容的点击监听器
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setCardContent(List<T> content, FragmentManager fragmentManager, int rowNum, int colNum, final PagerCardListener pagerCardListener){
         this.row = rowNum;
         this.colm = colNum;
@@ -184,7 +192,6 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             return;
         }
         fragments = new ArrayList<>();
-        indicator = view.findViewById(R.id.pagerCardIndicator);
         indicator.removeAllViews();
         indicatorList = new ArrayList<>();
         if (content.size() <= rowNum*colNum || rowNum == -1){
@@ -242,7 +249,6 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         }
 
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(fragmentManager,fragments);
-        pager2 = view.findViewById(R.id.pagerCard);
         pager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -334,6 +340,26 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                }
            },1000,playDuration);
        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void initView() {
+        removeAllViews();
+        setOrientation(LinearLayout.VERTICAL);
+        pager2 = new SelfViewPagerView(getContext(),attributeSet);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.width = LayoutParams.MATCH_PARENT;
+        lp.height = LayoutParams.WRAP_CONTENT;
+        pager2.setId(generateViewId());
+        pager2.setLayoutParams(lp);
+        indicator = new LinearLayout(getContext());
+        LinearLayout.LayoutParams li = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        li.width = LayoutParams.MATCH_PARENT;
+        li.height = LayoutParams.WRAP_CONTENT;
+        indicator.setGravity(Gravity.CENTER);
+        indicator.setLayoutParams(li);
+        addView(pager2);
+        addView(indicator);
     }
 
     @Override
@@ -550,6 +576,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param rowNum
      * @param colNum
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void build(FragmentManager fragmentManager, int rowNum, int colNum){
         setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum);
     }
@@ -561,7 +588,8 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param colNum
      * @param pagerCardListener
      */
-    public void build(FragmentManager fragmentManager, int rowNum, int colNum,PagerCardListener pagerCardListener){
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void build(FragmentManager fragmentManager, int rowNum, int colNum, PagerCardListener pagerCardListener){
         setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum,pagerCardListener);
     }
 }

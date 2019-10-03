@@ -73,7 +73,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         pagerContentAdapter.setPagerCardAttribute(attribute);
         pagerContentAdapter.setContent(contentList);
         pagerContentAdapter.setCardListener(this);
-        if (attribute.getItemDecorationWeight() != -1){
+        if (attribute != null && attribute.getItemDecorationWeight() != -1){
             pagerCardContent.addItemDecoration(new PagerCardGridDivider(getContext(),attribute.getItemDecorationWeight(),attribute.getItemDecorationColor(),colNum));
         }
         pagerCardContent.setLayoutManager(layoutManager);
