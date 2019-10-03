@@ -1,13 +1,8 @@
-# guideView
-
-#### 介绍
-此依赖的目的是为大部分view添加新手引导。目前activity，fragment的任意view都可以使用此依赖来制作新手引导。新手引导的高亮区支持控件本身的形状，圆形，矩形，椭圆形。<br>
-![](https://images.gitee.com/uploads/images/2019/0806/145419_c5ce617d_1951678.gif)
-![](https://images.gitee.com/uploads/images/2019/0806/145222_ade564b4_1951678.gif)
-
-#### 主要模块
+#### 项目说明
+原本此项目为新手引导的高亮区控件，后面有加入了一个宫格控件，用于方便的进行分页宫格显示。一下为此项目的模块说明：
 1. 新手引导的高亮控件
 2. pagerCard控件，一个简单好用的宫格控件
+
 
 #### 安装教程
 ```
@@ -24,6 +19,11 @@ dependencies {
 
   
 ```
+
+#### guideView介绍
+此依赖的目的是为大部分view添加新手引导。目前activity，fragment的任意view都可以使用此依赖来制作新手引导。新手引导的高亮区支持控件本身的形状，圆形，矩形，椭圆形。<br>
+![](https://images.gitee.com/uploads/images/2019/0806/145419_c5ce617d_1951678.gif)
+![](https://images.gitee.com/uploads/images/2019/0806/145222_ade564b4_1951678.gif)
 
 #### guideView使用说明
 使用代码如下：
@@ -71,6 +71,20 @@ guideDialog.setMarkColor(Color.parseColor("#DD000000"));
 //执行显示高亮控件
 guideDialog.show(getFragmentManager(),getClass().getName());
 ```
+#### guideView构造方法说明
+1. GuideBean(int img, Activity act, View view)<br>
+img:高亮区说明图片<br>
+act:当前activity<br>
+View:要被说明的控件<br>
+
+2. GuideBean(int img, final Activity act,final Rect simpleRect)
+img:高亮区说明图片<br>
+act:当前activity<br>
+simpleRect:自由绘制的矩形<br>
+
+#### pagerCard介绍
+paerCard控件的目的是方便的编写一个可以分页的宫格控件（也可不进行分页显示）。宫格中的图片显示支持矩形，圆角矩形，矩形，圆形的显示方式
+
 
 #### pagerCard使用说明
 * xml属性介绍
@@ -124,17 +138,6 @@ guideDialog.show(getFragmentManager(),getClass().getName());
  //this为监听器，2,3分别代表宫格的行数和列数，行数设置为-1时表示不进行分页显示，即有多少内容就显示多少。
  pagerCardView.setCardContent(bean,getSupportFragmentManager(),2,3,this);
 ```
-
-#### 构造方法说明
-1. GuideBean(int img, Activity act, View view)<br>
-img:高亮区说明图片<br>
-act:当前activity<br>
-View:要被说明的控件<br>
-
-2. GuideBean(int img, final Activity act,final Rect simpleRect)
-img:高亮区说明图片<br>
-act:当前activity<br>
-simpleRect:自由绘制的矩形<br>
 
 #### 更新历史说明
 * v1.0.4
