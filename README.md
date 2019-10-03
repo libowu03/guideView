@@ -19,8 +19,9 @@ allprojects {
 }
 
 dependencies {
-	        implementation 'com.github.libowu03:guideview:v1.0.3'
+	        implementation 'com.github.libowu03:guideview:v1.0.4'
 }
+
   
 ```
 
@@ -136,6 +137,10 @@ act:当前activity<br>
 simpleRect:自由绘制的矩形<br>
 
 #### 更新历史说明
+* v1.0.4
+  + 修正在同一个fragment或activity中无法同时使用多个pagerCard的问题
+  + 修正pagerCard中旋屏时出现的闪退问题
+  + pagerCard添加链式调用的方法添加数据源，也可以使用以前的setCardContent（）方法设置数据源
 * v1.0.3
   + pagerCard的xml添加自定义属性
   + pagerCard添加无限循环和自动滑动功能
