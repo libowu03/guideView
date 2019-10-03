@@ -38,23 +38,38 @@ import java.util.TimerTask;
  * @param <T>
  */
 public class PagerCardView<T extends PagerCardBean> extends LinearLayout implements CardPagerAdapter.ClickPagerCardListener<T> {
-    protected View view;
+    //指示器盒子
     protected LinearLayout indicator;
+    //指示器盒子中的具体指示器
     protected List<View> indicatorList;
+    //上一个指示器的索引号
     protected int oldIndicatorIndex;
+    //内容监听器，监听pagercard中的各种事件，比如点击，页面切换等
     private PagerCardListener pagerCardListener;
+    //自定义viewpager，自定义的目的是设置正确的高度
     private SelfViewPagerView pager2;
+    //分页显示的内容集合
     private List<Fragment> fragments;
+    //页面属性
     private PagerCardAttribute attribute;
+    //指示器的高度，宽度
     private int indicatorWidth,indicatorHeight;
-    private int seIndicatorColor, unSeIndicatorColor,pagerCardTextColor,pagerCardTextSize;
+    //选中指示器的颜色和未选中指示器的颜色
+    private int seIndicatorColor, unSeIndicatorColor;
+    //是否显示指示器
     private boolean needIndicator;
+    //每个页面内容的列数和行数
     private int colm,row;
+    //是否启用页面无限循环，只有一页没作用
     private boolean enableInfinite;
+    //定时器，用于自动也换界面
     private Timer timer;
     private Handler handler;
+    //自动播放页面时的时间间隔
     private int playDuration;
+    //是否停止页面播放
     private boolean isPausePlay;
+    //页面数据源集合
     private List<T> pagerCardBeans;
     private AttributeSet attributeSet;
 
@@ -194,24 +209,32 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         fragments = new ArrayList<>();
         indicator.removeAllViews();
         indicatorList = new ArrayList<>();
+        //如果内容数量小鱼要求显示数量，就不进行分页显示了
         if (content.size() <= rowNum*colNum || rowNum == -1){
+            //获取fragment
             PagerCardContentFragment fragment = makeFragment(colNum);
+            //设置数据源
             fragment.setFragmentList(content);
+            //装载数据
             fragments.add(fragment);
+            //添加指示器
             if (needIndicator){
                 indicatorList.add(makeIndicator());
             }
         }else {
+            //更具数据源总长度和要求每页显示数量来进行分页显示
             int length;
             length = content.size()/(rowNum*colNum);
             if (content.size()/(rowNum*colNum*1.0f) > 0){
                 length++;
             }
+            //遍历数据源
             for (int i=0;i<length;i++){
                 if (needIndicator){
                     indicatorList.add(makeIndicator());
                 }
                 List<PagerCardBean> result = new ArrayList<>();
+                //设置遍历获取每页中的数据
                 for (int j=i*rowNum*colNum;j<(i+1)*rowNum*colNum;j++){
                     if (j >= content.size()){
                         break;
@@ -237,6 +260,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
         if (indicatorList.size() != 0){
             oldIndicatorIndex = 0;
             indicatorList.get(0).setBackgroundResource(R.drawable.indicator_bg);
+            //设置drawable中的颜色，默认为粉红色
             GradientDrawable gifDrawableResource = (GradientDrawable)indicatorList.get(0).getBackground();
             gifDrawableResource.setColor(seIndicatorColor);
         }
@@ -253,6 +277,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 //changeIndicator(position);
+                //如果滑动距离超过一半，认为已经滑动到第二页，此时需要改变指示器状态
                 if (positionOffset < 0.5f){
                     changeIndicator(position,positionOffset,positionOffsetPixels);
                 }else {
@@ -272,6 +297,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
             @Override
             public void onPageSelected(int position) {
                 changeIndicator(position,0,0);
+                //下面部分为无线循环页面时的代码逻辑
                 if (fragments.size() > 1 && enableInfinite){
                     if (position == fragments.size()-1){
                         pager2.setCurrentItem(1,false);
@@ -303,6 +329,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                 }
             }
         });
+        //给viewpager设置数据，目的是设置正确的高度
         if (rowNum == -1){
             pager2.setRow(rowNum,colNum,content.size(),true,attribute);
         }else {
@@ -342,16 +369,21 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
        }
     }
 
+    /**
+     *     初始化界面，为次见面添加viewager和指示器
+     */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void initView() {
         removeAllViews();
         setOrientation(LinearLayout.VERTICAL);
+        //添加viewpager
         pager2 = new SelfViewPagerView(getContext(),attributeSet);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.width = LayoutParams.MATCH_PARENT;
         lp.height = LayoutParams.WRAP_CONTENT;
         pager2.setId(generateViewId());
         pager2.setLayoutParams(lp);
+        //添加指示器
         indicator = new LinearLayout(getContext());
         LinearLayout.LayoutParams li = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         li.width = LayoutParams.MATCH_PARENT;
