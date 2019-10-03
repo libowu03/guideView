@@ -576,9 +576,10 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param rowNum
      * @param colNum
      */
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void build(FragmentManager fragmentManager, int rowNum, int colNum){
-        setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum);
+        }
     }
 
     /**
@@ -588,8 +589,9 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param colNum
      * @param pagerCardListener
      */
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void build(FragmentManager fragmentManager, int rowNum, int colNum, PagerCardListener pagerCardListener){
-        setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum,pagerCardListener);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setCardContent(pagerCardBeans,fragmentManager,rowNum,colNum,pagerCardListener);
+        }
     }
 }
