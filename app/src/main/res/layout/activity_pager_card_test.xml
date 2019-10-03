@@ -48,14 +48,26 @@
         android:background="@color/transparent"
         app:itemBg="@color/transparent"
         android:paddingBottom="6dp"/>
-    <Button
+
+    <com.kit.pagerCard.PagerCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="减"
-        android:id="@+id/update"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="加"
-        android:id="@+id/pro"/>
+        android:layout_height="200dp"
+        android:id="@+id/cardviewThree"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:pagerCardImgWidth="45dp"
+        app:pagerCardImgHeight="45dp"
+        app:seIndicatorColor="#112222"
+        app:unSeIndicatorColor="#949097"
+        app:pagerCardTextColor="@color/colorPrimary"
+        app:pagerCardTextSize="12dp"
+        app:indicatorHeight="5dp"
+        app:indicatorWidth="5dp"
+        app:pagerCardImgType="CIRCLE"
+        app:imgCorner="16dp"
+        app:itemMargin="10dp"
+        android:background="@color/transparent"
+        app:itemBg="@color/transparent"
+        android:paddingBottom="6dp"/>
 </LinearLayout>
