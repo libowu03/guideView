@@ -1,7 +1,8 @@
 package com.test.guide;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.kit.pagerCard.PagerCardBean;
 import com.kit.pagerCard.PagerCardView;

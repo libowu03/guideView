@@ -3,9 +3,6 @@ package com.test.guide;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +10,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.test.guide.R;
 import com.kit.guide.bean.GuideBean;
 import com.kit.guide.callBack.GuideViewClickCallBack;
 import com.kit.guide.dialog.GuideDialog;
 import com.kit.guide.utils.GuideViewUtils;
 import com.kit.guide.view.GuideView;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
