@@ -12,9 +12,9 @@ import com.kit.pagerCard.PagerCardView;
  * @date 2019/09/27
  */
 public class PagerCardTestActivity extends AppCompatActivity implements PagerCardView.PagerCardListener{
-    private PagerCardView<PagerCardBean> pagerCardView;
-    private PagerCardView<PagerCardBean> pagerCardViewTwo;
-    private PagerCardView<PagerCardBean> pagerCardViewThree;
+    private PagerCardView pagerCardView;
+    private PagerCardView pagerCardViewTwo;
+    private PagerCardView pagerCardViewThree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

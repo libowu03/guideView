@@ -35,9 +35,8 @@ import java.util.TimerTask;
  * pagerCard的容器，容器里有一个viewpager和若干个textview组成，textview用于指示器的显示
  * @author libowu
  * @date 2019/09/27
- * @param <T>
  */
-public class PagerCardView<T extends PagerCardBean> extends LinearLayout implements CardPagerAdapter.ClickPagerCardListener<T> {
+public class PagerCardView extends LinearLayout implements CardPagerAdapter.ClickPagerCardListener<PagerCardBean> {
     //指示器盒子
     protected LinearLayout indicator;
     //指示器盒子中的具体指示器
@@ -70,7 +69,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
     //是否停止页面播放
     private boolean isPausePlay;
     //页面数据源集合
-    private List<T> pagerCardBeans;
+    private List<PagerCardBean> pagerCardBeans;
     private AttributeSet attributeSet;
 
 
@@ -185,7 +184,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param colNum 列数
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public void setCardContent(List<T> content, FragmentManager fragmentManager, int rowNum, int colNum){
+    public void setCardContent(List<PagerCardBean> content, FragmentManager fragmentManager, int rowNum, int colNum){
         setCardContent(content,fragmentManager,rowNum,colNum,null);
     }
 
@@ -198,7 +197,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param pagerCardListener 内容的点击监听器
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public void setCardContent(List<T> content, FragmentManager fragmentManager, int rowNum, int colNum, final PagerCardListener pagerCardListener){
+    public void setCardContent(List<PagerCardBean> content, FragmentManager fragmentManager, int rowNum, int colNum, final PagerCardListener pagerCardListener){
         this.row = rowNum;
         this.colm = colNum;
         this.pagerCardListener = pagerCardListener;
@@ -472,7 +471,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param index
      */
     @Override
-    public void onClickPagerCardListener(T pagerCardBean, int index) {
+    public void onClickPagerCardListener(PagerCardBean pagerCardBean, int index) {
         if (pagerCardListener != null){
             int position = pager2.getCurrentItem();
             if (enableInfinite && fragments.size() > 1){
@@ -503,7 +502,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * 更新某一页中的内容
      * @param pagerNum 要更新内容的所在页码
      */
-    public void updatePagerContent(int pagerNum,List<T> updateContent){
+    public void updatePagerContent(int pagerNum,List<PagerCardBean> updateContent){
 
     }
 
@@ -519,7 +518,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * 更新pagerNum页面的数据
      * @param pagerNum
      */
-    public boolean updatePagerCardList(int pagerNum,List<T> contentList){
+    public boolean updatePagerCardList(int pagerNum,List<PagerCardBean> contentList){
         if (enableInfinite && fragments.size() > 1){
             pagerNum = pagerNum + 1;
         }
@@ -545,7 +544,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param index
      * @return
      */
-    public List<T> getPagerList(int index){
+    public List<PagerCardBean> getPagerList(int index){
         if (fragments == null){
             LogUtils.i("kitMessage","请在获取页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
             return null;
@@ -554,8 +553,8 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
                 LogUtils.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
             }
             //复制一份数据出来，如果直接返回源数据，调用者就可以直接给源数据内容进行修改了，而不需要经过updatePagerCardList方法，这是不允许的，如果允许updatePagerCardList中的判断也就没有意义了。
-            List<T> pagerList = new ArrayList<>();
-            List<T> source = ((PagerCardContentFragment)fragments.get(index)).getPagerContentList();
+            List<PagerCardBean> pagerList = new ArrayList<>();
+            List<PagerCardBean> source = ((PagerCardContentFragment)fragments.get(index)).getPagerContentList();
             for (int i=0; i< source.size(); i++){
                 pagerList.add(source.get(i));
             }
@@ -597,7 +596,7 @@ public class PagerCardView<T extends PagerCardBean> extends LinearLayout impleme
      * @param item
      * @return
      */
-    public PagerCardView<T> addContent(T item){
+    public PagerCardView addContent(PagerCardBean item){
         pagerCardBeans.add(item);
         return this;
     }
