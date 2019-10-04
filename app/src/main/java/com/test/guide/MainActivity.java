@@ -39,7 +39,11 @@ public class MainActivity extends AppCompatActivity implements GuideViewClickCal
         fragments.add(new CustomFragment());
         fragments.add(new CustomFragment());
         fragments.add(new CustomFragment());
-        viewpager.setAdapter(new FslpVpAdapter(getSupportFragmentManager(),new String[]{"测试","测试","测试"},fragments));
+        fragments.add(new CustomFragment());
+        fragments.add(new CustomFragment());
+        viewpager.setAdapter(new FslpVpAdapter(getSupportFragmentManager(),new String[]{"测试","测试","测试","测试","测试"},fragments));
+        tab.addTab(tab.newTab().setText("测试"));
+        tab.addTab(tab.newTab().setText("测试"));
         tab.addTab(tab.newTab().setText("测试"));
         tab.addTab(tab.newTab().setText("测试"));
         tab.addTab(tab.newTab().setText("测试"));

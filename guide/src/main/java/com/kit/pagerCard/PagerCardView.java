@@ -380,7 +380,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.width = LayoutParams.MATCH_PARENT;
         lp.height = LayoutParams.WRAP_CONTENT;
-        pager2.setId(generateViewId());
+        pager2.setId(R.id.pagerCard);
         pager2.setLayoutParams(lp);
         //添加指示器
         indicator = new LinearLayout(getContext());
