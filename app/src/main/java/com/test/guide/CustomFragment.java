@@ -54,17 +54,9 @@ public class CustomFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        PagerCardView pagerCardView = view.findViewById(R.id.cardview);
-        pagerCardView.addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569591923995&di=23164aeb16b55d649bad5509cb7e3048&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D7d2272098782b9013dadc333438ca97e%2F10dfa9ec8a136327d00e9b1d9c8fa0ec08fac739.jpg").setName("dqq"))
-                .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569647607838&di=daadb04b3c41ab14c6a4eb5ebdb4f5ce&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D432aef2ac35c1038247ecec28211931c%2Fd4628535e5dde7113a95acc6a2efce1b9d1661bf.jpg").setName("dqq"))
-                .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569591923995&di=23164aeb16b55d649bad5509cb7e3048&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D7d2272098782b9013dadc333438ca97e%2F10dfa9ec8a136327d00e9b1d9c8fa0ec08fac739.jpg").setName("dqq"))
-                .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569418221253&di=1770a74bb77874862ef83b5d0dd9deea&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201511%2F14%2F20151114095852_2KEvG.jpeg").setName("dqq").setShowRedPoint(true))
-                .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569591923995&di=23164aeb16b55d649bad5509cb7e3048&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D7d2272098782b9013dadc333438ca97e%2F10dfa9ec8a136327d00e9b1d9c8fa0ec08fac739.jpg").setName("dqq"))
-                .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569647607838&di=daadb04b3c41ab14c6a4eb5ebdb4f5ce&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D432aef2ac35c1038247ecec28211931c%2Fd4628535e5dde7113a95acc6a2efce1b9d1661bf.jpg").setName("dqq"))
-                .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569647607838&di=daadb04b3c41ab14c6a4eb5ebdb4f5ce&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D432aef2ac35c1038247ecec28211931c%2Fd4628535e5dde7113a95acc6a2efce1b9d1661bf.jpg").setName("dqq"))
-                .build(getChildFragmentManager(),2,3);
+        //Log.e("日志","内存地址为："+pagerCardView.hashCode());
 
-    /*    Log.e("日志","3");
+        Log.e("日志","3");
         test = getActivity().findViewById(R.id.test);
         test_two = getActivity().findViewById(R.id.test_two);
         test_three = getActivity().findViewById(R.id.test_three);
@@ -110,11 +102,11 @@ public class CustomFragment extends Fragment {
         //设置高亮区遮罩层的样色,默认值为#cc000000
         guideDialog.setMarkColor(Color.parseColor("#DD000000"));
         //执行显示高亮控件
-        guideDialog.show(getFragmentManager(),getClass().getName());*/
+        guideDialog.show(getFragmentManager(),getClass().getName());
     }
 
     public void showDialog(){
-       /* //将要说明的控件添加到集合中
+        //将要说明的控件添加到集合中
         guides = new ArrayList<>();
         //GuideBean的构造方法比较多，后面会提到各个构造方法的作用
         guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two).setShape(GuideView.Config.ROUNDED_RECT).setPadding(GuideViewUtils.dip2px(getContext(),10)));
@@ -155,6 +147,6 @@ public class CustomFragment extends Fragment {
         //设置圆角
         guideDialog.setRectCorner(GuideViewUtils.dip2px(getContext(),20));
         //执行显示高亮控件
-        guideDialog.show(getFragmentManager(),getClass().getName());*/
+        guideDialog.show(getFragmentManager(),getClass().getName());
     }
 }

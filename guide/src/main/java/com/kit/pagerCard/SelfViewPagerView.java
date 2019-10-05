@@ -40,6 +40,7 @@ public class SelfViewPagerView extends ViewPager {
      * 获取属性参数
      */
     private PagerCardAttribute attribute;
+    private PagerCardView pagerCardView;
 
     public SelfViewPagerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -50,7 +51,7 @@ public class SelfViewPagerView extends ViewPager {
         if (!isNotClassPager){
             if (getChildCount() != 0){
                 View child = getChildAt(0);
-                RecyclerView list = ((RecyclerView)((LinearLayout)(child)).getChildAt(0));
+                RecyclerView list = (RecyclerView) getChildAt(0);
                 child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
                 if (list != null && list.getChildCount() != 0){
                     View firstChild = list.getChildAt(0);
@@ -62,6 +63,9 @@ public class SelfViewPagerView extends ViewPager {
 
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             }else {
+                if (pagerCardView != null){
+                    Log.e("日志","pagerCard的地址为："+pagerCardView.hashCode()+"，当前viewpager的地址为："+this.hashCode());
+                }
                 heightMeasureSpec = MeasureSpec.makeMeasureSpec(PagerCardTempData.pagerCardHeight, MeasureSpec.EXACTLY);
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             }
@@ -76,12 +80,13 @@ public class SelfViewPagerView extends ViewPager {
      * @param col
      * @param contentListSize
      */
-    public void setRow(int row,int col,int contentListSize,boolean isNotClassPager,PagerCardAttribute attribute){
+    public void setRow(int row,int col,int contentListSize,boolean isNotClassPager,PagerCardAttribute attribute,PagerCardView pagerCardView){
         this.row = row;
         this.col = col;
         this.contentListSize = contentListSize;
         this.isNotClassPager = isNotClassPager;
         this.attribute = attribute;
+        this.pagerCardView = pagerCardView;
     }
 
     @Override

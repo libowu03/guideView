@@ -33,7 +33,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pagercard,container,false);
+        return LayoutInflater.from(container.getContext()).inflate(R.layout.fragment_pagercard,container,false);
     }
 
     @Override
@@ -78,6 +78,7 @@ public class PagerCardContentFragment<T extends PagerCardBean> extends Fragment 
         }
         pagerCardContent.setLayoutManager(layoutManager);
         pagerCardContent.setAdapter(pagerContentAdapter);
+        Log.e("日志","fragment重点的孩子数量为："+pagerContentAdapter.getItemCount());
     }
 
     public void setFragmentList(List<T> contentList){

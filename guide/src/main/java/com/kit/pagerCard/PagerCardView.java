@@ -13,6 +13,8 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -48,7 +50,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
     //自定义viewpager，自定义的目的是设置正确的高度
     private SelfViewPagerView pager2;
     //分页显示的内容集合
-    private List<Fragment> fragments;
+    private List<RecyclerView> fragments;
     //页面属性
     private PagerCardAttribute attribute;
     //指示器的高度，宽度
@@ -84,10 +86,14 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public PagerCardView(Context context, AttributeSet attributeSet, int defStyleAttr){
         super(context, attributeSet,0);
+
+        LayoutInflater.from(context).inflate(R.layout.view_pagecard,this,true);
+        pager2 = findViewById(R.id.pagerCard);
+        indicator = findViewById(R.id.pagerCardIndicator);
+
         this.attributeSet = attributeSet;
         pagerCardBeans = new ArrayList<>();
         initAttr(context,attributeSet,defStyleAttr);
-        initView();
     }
 
     /**
@@ -110,7 +116,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         //pagerCard标题颜色
         int pagerCardTextColor = attr.getColor(R.styleable.PagerCardView_pagerCardTextColor,Color.BLACK);
         //pagerCard标题大小
-        int pagerCardTextSize = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardTextSize,12);
+        int pagerCardTextSize = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardTextSize,GuideViewUtils.dip2px(context,12));
         //pagerCard图片宽度
         int imgWidht = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardImgWidth,-1);
         //pagerCard图片高度
@@ -144,7 +150,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         //获取底部的margin
         int itemMarginBottom = (int) attr.getDimension(R.styleable.PagerCardView_itemMarginBottom,0);
         //获取margin
-        int itemMargin = (int) attr.getDimension(R.styleable.PagerCardView_itemMargin,0);
+        int itemMargin = (int) attr.getDimension(R.styleable.PagerCardView_itemMargin,GuideViewUtils.dip2px(context,10));
         //获取左边的padding
         int itemPaddingLeft = (int) attr.getDimension(R.styleable.PagerCardView_itemPaddingLeft,0);
         //获取右边的padding
@@ -202,7 +208,6 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         this.colm = colNum;
         this.pagerCardListener = pagerCardListener;
         if (fragmentManager == null || content == null || content.size() == 0 || rowNum == 0|| colNum == 0){
-            LogUtils.i("kitMessage","参数错误");
             return;
         }
         fragments = new ArrayList<>();
@@ -211,11 +216,9 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         //如果内容数量小鱼要求显示数量，就不进行分页显示了
         if (content.size() <= rowNum*colNum || rowNum == -1){
             //获取fragment
-            PagerCardContentFragment fragment = makeFragment(colNum);
-            //设置数据源
-            fragment.setFragmentList(content);
-            //装载数据
-            fragments.add(fragment);
+            List<RecyclerView> list = new ArrayList<>();
+            list.add(makeRecyclerview(content));
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(list);
             //添加指示器
             if (needIndicator){
                 indicatorList.add(makeIndicator());
@@ -224,7 +227,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
             //更具数据源总长度和要求每页显示数量来进行分页显示
             int length;
             length = content.size()/(rowNum*colNum);
-            if (content.size()/(rowNum*colNum*1.0f) > 0){
+            if (content.size()%(rowNum*colNum*1.0f) > 0){
                 length++;
             }
             //遍历数据源
@@ -240,16 +243,12 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
                     }
                     result.add(content.get(j));
                 }
-                PagerCardContentFragment fragment = makeFragment(colNum);
-                fragment.setFragmentList(result);
-                fragments.add(fragment);
+                fragments.add(makeRecyclerview(result));
 
                 if (enableInfinite){
                     //在首尾多添加一项，用于无限循环,在后面还需要调换一下位置。
                     if (i == 0 || i == length-1){
-                        PagerCardContentFragment fragmentCpOne = makeFragment(colNum);
-                        fragmentCpOne.setFragmentList(result);
-                        fragments.add(fragmentCpOne);
+                        fragments.add(makeRecyclerview(result));
                     }
                 }
             }
@@ -265,13 +264,15 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         }
 
         //对第一项和最后一项进行位置调换
-        if (fragments.size() > 1 && enableInfinite){
-            PagerCardContentFragment one = (PagerCardContentFragment) fragments.get(0);
-            fragments.set(0,fragments.get(fragments.size()-1));
-            fragments.set(fragments.size()-1,one);
+        if (enableInfinite){
+            if (fragments.size() > 1 && enableInfinite){
+                RecyclerView one = fragments.get(0);
+                fragments.set(0,fragments.get(fragments.size()-1));
+                fragments.set(fragments.size()-1,one);
+            }
         }
 
-        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(fragmentManager,fragments);
+        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(fragments);
         pager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -330,9 +331,9 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         });
         //给viewpager设置数据，目的是设置正确的高度
         if (rowNum == -1){
-            pager2.setRow(rowNum,colNum,content.size(),true,attribute);
+            pager2.setRow(rowNum,colNum,content.size(),true,attribute,this);
         }else {
-            pager2.setRow(rowNum,colNum,content.size(),false,attribute);
+            pager2.setRow(rowNum,colNum,content.size(),false,attribute,this);
         }
         pager2.setAdapter(pagerAdapter);
         if (enableInfinite){
@@ -368,29 +369,38 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
        }
     }
 
-    /**
-     *     初始化界面，为次见面添加viewager和指示器
-     */
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void initView() {
-        removeAllViews();
-        setOrientation(LinearLayout.VERTICAL);
-        //添加viewpager
-        pager2 = new SelfViewPagerView(getContext(),attributeSet);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.width = LayoutParams.MATCH_PARENT;
-        lp.height = LayoutParams.WRAP_CONTENT;
-        pager2.setId(R.id.pagerCard);
-        pager2.setLayoutParams(lp);
-        //添加指示器
-        indicator = new LinearLayout(getContext());
-        LinearLayout.LayoutParams li = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        li.width = LayoutParams.MATCH_PARENT;
-        li.height = LayoutParams.WRAP_CONTENT;
-        indicator.setGravity(Gravity.CENTER);
-        indicator.setLayoutParams(li);
-        addView(pager2);
-        addView(indicator);
+    public RecyclerView makeRecyclerview(List<PagerCardBean> list){
+        RecyclerView pagerCardContent = new RecyclerView(getContext());
+        CardPagerAdapter pagerContentAdapter = new CardPagerAdapter();
+        GridLayoutManager layoutManager = null;
+        //设置recyclerview是否可垂直滑动
+        if (attribute != null){
+            if (attribute.isCanScrollVertically()){
+                layoutManager = new GridLayoutManager(getContext(),colm);
+            }else {
+                layoutManager = new GridLayoutManager(getContext(),colm){
+                    @Override
+                    public boolean canScrollVertically() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean canScrollHorizontally() {
+                        return false;
+                    }
+                };
+            }
+        }
+        pagerContentAdapter = new CardPagerAdapter();
+        pagerContentAdapter.setPagerCardAttribute(attribute);
+        pagerContentAdapter.setContent(list);
+        pagerContentAdapter.setCardListener(this);
+        if (attribute != null && attribute.getItemDecorationWeight() != -1){
+            pagerCardContent.addItemDecoration(new PagerCardGridDivider(getContext(),attribute.getItemDecorationWeight(),attribute.getItemDecorationColor(),colm));
+        }
+        pagerCardContent.setLayoutManager(layoutManager);
+        pagerCardContent.setAdapter(pagerContentAdapter);
+        return pagerCardContent;
     }
 
     @Override
@@ -534,7 +544,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
                 LogUtils.i("kitMessage","更新集合长度不允许超过当前页面被定义的长度，即在调用setCardContent方法时，传入的rowNum和colNum决定了页面可显示的最大内容，更新的内容长度不允许超过rowNum*colNum");
                 return false;
             }
-            ((PagerCardContentFragment)fragments.get(pagerNum)).updatePagerCardList(contentList);
+            //((PagerCardContentFragment)fragments.get(pagerNum)).updatePagerCardList(contentList);
             return true;
         }
     }
@@ -544,7 +554,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
      * @param index
      * @return
      */
-    public List<PagerCardBean> getPagerList(int index){
+ /*   public List<PagerCardBean> getPagerList(int index){
         if (fragments == null){
             LogUtils.i("kitMessage","请在获取页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
             return null;
@@ -560,7 +570,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
             }
             return pagerList;
         }
-    }
+    }*/
 
     /**
      * 获取有多少页内容

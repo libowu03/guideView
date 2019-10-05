@@ -33,11 +33,4 @@ public class FslpVpAdapter extends FragmentPagerAdapter {
         return title[position];
     }
 
-  /*  @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        BaZhaiNewOrderHelper baZhaiNewOrderHelper = new BaZhaiNewOrderHelper(container.getContext());
-        if (!baZhaiNewOrderHelper.getPayJiajv()){
-            super.destroyItem(container, position, object);
-        }
-    }*/
 }
