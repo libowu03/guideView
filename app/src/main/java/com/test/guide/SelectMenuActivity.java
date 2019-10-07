@@ -16,6 +16,7 @@ import com.kit.utils.LogUtils;
 public class SelectMenuActivity extends AppCompatActivity {
     private TextView sendToGuide;
     private TextView sendToPagerCard;
+    private TextView sendToSuperTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public class SelectMenuActivity extends AppCompatActivity {
         LogUtils.isDebug = true;
         sendToGuide = findViewById(R.id.sendToGuide);
         sendToPagerCard = findViewById(R.id.sendToPagerCard);
+        sendToSuperTab = findViewById(R.id.sendToSuperTab);
 
         sendToGuide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +42,15 @@ public class SelectMenuActivity extends AppCompatActivity {
                 Intent sendToGuide = new Intent(SelectMenuActivity.this,PagerCardTestActivity.class);
                 sendToGuide.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(sendToGuide);
+            }
+        });
+
+        sendToSuperTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendToSuperTab = new Intent(SelectMenuActivity.this,SuperTabTestActivity.class);
+                sendToSuperTab.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(sendToSuperTab);
             }
         });
     }
