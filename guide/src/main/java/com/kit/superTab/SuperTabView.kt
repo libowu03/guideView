@@ -136,6 +136,16 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
             }
         }
 
+        if (tabViewList != null){
+            //给指示器设置数据,先获取每个tab、的宽度信息
+            var view = tabViewList!!.get(viewpager.currentItem)
+            var w = View.MeasureSpec.makeMeasureSpec(0,MeasureSpec.UNSPECIFIED)
+            var h = View.MeasureSpec.makeMeasureSpec(0,MeasureSpec.UNSPECIFIED)
+            view.measure(w,h)
+            var width = view.measuredWidth
+            this.tabIndicator.setEveryIndicatorWidth(GuideViewUtils.dip2px(context,width.toFloat()).toFloat(),GuideViewUtils.dip2px(context,2f).toFloat())
+        }
+
         viewpager.addOnPageChangeListener(this)
     }
 
@@ -144,7 +154,7 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
     }
 
     override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-
+        Log.e("日志","p0为："+p0+",p1为："+p1+",p2为："+p2)
     }
 
     override fun onPageSelected(p0: Int) {

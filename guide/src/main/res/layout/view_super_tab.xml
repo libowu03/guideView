@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <!--tab图片存放地-->
     <LinearLayout
@@ -11,4 +11,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/superTab"
         android:orientation="horizontal"/>
+    <com.kit.superTab.IndicatorView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:id="@+id/tabIndicator"/>
 </LinearLayout>
