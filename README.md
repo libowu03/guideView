@@ -14,7 +14,7 @@ allprojects {
 }
 
 dependencies {
-	        implementation 'com.github.libowu03:guideview:v1.0.4'
+	        implementation 'com.github.libowu03:guideview:v1.0.5'
 }
 
   
@@ -140,6 +140,8 @@ paerCard控件的目的是方便的编写一个可以分页的宫格控件（也
 ```
 
 #### 更新历史说明
+* v1.0.5
+  + 修正pagerCard在多个viewpager中使用时滑动可能导致闪退的问题
 * v1.0.4
   + 修正在同一个fragment或activity中无法同时使用多个pagerCard的问题
   + 修正pagerCard中旋屏时出现的闪退问题
