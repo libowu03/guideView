@@ -12,31 +12,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils
 import kotlinx.android.synthetic.main.view_super_tab.view.*
 import kotlinx.android.synthetic.main.view_tab.view.*
 
-class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
+class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener, View.OnClickListener {
     private var tabTextMargin: Float = 0f
     private var selectTextStyle: Int = 0
     private var selectTextSize: Float = 0f
     private var unselectTextSize: Float = 0f
     private var unselectTextColor: Int = Color.GRAY
     private var selectTextColor: Int = Color.BLACK
-
+    private var tabIndicatorWidth:Float = 0f
+    private var tabIndicatorHeight:Float = 0f
     private var tabList:MutableList<SuperTab>?=null
     private var tabViewList:MutableList<View>?=null
+    private var oldPositionX:Float = -1f
+    private lateinit var viewpager:ViewPager
+    private lateinit var tabSelectListener: TabSelectListener
+    private var indicatorMarginTop:Float = 0f
+    private var tabClickNoScroll:Boolean = true
 
-    constructor(context: Context):this(context,null){
-    }
+    constructor(context: Context):this(context,null)
 
-    constructor(context: Context,attr:AttributeSet?):this(context,attr,0){
-    }
+    constructor(context: Context,attr:AttributeSet?):this(context,attr,0)
 
     constructor(context: Context, attr: AttributeSet?, defStyleAttr:Int):super(context,attr,defStyleAttr){
         LayoutInflater.from(context).inflate(R.layout.view_super_tab,this,true)
         initArray(attr,defStyleAttr)
+        initBaseInfo()
+    }
+
+    private fun initBaseInfo() {
+        var llp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        llp.height = tabIndicatorHeight.toInt()
+        llp.topMargin = indicatorMarginTop.toInt()
+        this.tabIndicator.layoutParams = llp
     }
 
     /**
@@ -51,6 +64,10 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
         selectTextSize = typeArray.getDimension(R.styleable.SuperTabView_tabSelectTextSize,16f)
         selectTextStyle = typeArray.getInt(R.styleable.SuperTabView_tabSelectTextStyle,0)
         tabTextMargin = typeArray.getDimension(R.styleable.SuperTabView_tabTextMargin,GuideViewUtils.dip2px(context,5f).toFloat())
+        tabIndicatorHeight = typeArray.getDimension(R.styleable.SuperTabView_tabIndicatorHeight,GuideViewUtils.dip2px(context,1f).toFloat())
+        tabIndicatorWidth = typeArray.getLayoutDimension(R.styleable.SuperTabView_tabIndicatorWidth,-1).toFloat()
+        indicatorMarginTop = typeArray.getDimension(R.styleable.SuperTabView_tabIndicatorMarginTop,GuideViewUtils.dip2px(context,2f).toFloat())
+        tabClickNoScroll = typeArray.getBoolean(R.styleable.SuperTabView_tabClickNoScroll,true)
         typeArray.recycle()
     }
 
@@ -70,9 +87,26 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
         this.superTab.addView(v)
         //添加到集合中去，方便后面viewpager选中时改变选中颜色
         tabViewList!!.add(v)
+        tab.setPosition(tabList!!.size)
         tabList!!.add(tab)
 
+        //设置点击监听器
+        v.tabBox.setTag(tabList!!.size -1)
+        v.tabBox.setOnClickListener(this)
         return this
+    }
+
+    override fun onClick(v: View?) {
+        //如果tabClickNoScroll为true时，则点击跳转到某页时不使用滑动效果
+        if (tabClickNoScroll){
+            viewpager.setCurrentItem(v!!.getTag() as Int,false)
+        }else{
+            viewpager.currentItem = v!!.getTag() as Int
+        }
+        this.tabIndicator.setCurrentPager(v!!.getTag() as Int)
+        if (tabSelectListener != null){
+            tabSelectListener.onTabSelect(tabList!!.get(v!!.getTag() as Int),tabViewList!!.get(v!!.getTag() as Int))
+        }
     }
 
     /**
@@ -110,7 +144,15 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
         }
     }
 
+    fun setTabSelectListener(tabSelectListener: TabSelectListener){
+        this.tabSelectListener = tabSelectListener
+    }
+
+    /**
+     * 实现tab与viewpager的联动
+     */
     open fun setupWithViewPager(viewpager:ViewPager){
+        this.viewpager = viewpager
         //绑定viewpager后执行一遍初始化操作
         for ((index,tab) in tabViewList!!.withIndex()){
             if (viewpager.currentItem == index){
@@ -142,8 +184,13 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
             var w = View.MeasureSpec.makeMeasureSpec(0,MeasureSpec.UNSPECIFIED)
             var h = View.MeasureSpec.makeMeasureSpec(0,MeasureSpec.UNSPECIFIED)
             view.measure(w,h)
-            var width = view.measuredWidth
-            this.tabIndicator.setEveryIndicatorWidth(GuideViewUtils.dip2px(context,width.toFloat()).toFloat(),GuideViewUtils.dip2px(context,2f).toFloat())
+            var viewWidth = view.measuredWidth
+
+            //如果没有设置指示器长度，则使用控件长度作为指示器长度
+            if (tabIndicatorWidth == -1f){
+                tabIndicatorWidth = viewWidth.toFloat()
+            }
+            this.tabIndicator.setEveryIndicatorWidth(GuideViewUtils.dip2px(context,tabIndicatorWidth).toFloat(),GuideViewUtils.dip2px(context,viewWidth.toFloat()).toFloat(),viewpager.currentItem)
         }
 
         viewpager.addOnPageChangeListener(this)
@@ -155,6 +202,14 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
 
     override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
         Log.e("日志","p0为："+p0+",p1为："+p1+",p2为："+p2)
+        if(oldPositionX - p1 < 0){
+            //往右边滑动
+            this.tabIndicator.updateIndicatorPosition(p1,true,p0)
+        }else if (oldPositionX - p1 > 0){
+            //往左边滑动
+            this.tabIndicator.updateIndicatorPosition(p1,false,p0)
+        }
+        oldPositionX = p1
     }
 
     override fun onPageSelected(p0: Int) {
@@ -178,4 +233,6 @@ class SuperTabView : LinearLayout, ViewPager.OnPageChangeListener {
             }
         }
     }
+
+
 }

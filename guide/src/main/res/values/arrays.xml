@@ -87,22 +87,30 @@
 
     <!--superTab属性-->
     <declare-styleable name="SuperTabView">
-        <!--        选中字体颜色-->
+        <!--选中字体颜色-->
         <attr name="tabSelectTextColor" format="color"/>
-        <!--        未选中字体颜色-->
+        <!--未选中字体颜色-->
         <attr name="tabUnselectTextColor" format="color"/>
-        <!--        未选中字体大小-->
+        <!--未选中字体大小-->
         <attr name="tabUnselectTextSize" format="dimension"/>
-        <!--        选中字体大小-->
-        <attr name="tabSelectTextSize" format="dimension"/>
-        <!--        选中字体是否加粗-->
+        <!--选中字体大小-->
+        <attr name="tabSelectTextSize" format="dimension"/>shiji
+        <!--选中字体是否加粗-->
         <attr name="tabSelectTextStyle">
             <enum name="bold" value="0"/>
             <enum name="normal" value="1"/>
             <enum name="italic" value="2"/>
         </attr>
-
-        <!--        文字与图片的距离-->
+        <!--文字与图片的距离-->
         <attr name="tabTextMargin" format="dimension"/>
+        <!--指示器长度-->
+        <attr name="tabIndicatorWidth" format="dimension">
+            <enum name="match_parent" value="-1"/>
+        </attr>
+        <!--指示器高度-->
+        <attr name="tabIndicatorHeight" format="dimension"/>
+        <!--指示器距离文字的距离-->
+        <attr name="tabIndicatorMarginTop" format="dimension"/>
+        <attr name="tabClickNoScroll" format="boolean"/>
     </declare-styleable>
 </resources>

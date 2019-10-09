@@ -56,9 +56,9 @@ public class SelfViewPagerView extends ViewPager {
                 if (list != null && list.getChildCount() != 0){
                     View firstChild = list.getChildAt(0);
                     heightMeasureSpec = MeasureSpec.makeMeasureSpec(firstChild.getHeight()*row + attribute.getItemMargin()*(row*2), MeasureSpec.EXACTLY);
-                    PagerCardTempData.pagerCardHeight = heightMeasureSpec;
+                    //PagerCardTempData.pagerCardHeight = heightMeasureSpec;
                 }else {
-                    heightMeasureSpec = PagerCardTempData.pagerCardHeight;
+                    //heightMeasureSpec = PagerCardTempData.pagerCardHeight;
                 }
 
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -66,7 +66,7 @@ public class SelfViewPagerView extends ViewPager {
                 if (pagerCardView != null){
                     Log.e("日志","pagerCard的地址为："+pagerCardView.hashCode()+"，当前viewpager的地址为："+this.hashCode());
                 }
-                heightMeasureSpec = MeasureSpec.makeMeasureSpec(PagerCardTempData.pagerCardHeight, MeasureSpec.EXACTLY);
+                //heightMeasureSpec = MeasureSpec.makeMeasureSpec(PagerCardTempData.pagerCardHeight, MeasureSpec.EXACTLY);
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             }
         }else {
@@ -92,6 +92,6 @@ public class SelfViewPagerView extends ViewPager {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        PagerCardTempData.clearTemp();
+       // PagerCardTempData.clearTemp();
     }
 }

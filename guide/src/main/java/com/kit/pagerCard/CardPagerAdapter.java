@@ -213,6 +213,7 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
     }
 
     public void setContent(List<T> content){
+        //Log.e("日志","内容长度为："+content.size());
         this.content = content;
         notifyDataSetChanged();
     }

@@ -4,10 +4,11 @@ class SuperTab {
     private var text:String?=null
     private var iconSelectNet:String?=null
     private var iconUnselectedNet:String?=null
-    private var iconUnselectedLocal:Int?=null
-    private var iconSelectLocal:Int?=null
+    private var iconUnselectedLocal:Int = 0
+    private var iconSelectLocal:Int = 0
+    private var position:Int = 0
     private var pointText:String?=null
-    private var pointIcon:Int?=null
+    private var pointIcon:Int = 0
 
     open fun setText(text:String):SuperTab{
         this.text = text
@@ -48,6 +49,14 @@ class SuperTab {
 
     open fun getIconSelectLocal():Int{
         return iconSelectLocal!!
+    }
+
+    open fun getPosition():Int{
+        return position
+    }
+
+    open fun setPosition(position:Int){
+        this.position = position
     }
 
 }
