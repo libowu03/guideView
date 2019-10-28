@@ -83,6 +83,7 @@ act:当前activity<br>
 simpleRect:自由绘制的矩形<br>
 
 #### pagerCard介绍
+![](http://114.116.149.238/img/kitview_pagerCardView.jpg)
 paerCard控件的目的是方便的编写一个可以分页的宫格控件（也可不进行分页显示）。宫格中的图片显示支持矩形，圆角矩形，矩形，圆形的显示方式
 
 
