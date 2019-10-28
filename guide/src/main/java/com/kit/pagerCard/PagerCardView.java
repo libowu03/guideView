@@ -130,7 +130,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         //红点字体颜色
         int redPointTextSize = (int) attr.getDimension(R.styleable.PagerCardView_pagerCardRedPointTextSize,getContext().getResources().getDimension(R.dimen.redPointTextSize));
         //获取图片类型
-        int imgType = attr.getInt(R.styleable.PagerCardView_pagerCardImgType,0);
+        int imgType = attr.getInt(R.styleable.PagerCardView_pagerCardImgType,1);
         //获取圆角矩形的圆角弧度
         int imgCorner = (int) attr.getDimension(R.styleable.PagerCardView_imgCorner,getContext().getResources().getDimension(R.dimen.imgCorner));
         //是否需要显示指示器
@@ -172,11 +172,11 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         enableInfinite = attr.getBoolean(R.styleable.PagerCardView_enableInfinite,false);
         //自动播放时间
         playDuration = attr.getInteger(R.styleable.PagerCardView_playDuration,0);
-
+        int redBackGroundColor = attr.getColor(R.styleable.PagerCardView_pagerCardRedPointColor,Color.RED);
         attribute = new PagerCardAttribute(imgHeight,imgWidht,redPointTextSize,redPointBackground,redPointWidht,
                 redPointHeight,pagerCardTextSize,pagerCardTextColor,unSeIndicatorColor,seIndicatorColor,
                 10,10,imgType,imgCorner,needIndicator,canScrollVertically,itemDecorationColor,itemDecorationWeight,
-                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin,itemPadding,itemPaddingLeft,itemPaddingTop,itemPaddingRight,itemPaddingBottom,itemBackgroundColor,itemBackgroundResource,enableInfinite,playDuration);
+                itemMarginLeft,itemMarginRight,itemMarginTop,itemMarginBottom,itemMargin,itemPadding,itemPaddingLeft,itemPaddingTop,itemPaddingRight,itemPaddingBottom,itemBackgroundColor,itemBackgroundResource,enableInfinite,playDuration,redBackGroundColor);
         timer = new Timer();
         handler = new Handler();
         attr.recycle();

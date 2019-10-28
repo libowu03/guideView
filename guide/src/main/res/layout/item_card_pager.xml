@@ -7,14 +7,16 @@
     android:padding="5dp"
     android:background="@color/white">
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/homeFunImg"
         android:src="@mipmap/default_pet"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/redPoint"
         app:layout_constraintBottom_toTopOf="@id/homeFuncName"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,15 +31,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/homeFunImg"/>
     <TextView
-        android:minWidth="6dp"
-        android:minHeight="6dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="@id/homeFunImg"
-        app:layout_constraintTop_toTopOf="@id/homeFunImg"
+        app:layout_constraintLeft_toLeftOf="@id/homeFunImg"
+        app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/white"
         android:textSize="10dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:gravity="center"
         android:background="@drawable/pagercard_redpoint"
         android:id="@+id/redPoint"/>
 </android.support.constraint.ConstraintLayout>

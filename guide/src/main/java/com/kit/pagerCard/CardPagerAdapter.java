@@ -1,12 +1,15 @@
 package com.kit.pagerCard;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,15 +82,48 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
             //设置红点属性
             cpa.redPoint.setTextSize(GuideViewUtils.px2dip(context, pagerCardAttribute.getRedPointTextSize()));
             cpa.redPoint.setTextColor(pagerCardAttribute.getRedPointTextColor());
+            GradientDrawable gifDrawableResource = (GradientDrawable)cpa.redPoint.getBackground();
+            gifDrawableResource.setColor(pagerCardAttribute.getRedBackGroundColor());
             if (pagerCardBean.getRedPointText() == null || pagerCardBean.getRedPointText().isEmpty()) {
                 ConstraintLayout.LayoutParams cl = (ConstraintLayout.LayoutParams) cpa.redPoint.getLayoutParams();
                 cl.height = pagerCardAttribute.getRedPointSizeHeight();
                 cl.width = pagerCardAttribute.getRedPointSizeWidth();
+                if (pagerCardAttribute.getImageHeight() > 0 && pagerCardAttribute.getImageWidth() > 0){
+                    cl.leftMargin = pagerCardAttribute.getImageWidth() - pagerCardAttribute.getRedPointSizeWidth()/2;
+                }else {
+                    cl.leftMargin = GuideViewUtils.dip2px(context, 50) - (pagerCardAttribute.getRedPointTextSize()+GuideViewUtils.dip2px( context,4))/2;
+                }
                 cpa.redPoint.setLayoutParams(cl);
+                if (pagerCardBean.isShowRedPoint()) {
+                    cpa.redPoint.setVisibility(View.VISIBLE);
+                } else {
+                    cpa.redPoint.setVisibility(View.GONE);
+                }
             } else {
+                cpa.redPoint.setText(pagerCardBean.getRedPointText());
                 ConstraintLayout.LayoutParams cl = (ConstraintLayout.LayoutParams) cpa.redPoint.getLayoutParams();
-                cl.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-                cl.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                if (cpa.redPoint.getText().toString().length() == 1){
+                    cpa.redPoint.setPadding(0,0,0,0);
+                    //如果只有一个文字，则将背景改为圆形
+                    cl.height =pagerCardAttribute.getRedPointTextSize()+GuideViewUtils.dip2px( context,4);
+                    cl.width =  pagerCardAttribute.getRedPointTextSize()+GuideViewUtils.dip2px( context,4);
+
+                    if (pagerCardAttribute.getImageHeight() > 0 && pagerCardAttribute.getImageWidth() > 0){
+                        cl.leftMargin = pagerCardAttribute.getImageWidth() - (pagerCardAttribute.getRedPointTextSize()+GuideViewUtils.dip2px( context,4))/2;
+                    }else {
+                        cl.leftMargin = GuideViewUtils.dip2px(context, 50) - (pagerCardAttribute.getRedPointTextSize()+GuideViewUtils.dip2px( context,4))/2;
+                    }
+                }else {
+                    cpa.redPoint.measure(0,0);
+                    int measureWidht = cpa.redPoint.getMeasuredWidth();
+                    if (pagerCardAttribute.getImageHeight() > 0 && pagerCardAttribute.getImageWidth() > 0){
+                        cl.leftMargin = pagerCardAttribute.getImageWidth() - measureWidht/2;
+                    }else {
+                        cl.leftMargin = GuideViewUtils.dip2px(context, 50) - measureWidht/2;
+                    }
+                    cl.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                    cl.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                }
                 cpa.redPoint.setLayoutParams(cl);
             }
 
@@ -101,13 +137,17 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
                 llp.width = pagerCardAttribute.getImageWidth();
                 llp.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
                 llp.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+                llp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+                llp.topMargin = pagerCardAttribute.getRedPointSizeHeight()/2;
                 cpa.img.setLayoutParams(llp);
             } else {
                 ConstraintLayout.LayoutParams llp = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-                llp.height = GuideViewUtils.dip2px(context, 40);
-                llp.width = GuideViewUtils.dip2px(context, 40);
+                llp.height = GuideViewUtils.dip2px(context, 50);
+                llp.width = GuideViewUtils.dip2px(context, 50);
                 llp.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
                 llp.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+                llp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+                llp.topMargin = pagerCardAttribute.getRedPointSizeHeight()/2;
                 cpa.img.setLayoutParams(llp);
             }
         }
@@ -134,17 +174,6 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
         }else {
             //加载矩形图片直接加载即可
             loadImage(imgId, null, cpa, pagerCardBean);
-        }
-
-        if (pagerCardBean.getRedPointText() == null || pagerCardBean.getRedPointText().isEmpty()) {
-            if (pagerCardBean.isShowRedPoint()) {
-                cpa.redPoint.setVisibility(View.VISIBLE);
-            } else {
-                cpa.redPoint.setVisibility(View.GONE);
-            }
-        } else {
-            cpa.redPoint.setBackgroundResource(0);
-            cpa.redPoint.setText(pagerCardBean.getRedPointText());
         }
 
         cpa.itemView.setOnClickListener(new View.OnClickListener() {

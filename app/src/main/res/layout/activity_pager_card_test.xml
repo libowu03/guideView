@@ -10,15 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardview"
-        app:pagerCardRedPointColor="@color/colorRed"
-        app:pagerCardRedPointHeight="5dp"
-        app:pagerCardRedPointWidth="5dp"
-        app:pagerCardImgType="ROUND_RECT"
-        app:imgCorner="10dp"/>
+        app:pagerCardRedPointColor="@color/colorPrimary"
+        app:pagerCardRedPointTextColor="@color/white"
+        app:pagerCardRedPointTextSize="8dp" />
     <com.kit.pagerCard.PagerCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cardviewTwo" />
+        android:id="@+id/cardviewTwo"
+        app:pagerCardImgType="CIRCLE"
+        app:pagerCardImgHeight="40dp"
+        app:pagerCardImgWidth="40dp"/>
 
     <com.kit.pagerCard.PagerCardView
         android:layout_width="match_parent"

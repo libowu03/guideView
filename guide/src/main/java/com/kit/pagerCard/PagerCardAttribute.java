@@ -72,13 +72,15 @@ public class PagerCardAttribute {
     private boolean enableInfinite;
     //自动播放时间间隔
     private int playDuration;
+    //红点背景色
+    private int redBackGroundColor;
 
 
     public PagerCardAttribute(int imageHeight, int imageWidth, int redPointTextSize, int redPointTextColor, int redPointSizeWidth, int redPointSizeHeight, int titleTextSize,
                               int titleTextColor, int unSeIndicatorColor, int seIndicatorColor, int unSeIndicatorWidth, int seIndicatorHeight,int imgTyoe,int imgCorner,
                               boolean needIndicator,boolean canScrollVertically,int itemDecorationColor,int itemDecorationWeight,
                               int itemMarginLeft,int itemMarginRight,int itemMarginTop,int itemMarginBottom,int itemMargin,int itemPadding,int itemPaddingLeft,int itemPaddingTop,int itemPaddingRight,int itemPaddingBottom,int itemBackgrounColor,Drawable itemBackgrounResource,
-                              boolean enableInfinite,int playDuration) {
+                              boolean enableInfinite,int playDuration,int redBackGroundColor) {
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.redPointTextSize = redPointTextSize;
@@ -112,6 +114,15 @@ public class PagerCardAttribute {
         this.itemBackgrounResource = itemBackgrounResource;
         this.enableInfinite = enableInfinite;
         this.playDuration = playDuration;
+        this.redBackGroundColor = redBackGroundColor;
+    }
+
+    public int getRedBackGroundColor() {
+        return redBackGroundColor;
+    }
+
+    public void setRedBackGroundColor(int redBackGroundColor) {
+        this.redBackGroundColor = redBackGroundColor;
     }
 
     public int getItemBackgrounColor() {
@@ -285,6 +296,8 @@ public class PagerCardAttribute {
     public int getRedPointTextColor() {
         return redPointTextColor;
     }
+
+
 
     public void setRedPointTextColor(int redPointTextColor) {
         this.redPointTextColor = redPointTextColor;
