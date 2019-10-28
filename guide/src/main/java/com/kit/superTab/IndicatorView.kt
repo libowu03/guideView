@@ -9,6 +9,11 @@ import android.util.Log
 import android.view.View
 import com.kit.guide.utils.GuideViewUtils
 
+/**
+ * tab的指示器
+ * @author libowu
+ * @date 2019/10/10
+ */
 class IndicatorView : View{
     private lateinit var paint:Paint
     private var everyIndicatorWidth:Float = 0f

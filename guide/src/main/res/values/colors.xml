@@ -9,4 +9,5 @@
     <color name="colorTitle">#363636</color>
     <color name="colorLine">#22000000</color>
     <color name="colorTranslate">#00000000</color>
+    <color name="colorRed">#FF0000</color>
 </resources>
