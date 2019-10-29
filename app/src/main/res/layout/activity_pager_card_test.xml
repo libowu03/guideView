@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardview"
-        app:pagerCardRedPointColor="@color/colorPrimary"
+        app:pagerCardRedPointColor="@color/colorRed"
         app:pagerCardRedPointTextColor="@color/white"
         app:pagerCardRedPointTextSize="8dp" />
     <com.kit.pagerCard.PagerCardView
@@ -19,10 +19,13 @@
         android:id="@+id/cardviewTwo"
         app:pagerCardImgType="CIRCLE"
         app:pagerCardImgHeight="40dp"
-        app:pagerCardImgWidth="40dp"/>
+        app:pagerCardImgWidth="40dp"
+        app:pagerCardRedPointTextColor="@color/white"
+        app:seIndicatorColor="@color/colorRed"/>
 
     <com.kit.pagerCard.PagerCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cardviewThree"/>
+        android:id="@+id/cardviewThree"
+        app:pagerCardRedPointTextColor="@color/white"/>
 </LinearLayout>

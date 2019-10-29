@@ -117,9 +117,9 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
                     cpa.redPoint.measure(0,0);
                     int measureWidht = cpa.redPoint.getMeasuredWidth();
                     if (pagerCardAttribute.getImageHeight() > 0 && pagerCardAttribute.getImageWidth() > 0){
-                        cl.leftMargin = pagerCardAttribute.getImageWidth() - measureWidht/2;
+                        cl.leftMargin = pagerCardAttribute.getImageWidth() - measureWidht + GuideViewUtils.dip2px(context, 6);
                     }else {
-                        cl.leftMargin = GuideViewUtils.dip2px(context, 50) - measureWidht/2;
+                        cl.leftMargin = GuideViewUtils.dip2px(context, 50) - measureWidht + GuideViewUtils.dip2px(context, 6);
                     }
                     cl.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
                     cl.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;

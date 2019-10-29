@@ -436,8 +436,13 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
             return;
         }
        indicatorList.get(position).setBackgroundResource(R.drawable.indicator_bg);
+        GradientDrawable gifDrawableResource = (GradientDrawable)indicatorList.get(position).getBackground();
+        gifDrawableResource.setColor(seIndicatorColor);
+
        if (position != oldIndicatorIndex){
            indicatorList.get(oldIndicatorIndex).setBackgroundResource(R.drawable.indicator_unselect_bg);
+           GradientDrawable gif = (GradientDrawable)indicatorList.get(oldIndicatorIndex).getBackground();
+           gif.setColor(unSeIndicatorColor);
        }
        oldIndicatorIndex = position;
     }
