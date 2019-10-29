@@ -7,26 +7,21 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.load.resource.gif.GifDrawableResource;
 import com.kit.guide.R;
 import com.kit.guide.utils.GuideViewUtils;
-import com.kit.utils.LogUtils;
+import com.kit.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -468,20 +463,6 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         return v;
     }
 
-    /**
-     * 设置fragment
-     * @param col 卡片中要显示内容的列数
-     * @return
-     */
-    protected PagerCardContentFragment makeFragment(int col){
-        PagerCardContentFragment cardContentFragment = new PagerCardContentFragment();
-        cardContentFragment.setPagerCardListener(this);
-        cardContentFragment.setAttribute(attribute);
-        Bundle bundle = new Bundle();
-        bundle.putInt("col",col);
-        cardContentFragment.setArguments(bundle);
-        return cardContentFragment;
-    }
 
     /**
      * 条目点击事件
@@ -541,15 +522,15 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
             pagerNum = pagerNum + 1;
         }
         if (fragments == null){
-            LogUtils.i("kitMessage","请在更新页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
+            L.i("kitMessage","请在更新页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
             return false;
         }else {
             if (pagerNum >= fragments.size()){
-                LogUtils.i("kitMessage","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
+                L.i("kitMessage","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
                 return false;
             }
             if (contentList.size() > row*colm){
-                LogUtils.i("kitMessage","更新集合长度不允许超过当前页面被定义的长度，即在调用setCardContent方法时，传入的rowNum和colNum决定了页面可显示的最大内容，更新的内容长度不允许超过rowNum*colNum");
+                L.i("kitMessage","更新集合长度不允许超过当前页面被定义的长度，即在调用setCardContent方法时，传入的rowNum和colNum决定了页面可显示的最大内容，更新的内容长度不允许超过rowNum*colNum");
                 return false;
             }
             //((PagerCardContentFragment)fragments.get(pagerNum)).updatePagerCardList(contentList);
@@ -558,17 +539,36 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
     }
 
     /**
+     * 获取页面下的某项
+     * @param pager 页码
+     * @param index 第几个对象
+     * @return 第pager页的第index个对象
+     */
+    public PagerCardBean getPagerItem(int pager,int index){
+        if (pager >= fragments.size()){
+            return null;
+        }
+        return ((CardPagerAdapter)(fragments.get(pager).getAdapter())).getPagerItem(index);
+    }
+
+    public List<PagerCardBean> getPagerItemList(int pager){
+        if (pager >= fragments.size()){
+            return null;
+        }
+        return ((CardPagerAdapter)(fragments.get(pager).getAdapter())).getPagerItemList();
+    }
+    /**
      * 获取某页中的所有内容
      * @param index
      * @return
      */
  /*   public List<PagerCardBean> getPagerList(int index){
         if (fragments == null){
-            LogUtils.i("kitMessage","请在获取页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
+            L.i("kitMessage","请在获取页面数据前设置数据，即调用setCardContent方法进行页面数据装载，目前pagerCard中不存在页面");
             return null;
         }else {
             if (index >= fragments.size()){
-                LogUtils.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
+                L.e("kitError","传入的页码数大于pagerCard中的最大页码数，将会出现“越界”的情况，请检查传入参数是否正确");
             }
             //复制一份数据出来，如果直接返回源数据，调用者就可以直接给源数据内容进行修改了，而不需要经过updatePagerCardList方法，这是不允许的，如果允许updatePagerCardList中的判断也就没有意义了。
             List<PagerCardBean> pagerList = new ArrayList<>();
@@ -605,7 +605,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
                 pager2.setCurrentItem(pagerNum,smoothScroll);
             }
         }else {
-            LogUtils.e("KitError","PagerCard：viewpager can not be null");
+            L.e("KitError","PagerCard：viewpager can not be null");
         }
     }
 

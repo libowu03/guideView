@@ -190,6 +190,13 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
         return content;
     }
 
+    public T getPagerItem(int index){
+        if (index >= content.size()){
+            return null;
+        }
+        return content.get(index);
+    }
+
     public boolean updateItemPagerCard(int index,T item){
         if (content == null || index >= content.size()){
             return false;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.kit.utils.LogUtils;
+import com.kit.utils.L;
 
 /**
  * 选择测试功能的活动
@@ -22,7 +22,7 @@ public class SelectMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_menu);
-        LogUtils.isDebug = true;
+        L.isDebug = true;
         sendToGuide = findViewById(R.id.sendToGuide);
         sendToPagerCard = findViewById(R.id.sendToPagerCard);
         sendToSuperTab = findViewById(R.id.sendToSuperTab);
