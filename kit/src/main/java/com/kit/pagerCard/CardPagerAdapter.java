@@ -186,6 +186,19 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
         });
     }
 
+    public List<T> getPagerItemList(){
+        return content;
+    }
+
+    public boolean updateItemPagerCard(int index,T item){
+        if (content == null || index >= content.size()){
+            return false;
+        }
+        content.set(index,item);
+        notifyItemChanged(index);
+        return true;
+    }
+
     /**
      * 加载图片
      *

@@ -368,6 +368,10 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
        }
     }
 
+    public boolean updateItemPagerCard(int pager,int itemIndex,PagerCardBean pagerCardBean){
+        return ((CardPagerAdapter) (fragments.get(pager).getAdapter())).updateItemPagerCard(itemIndex,pagerCardBean);
+    }
+
     public RecyclerView makeRecyclerview(List<PagerCardBean> list){
         RecyclerView pagerCardContent = new RecyclerView(getContext());
         CardPagerAdapter pagerContentAdapter = new CardPagerAdapter();

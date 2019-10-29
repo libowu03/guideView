@@ -55,7 +55,7 @@ public class SelfViewPagerView extends ViewPager {
                 RecyclerView list = (RecyclerView) getChildAt(0);
                 if (row == -1){
                     row = list.getAdapter().getItemCount()/col;
-                    Log.e("日志","row为-1，row为-1时的行数为："+row);
+                    //Log.e("日志","row为-1，row为-1时的行数为："+row);
                 }
                 child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
                 if (list != null && list.getChildCount() != 0){

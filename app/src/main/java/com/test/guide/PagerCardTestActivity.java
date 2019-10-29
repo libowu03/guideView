@@ -53,12 +53,14 @@ public class PagerCardTestActivity extends AppCompatActivity implements PagerCar
                 .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569647607838&di=daadb04b3c41ab14c6a4eb5ebdb4f5ce&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D432aef2ac35c1038247ecec28211931c%2Fd4628535e5dde7113a95acc6a2efce1b9d1661bf.jpg").setName("dqq"))
                 .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569647607838&di=daadb04b3c41ab14c6a4eb5ebdb4f5ce&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D432aef2ac35c1038247ecec28211931c%2Fd4628535e5dde7113a95acc6a2efce1b9d1661bf.jpg").setName("dqq"))
                 .addContent(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569647607838&di=daadb04b3c41ab14c6a4eb5ebdb4f5ce&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D432aef2ac35c1038247ecec28211931c%2Fd4628535e5dde7113a95acc6a2efce1b9d1661bf.jpg").setName("dqq"))
-                .build(getSupportFragmentManager(),-1,4,this);
+                .build(getSupportFragmentManager(),2,4,this);
+        pagerCardViewThree.updateItemPagerCard(0,2,new PagerCardBean("default_pet").setName("DQQ").setRedPointText("LBW"));
     }
 
     @Override
     public void onItemClickListener(PagerCardBean pagerCardBean, int itemIndex, int currentPagerIndex) {
         //Toast.makeText(this,"在第："+currentPagerIndex+"页的第"+itemIndex+"项发生点击",Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
