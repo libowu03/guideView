@@ -216,11 +216,10 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
         //如果内容数量小鱼要求显示数量，就不进行分页显示了
         if (content.size() <= rowNum*colNum || rowNum == -1){
             //获取fragment
-            List<RecyclerView> list = new ArrayList<>();
-            list.add(makeRecyclerview(content));
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(list);
+            fragments = new ArrayList<>();
+            fragments.add(makeRecyclerview(content));
             //添加指示器
-            if (needIndicator){
+            if (needIndicator && rowNum != -1){
                 indicatorList.add(makeIndicator());
             }
         }else {
