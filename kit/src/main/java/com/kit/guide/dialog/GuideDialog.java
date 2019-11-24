@@ -72,10 +72,12 @@ public class GuideDialog extends DialogFragment {
     /**
      * 主窗口的view，activity可通过getWindow -> getDecorView 方法获取，fragment可使用onViewCreated中的view
      * @param view
+     * @param guideBeans 高亮集合，强制让调用者输入
      */
     @SuppressLint("ValidFragment")
-    public GuideDialog(View view) {
+    public GuideDialog(View view,List<GuideBean> guideBeans) {
         this.activityView = view;
+        this.guideBeans = guideBeans;
         initData();
     }
 
@@ -165,6 +167,10 @@ public class GuideDialog extends DialogFragment {
     public void show(FragmentManager manager, String tag) {
         //如果不存在，则显示，存在不显示，目的是保证dialog不重复显示
         if (!DialogManager.isExistCurrentDialog(this)){
+            //如果高亮集合中不存在内容，则不进行显示
+            if (guideBeans == null || guideBeans.size() == 0){
+                return;
+            }
             super.show(manager, tag);
             //移除管理器中的上一个内容
             DialogManager.removePreDialog();

@@ -68,10 +68,10 @@ public class CustomFragment extends Fragment {
         //将要说明的控件添加到集合中
         guides = new ArrayList<>();
         //GuideBean的构造方法比较多，后面会提到各个构造方法的作用
-        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.CIRCLE));
-        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two).setShape(GuideView.Config.CIRCLE));
+        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_go));
+        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two));
         //设置高亮区弹窗,传入的view为activity或fragment的主界面的view，activity可以通过getWindow().getDecorView()的方式获取，fragment可以在onViewCreated中获取到，用于判断主view是否可以获取到控件的位置参数了。
-        guideDialog = new GuideDialog(getActivity().getWindow().getDecorView());
+        guideDialog = new GuideDialog(getActivity().getWindow().getDecorView(),guides);
         //设置高亮集合
         guideDialog.setGuideBeans(guides);
         //设置是否启用精确点击（true时只有点击高亮区时才执行下一步操作，默认为false）
@@ -109,11 +109,11 @@ public class CustomFragment extends Fragment {
         //将要说明的控件添加到集合中
         guides = new ArrayList<>();
         //GuideBean的构造方法比较多，后面会提到各个构造方法的作用
-        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two).setShape(GuideView.Config.ROUNDED_RECT).setPadding(GuideViewUtils.dip2px(getContext(),10)));
-        guides.add( new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.OVAL).setPadding(GuideViewUtils.dip2px(getContext(),20)));
+        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two).setPadding(20));
+        guides.add( new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.OVAL).setPadding(GuideViewUtils.dip2px(getContext(),200)));
         guides.add(new GuideBean(R.mipmap.guide,getActivity(),new Rect(0,0,getResources().getDisplayMetrics().widthPixels,200)));
         //设置高亮区弹窗,传入的view为activity或fragment的主界面的view，activity可以通过getWindow().getDecorView()的方式获取，fragment可以在onViewCreated中获取到，用于判断主view是否可以获取到控件的位置参数了。
-        guideDialog = new GuideDialog(view);
+        guideDialog = new GuideDialog(view,guides);
         //设置高亮集合
         guideDialog.setGuideBeans(guides);
         //设置是否启用精确点击（true时只有点击高亮区时才执行下一步操作，默认为false）
