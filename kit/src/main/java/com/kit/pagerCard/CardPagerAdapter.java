@@ -1,7 +1,6 @@
 package com.kit.pagerCard;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -9,7 +8,6 @@ import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +39,7 @@ public class CardPagerAdapter<T extends PagerCardBean> extends RecyclerView.Adap
     @Override
     public Cpa onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         this.context = viewGroup.getContext();
-        return new Cpa(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card_pager, viewGroup, false));
+        return new Cpa(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardpager_item, viewGroup, false));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

@@ -148,7 +148,7 @@ public class GuideDialog extends DialogFragment {
      */
     private View initWindow(LayoutInflater inflater, ViewGroup container) {
         getDialog().setCanceledOnTouchOutside(true);
-        View rootView = inflater.inflate(R.layout.dialog_guide, container, false);
+        View rootView = inflater.inflate(R.layout.guide_dialog, container, false);
         // 设置宽度为屏宽、靠近屏幕底部。
         final Window window = getDialog().getWindow();
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);

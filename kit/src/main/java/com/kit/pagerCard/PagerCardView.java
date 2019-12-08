@@ -82,7 +82,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
     public PagerCardView(Context context, AttributeSet attributeSet, int defStyleAttr){
         super(context, attributeSet,0);
 
-        LayoutInflater.from(context).inflate(R.layout.view_pagecard,this,true);
+        LayoutInflater.from(context).inflate(R.layout.cardpager_view,this,true);
         pager2 = findViewById(R.id.pagerCard);
         indicator = findViewById(R.id.pagerCardIndicator);
 
@@ -450,7 +450,7 @@ public class PagerCardView extends LinearLayout implements CardPagerAdapter.Clic
      * @return
      */
     protected View makeIndicator(){
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.view_indicator_cardpager,null,false);
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.cardpager_view_indicator,null,false);
         GradientDrawable gifDrawableResource = (GradientDrawable)v.getBackground();
         gifDrawableResource.setColor(unSeIndicatorColor);
         LayoutParams ll = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

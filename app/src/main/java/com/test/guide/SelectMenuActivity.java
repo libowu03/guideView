@@ -48,9 +48,9 @@ public class SelectMenuActivity extends AppCompatActivity {
         sendToSuperTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent sendToSuperTab = new Intent(SelectMenuActivity.this,SuperTabTestActivity.class);
-                sendToSuperTab.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(sendToSuperTab);
+                Intent sendToGuide = new Intent(SelectMenuActivity.this,MainUiFrameActivity.class);
+                sendToGuide.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(sendToGuide);
             }
         });
     }
