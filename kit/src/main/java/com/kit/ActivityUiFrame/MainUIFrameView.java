@@ -3,12 +3,15 @@ package com.kit.ActivityUiFrame;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -19,15 +22,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.kit.guide.R;
 import com.kit.utils.GetActionBarHeight;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,9 +47,9 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     private LinearLayout toolbar;
     private ImageView mainuiOpenMenu;
     private ImageView mainuiRightBtn;
-    private TextView mainuiToolbarTitle;
-    private List<TabContent> tabContentList;
     private LinearLayout defaultTab;
+    private Fragment oldFragment;
+    private List<TabViewInfo> tabViewInfos;
 
 
     public MainUIFrameView(Context context) {
@@ -68,7 +74,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      */
     private void getObject(Context context) {
         activity = (Activity) context;
-        tabContentList = new ArrayList<>();
+        tabViewInfos = new ArrayList<>();
     }
 
 
@@ -92,7 +98,6 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * @param tabContents
      */
     public void setFragmentsList(final List<TabContent> tabContents){
-        this.tabContentList = tabContents;
         for (final TabContent tab:tabContents){
             View tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab,null);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
@@ -107,23 +112,97 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
             }else {
                 name.setVisibility(GONE);
             }
-            if (tab.getTabIcon() == null){
-                if (tab.getTabIcon() instanceof String){
-                    String tabIconUrl = (String) tab.getTabIcon();
-                    if (tabIconUrl == null || tabIconUrl.isEmpty()){
-                        tabIcon.setVisibility(GONE);
-                    }
-                }
+            tabViewInfos.add(new TabViewInfo(tabIcon,name,tab));
 
-            }
+            //设置tab点击事件
             tabView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   Log.e("日志","执行点击："+tab.getFragment().getTag());
+                    //设置默认fragment
+                    FragmentManager fragmentTransaction = ((AppCompatActivity)getContext()).getSupportFragmentManager();
+                    FragmentTransaction transation = fragmentTransaction.beginTransaction();
+                    transation.hide(oldFragment);
+                    if (!tab.getFragment().isAdded()){
+                        transation.add(R.id.mainContent,tab.getFragment(),tab.getTabName());
+                    }else {
+                        transation.show(tab.getFragment());
+                    }
+                    transation.commit();
+                    oldFragment = tab.getFragment();
+                    setCheckAndUncheck(tab);
                 }
             });
             defaultTab.addView(tabView);
         }
+
+        //设置默认fragment
+        FragmentManager fragmentTransaction = ((AppCompatActivity)getContext()).getSupportFragmentManager();
+        FragmentTransaction transation = fragmentTransaction.beginTransaction();
+        transation.add(R.id.mainContent,tabContents.get(0).getFragment(),tabContents.get(0).getTabName());
+        transation.commit();
+        oldFragment = tabContents.get(0).getFragment();
+        setCheckAndUncheck(tabContents.get(0));
+    }
+
+
+    /**
+     * 设置选中和未选中的字体颜色及图片状态
+     * @param tabContent
+     */
+    public void setCheckAndUncheck(TabContent tabContent){
+        for (TabViewInfo info:tabViewInfos){
+            if (info.getTabContent().getTabName().equals(tabContent.getTabName())){
+                info.getTabName().setTextColor(Color.RED);
+                setCheckAndUncheckImg(true,tabContent,info);
+            }else {
+                setCheckAndUncheckImg(false,tabContent,info);
+                info.getTabName().setTextColor(Color.GRAY);
+            }
+        }
+    }
+
+    /**
+     * 设置图片状态
+     * @param isChoose
+     * @param tab
+     * @param info
+     */
+    public void setCheckAndUncheckImg(boolean isChoose,TabContent tab,TabViewInfo info){
+        ImageView tabIcon = info.getTabIcon();
+        //设置tab的icon
+       if(!isChoose){
+           if (tab.getTabIcon() == null){
+               tabIcon.setVisibility(GONE);
+           }else if (tab.getTabIcon() instanceof String){
+               //是网络图片才进行加载显示，否则直接隐藏掉icon
+               String url = (String) tab.getTabIcon();
+               if (url.contains("https://") || url.contains("http://")){
+                   Glide.with(getContext()).load(url).into(tabIcon);
+               }else {
+                   tabIcon.setVisibility(GONE);
+               }
+           }else if (tab.getTabIcon() instanceof Integer){
+               tabIcon.setImageResource((Integer) tab.getTabIcon());
+           }else if (tab.getTabIcon() instanceof Bitmap){
+               tabIcon.setImageBitmap((Bitmap) tab.getTabIcon());
+           }
+       }else {
+           if (tab.getTabSelectIcon() == null){
+               tabIcon.setVisibility(GONE);
+           }else if (tab.getTabIcon() instanceof String){
+               //是网络图片才进行加载显示，否则直接隐藏掉icon
+               String url = (String) tab.getTabSelectIcon();
+               if (url.contains("https://") || url.contains("http://")){
+                   Glide.with(getContext()).load(url).into(tabIcon);
+               }else {
+                   tabIcon.setVisibility(GONE);
+               }
+           }else if (tab.getTabIcon() instanceof Integer){
+               tabIcon.setImageResource((Integer) tab.getTabSelectIcon());
+           }else if (tab.getTabIcon() instanceof Bitmap){
+               tabIcon.setImageBitmap((Bitmap) tab.getTabSelectIcon());
+           }
+       }
     }
 
 
@@ -167,7 +246,6 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         //默认顶部工具栏内部控件
         mainuiOpenMenu = findViewById(R.id.mainuiOpenMenu);
         mainuiRightBtn = findViewById(R.id.mainuiRightBtn);
-        mainuiToolbarTitle = findViewById(R.id.mainuiToolbarTitle);
     }
 
 

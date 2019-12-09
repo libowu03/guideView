@@ -7,8 +7,6 @@ public class TabContent {
     private String tabName;
     private Object tabIcon;
     private Object tabSelectIcon;
-    //默认图片，这个主要针对需要加载网络图片最为icon的tab
-    private int defaultTabIcon;
 
     public TabContent(Fragment fragment, String tabName) {
         this.fragment = fragment;
@@ -34,12 +32,12 @@ public class TabContent {
         return this;
     }
 
-    public int getDefaultTabIcon() {
-        return defaultTabIcon;
+    public Object getTabSelectIcon() {
+        return tabSelectIcon;
     }
 
-    public TabContent setDefaultTabIcon(int defaultTabIcon) {
-        this.defaultTabIcon = defaultTabIcon;
+    public TabContent setTabSelectIcon(Object tabSelectIcon) {
+        this.tabSelectIcon = tabSelectIcon;
         return this;
     }
 }

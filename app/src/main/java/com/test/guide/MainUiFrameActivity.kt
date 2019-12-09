@@ -15,11 +15,11 @@ class MainUiFrameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_ui_frame)
         list = mutableListOf()
-        list?.add(TabContent(MainUiDefaultFragment(),"0"))
-        list?.add(TabContent(MainUiDefaultFragment(),"1"))
-        list?.add(TabContent(MainUiDefaultFragment(),"2"))
-        list?.add(TabContent(MainUiDefaultFragment(),"3"))
-        list?.add(TabContent(MainUiDefaultFragment(),"4"))
+        list?.add(TabContent(MainUiDefaultFragment(),"首页").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(MainUiDefaultFragment(),"运势").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(MainUiDefaultFragment(),"测算").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(MainUiDefaultFragment(),"大师").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(MainUiDefaultFragment(),"我的").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
         mainui.setFragmentsList(list)
     }
 }
