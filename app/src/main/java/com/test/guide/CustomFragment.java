@@ -109,9 +109,7 @@ public class CustomFragment extends Fragment {
         //将要说明的控件添加到集合中
         guides = new ArrayList<>();
         //GuideBean的构造方法比较多，后面会提到各个构造方法的作用
-        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two).setMarginTop(GuideViewUtils.dip2px(getContext(),100)));
-        guides.add( new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.OVAL));
-        guides.add(new GuideBean(R.mipmap.guide,getActivity(),new Rect(0,0,getResources().getDisplayMetrics().widthPixels,GuideViewUtils.dip2px(getContext(),48))));
+        guides.add(new GuideBean(R.mipmap.guide,getActivity(),new Rect(0,0,getResources().getDisplayMetrics().widthPixels,GuideViewUtils.dip2px(getContext(),48))).setText("你好").setMarginTop(200).setPosition(GuideView.Config.BOTTOM));
         //设置高亮区弹窗,传入的view为activity或fragment的主界面的view，activity可以通过getWindow().getDecorView()的方式获取，fragment可以在onViewCreated中获取到，用于判断主view是否可以获取到控件的位置参数了。
         guideDialog = new GuideDialog(view,guides);
         //设置高亮集合
@@ -146,6 +144,7 @@ public class CustomFragment extends Fragment {
         guideDialog.setMarkColor(Color.parseColor("#DD000000"));
         //设置圆角
         guideDialog.setRectCorner(GuideViewUtils.dip2px(getContext(),20));
+        guideDialog.setTextMargin(GuideViewUtils.dip2px(getContext(),30),0);
         //执行显示高亮控件
         guideDialog.show(getFragmentManager(),getClass().getName());
     }

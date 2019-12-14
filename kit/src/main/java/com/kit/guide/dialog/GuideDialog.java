@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,7 @@ public class GuideDialog extends DialogFragment {
      * 矩形圆角
      */
     private int rectCorner;
+    private int textMarginTop,textMarginBottom;
     /**
      * 主窗口的view，activity可通过getWindow -> getDecorView 方法获取，fragment可使用onViewCreated中的view
      * @param view
@@ -128,9 +130,13 @@ public class GuideDialog extends DialogFragment {
                 guideView.setGuideTextSize(guideTextSize);
                 guideView.setMaskColor(markColor);
                 guideView.setClickExact(isExactClick);
+                guideView.setTextMargin(textMarginTop,textMarginBottom);
                 guideView.setActivity(getActivity());
                 GuideView.Config.ROUNDED_RECT_VALUE = rectCorner;
                 guideView.showGuide(activityView);
+            }else {
+                dismiss();
+                Log.e("guideWarning","reason========>guideBean不应该为空，请记得设置guidebean");
             }
      }
 
@@ -177,9 +183,9 @@ public class GuideDialog extends DialogFragment {
             //将本dialog存放进管理器中进行管理
             DialogManager.putDialog(this);
         }
-
-
     }
+
+
 
     /**
      * 设置高亮区的默认信息
@@ -189,6 +195,18 @@ public class GuideDialog extends DialogFragment {
         openMore = false;
         guideTextColor = Color.parseColor("#333333");
         guideTextSize = 20;
+        textMarginBottom = 20;
+        textMarginTop = 20;
+     }
+
+    /**
+     * 设置文字距离说明图片的距离
+     * @param textMarginTop 顶部边距
+     * @param textMarginBottom 底部边距
+     */
+     public void setTextMargin(int textMarginTop,int textMarginBottom){
+        this.textMarginTop = textMarginTop;
+        this.textMarginBottom = textMarginBottom;
      }
 
     /**

@@ -49,6 +49,7 @@ public class GuideView extends View {
     private int guideTextColor;
     private float guideTextSize;
     private Activity act;
+    private int textMarginTop,textMarginBottom;
 
     public GuideView(Context context){
         this(context,null);
@@ -235,6 +236,7 @@ public class GuideView extends View {
         int centerLine = guideBean.getRect().left+(guideBean.getRect().right-guideBean.getRect().left)/2;
         //说明图片的左边距离
         int targetCenter = centerLine - guideBean.getBitmap().getWidth()/2;
+        Log.e("日志","target值为："+targetCenter+"left为："+guideBean.getRect().left+",right为："+guideBean.getRect().right);
         if (guideBean.getBitmap() != null){
             drawShuoMingPic(canvas,guideBean,targetCenter);
         }
@@ -242,13 +244,14 @@ public class GuideView extends View {
         //如果自定义字体不为空，则绘制自定义字体
         if (guideBean.getText() != null){
             textPaint.setStrokeWidth(100);
-            int left = (int) (targetCenter - (textPaint.measureText(guideBean.getText())/4));
+            int left = (int) (centerLine - (textPaint.measureText(guideBean.getText())/2));
+            Log.e("日志","left的值为："+left+"center的值为："+targetCenter);
             if (guideBean.getTextAlign() == Config.LEFT){
-                canvas.drawText(guideBean.getText(),0,guideBean.getRect().bottom+guideBean.getBitmap().getHeight()+textPaint.measureText("里"),textPaint);
+                canvas.drawText(guideBean.getText(),0,guideBean.getRect().bottom+guideBean.getBitmap().getHeight()+textPaint.measureText("里")+textMarginTop - textMarginBottom,textPaint);
             }else if (guideBean.getTextAlign() == Config.RIGHT){
-                canvas.drawText(guideBean.getText(),width-textPaint.measureText(guideBean.getText()),guideBean.getRect().bottom+guideBean.getBitmap().getHeight()+textPaint.measureText("里"),textPaint);
+                canvas.drawText(guideBean.getText(),width-textPaint.measureText(guideBean.getText()),guideBean.getRect().bottom+guideBean.getBitmap().getHeight()+textPaint.measureText("里") + guideBean.getMarginTop() + guideBean.getMarginBottom() + textMarginTop - textMarginBottom,textPaint);
             }else {
-                canvas.drawText(guideBean.getText(),left,guideBean.getRect().bottom+guideBean.getBitmap().getHeight()+textPaint.measureText("里"),textPaint);
+                canvas.drawText(guideBean.getText(),left,guideBean.getRect().bottom+guideBean.getBitmap().getHeight()+textPaint.measureText("里")+ guideBean.getMarginTop() + guideBean.getMarginBottom()+textMarginTop - textMarginBottom,textPaint);
             }
         }
     }
@@ -284,7 +287,11 @@ public class GuideView extends View {
         }else {
             canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop()+guideBean.getMarginBottom(),paint);
         }
+    }
 
+    public void setTextMargin(int top,int bottom){
+        this.textMarginTop = top;
+        this.textMarginBottom = bottom;
     }
 
     /**
