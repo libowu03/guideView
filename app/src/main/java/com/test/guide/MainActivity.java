@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements GuideViewClickCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }
         tab = findViewById(R.id.tab);
         viewpager = findViewById(R.id.viewpager);
         fragments = new ArrayList<>();
@@ -48,15 +51,15 @@ public class MainActivity extends AppCompatActivity implements GuideViewClickCal
         tab.addTab(tab.newTab().setText("测试"));
         tab.addTab(tab.newTab().setText("测试"));
         tab.addTab(tab.newTab().setText("测试"));
-        viewpager.setOffscreenPageLimit(3);
+        viewpager.setOffscreenPageLimit(5);
         viewpager.setCurrentItem(4);
         tab.setupWithViewPager(viewpager);
 
-        List<GuideBean> guideBeans = new ArrayList<>();
+       /* List<GuideBean> guideBeans = new ArrayList<>();
         guideBeans.add(new GuideBean(R.mipmap.guide,this,tab));
         GuideDialog guideDialog = new GuideDialog(getWindow().getDecorView(),guideBeans);
-        guideDialog.show(getSupportFragmentManager(),getClass().getName());
-       /* viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        guideDialog.show(getSupportFragmentManager(),getClass().getName());*/
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
                 if (i1 == 0){
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements GuideViewClickCal
 
             }
 
-        });*/
+        });
     }
 
 

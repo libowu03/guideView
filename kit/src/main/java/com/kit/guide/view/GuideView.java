@@ -381,20 +381,25 @@ public class GuideView extends View {
                         if (guideBeans.get(i).getTargetView() != null){
                             //由于未知原因，安卓4.4使用getLocationInWindow测绘时左右会出现问题，但是上下坐标没问题
                             // 而使用getGlobalVisibleRect又会出现viewpager中上下又问题，左右坐标没问题，最终为了解决此问题只能两个结合使用了
-                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT){
-                                guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
-                                setRectInfo(rect);
-                            }else {
-                                guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
-                                int[] local = new int[2];
-                                guideBeans.get(i).getTargetView().getLocationInWindow(local);
-                                rect.top = local[1];
-                                rect.bottom = local[1]+guideBeans.get(i).getTargetView().getHeight();
-                            }
+                            guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
+                            int[] local = new int[2];
+                            guideBeans.get(i).getTargetView().getLocationInWindow(local);
+                            rect.top = local[1];
+                          /*  rect.left = local[0];
+                            rect.right = local[0]+guideBeans.get(i).getTargetView().getWidth();*/
+                            rect.bottom = local[1]+guideBeans.get(i).getTargetView().getHeight();
+                            setRectInfo(rect,true);
                         }else {
-                            rect = guideBeans.get(i).getRect();
+                            //如果直接绘制高亮区矩阵，不需考虑状态栏的影响，故不需要测绘顶部和顶部。
+                            if (guideBeans.get(i).isSimpleRect()){
+                                rect = guideBeans.get(i).getRect();
+                                setRectInfo(rect,false);
+                            }else {
+                                rect = guideBeans.get(i).getRect();
+                                setRectInfo(rect,true);
+                            }
                         }
-                        setRectInfo(rect);
+
 
                         //获取控件图片信息
                         if (guideBeans.get(i).getTargetView() != null){
@@ -418,11 +423,15 @@ public class GuideView extends View {
      * 设置控件矩阵的顶部坐标和底部坐标，这两个坐标与状态栏和标题栏高度有关
      * @param rect 控件的矩阵
      */
-    public void setRectInfo(Rect rect){
+    public void setRectInfo(Rect rect,Boolean isMeasureTopAndBottom){
         Rect tempRect = new Rect(rect.left,rect.top,rect.right,rect.bottom);
-        rect.top = rect.top - GuideViewUtils.getStatusBarHeight(act);
-        rect.bottom = rect.bottom - GuideViewUtils.getStatusBarHeight(act);
-        //如果是小于0，说明属于其他页面的viewpager
+        if (isMeasureTopAndBottom){
+            rect.top = Math.abs(rect.top - GuideViewUtils.getStatusBarHeight(act));
+            rect.bottom = Math.abs(rect.bottom - GuideViewUtils.getStatusBarHeight(act));
+        }
+        Log.e("日志","修改前：left:"+rect.left+",rightA:"+rect.right+",屏幕宽度为："+act.getResources().getDisplayMetrics().widthPixels);
+
+        //左右位置避免被viewpager影响
         if (tempRect.left < 0){
             //获取屏幕宽度
             int screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -432,6 +441,20 @@ public class GuideView extends View {
             int width = Math.abs(tempRect.right - tempRect.left);
             rect.left = screenNum * screenWidth - Math.abs(rect.left);
             rect.right = rect.left + width;
+        }else if (tempRect.left >= act.getResources().getDisplayMetrics().widthPixels && tempRect.left%act.getResources().getDisplayMetrics().widthPixels != 0){
+            //获取屏幕宽度
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            //计算viewpager页数
+            int screenNum = Math.abs((int)(((Math.abs(rect.left) / (screenWidth*1f)))+0.99)) ;
+            //获取view的宽度
+            int width = Math.abs(tempRect.right - tempRect.left);
+            rect.left = screenNum * screenWidth - Math.abs(rect.left) - width;
+            rect.right = Math.abs(rect.left) - width;
+        }else if (tempRect.left != 0 && tempRect.left%act.getResources().getDisplayMetrics().widthPixels == 0){
+            rect.left = 0;
+            int width = Math.abs(tempRect.right - tempRect.left);
+            rect.right = Math.abs(rect.left) + width;
+            Log.e("日志","修改后：left:"+rect.left+",rightA:"+rect.right);
         }
 
     }
