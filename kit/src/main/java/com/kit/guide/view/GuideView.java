@@ -376,6 +376,18 @@ public class GuideView extends View {
     }
 
     /**
+     * 为了调用者拥有更多的自定义属性，添加一个设置paint的方法
+     * 如需特别定制样式，可以设置paint来实现
+     * @param paint
+     */
+    public void setTextPaint(Paint paint){
+        if (paint == null){
+            return;
+        }
+        this.textPaint = paint;
+    }
+
+    /**
      * 显示高亮区，点击后立即显示
      */
     public void showGuide(View view){

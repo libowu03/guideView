@@ -2,6 +2,7 @@ package com.kit.guide.dialog;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -70,6 +71,10 @@ public class GuideDialog extends DialogFragment {
      * 矩形圆角
      */
     private int rectCorner;
+    /**
+     * 说明文字的画笔
+     */
+    private Paint textPaint;
     private int textMarginTop,textMarginBottom;
     /**
      * 主窗口的view，activity可通过getWindow -> getDecorView 方法获取，fragment可使用onViewCreated中的view
@@ -132,6 +137,7 @@ public class GuideDialog extends DialogFragment {
                 guideView.setClickExact(isExactClick);
                 guideView.setTextMargin(textMarginTop,textMarginBottom);
                 guideView.setActivity(getActivity());
+                guideView.setTextPaint(textPaint);
                 GuideView.Config.ROUNDED_RECT_VALUE = rectCorner;
                 guideView.showGuide(activityView);
             }else {
@@ -186,6 +192,13 @@ public class GuideDialog extends DialogFragment {
     }
 
 
+    /**
+     * 设置说明文字的画笔
+     * @param paint
+     */
+    public void setTextPaint(Paint paint){
+        this.textPaint = paint;
+    }
 
     /**
      * 设置高亮区的默认信息

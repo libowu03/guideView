@@ -1,6 +1,7 @@
 package com.test.guide;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -144,7 +145,12 @@ public class CustomFragment extends Fragment {
         guideDialog.setMarkColor(Color.parseColor("#DD000000"));
         //设置圆角
         guideDialog.setRectCorner(GuideViewUtils.dip2px(getContext(),20));
+        //设置文字上下边距
         guideDialog.setTextMargin(GuideViewUtils.dip2px(getContext(),30),0);
+        Paint paint = new Paint();
+        paint.setTextSize(100);
+        paint.setColor(Color.RED);
+        guideDialog.setTextPaint(paint);
         //执行显示高亮控件
         guideDialog.show(getFragmentManager(),getClass().getName());
     }
