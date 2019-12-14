@@ -109,7 +109,7 @@ public class CustomFragment extends Fragment {
         //将要说明的控件添加到集合中
         guides = new ArrayList<>();
         //GuideBean的构造方法比较多，后面会提到各个构造方法的作用
-        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two));
+        guides.add(new GuideBean(R.mipmap.guide,getActivity(),test_two).setMarginTop(GuideViewUtils.dip2px(getContext(),100)));
         guides.add( new GuideBean(R.mipmap.guide,getActivity(),test_go).setShape(GuideView.Config.OVAL));
         guides.add(new GuideBean(R.mipmap.guide,getActivity(),new Rect(0,0,getResources().getDisplayMetrics().widthPixels,GuideViewUtils.dip2px(getContext(),48))));
         //设置高亮区弹窗,传入的view为activity或fragment的主界面的view，activity可以通过getWindow().getDecorView()的方式获取，fragment可以在onViewCreated中获取到，用于判断主view是否可以获取到控件的位置参数了。

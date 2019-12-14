@@ -124,7 +124,7 @@ public class GuideView extends View {
                }
                //是否是绘制简单的集合图像，不是就绘制要说明view的图像
                if (!guideBeans.get(i).isSimpleShape()){
-                   drawBuyView(canvas,guideBeans.get(i));
+                   drawByView(canvas,guideBeans.get(i));
                }else {
                   drawSimpleShapeView(canvas,guideBeans.get(i));
                }
@@ -137,7 +137,7 @@ public class GuideView extends View {
                return;
            }
            if (!guideBean.isSimpleShape()){
-               drawBuyView(canvas,guideBean);
+               drawByView(canvas,guideBean);
            }else {
                canvas.drawBitmap(createDstBitmap(width,height), 0, 0, paint);
                drawSimpleShapeView(canvas,guideBean);
@@ -190,11 +190,11 @@ public class GuideView extends View {
     }
 
     /**
-     * 绘制高亮区及说明图片
+     * 绘制高亮区及说明图片（通过直接绘制view的本体图片）
      * @param canvas
      * @param guideBean
      */
-    public void drawBuyView(Canvas canvas,GuideBean guideBean){
+    public void drawByView(Canvas canvas,GuideBean guideBean){
         if (guideBean == null){
             return;
         }
@@ -213,6 +213,7 @@ public class GuideView extends View {
         }
         //说明控件的中线坐标
         int centerLine = guideBean.getRect().left+(guideBean.getRect().right-guideBean.getRect().left)/2;
+        //Log.e("日志","left为"+guideBean.getRect().left+"，右边距为："+guideBean.getRect().right);
         //说明图片的左边距离
         int targetCenter = centerLine - guideBean.getBitmap().getWidth()/2;
         if (guideBean.getBitmap() != null){
@@ -253,11 +254,12 @@ public class GuideView extends View {
     }
 
     /**
-     * 绘制控件说明
+     * 绘制控件说明图片
      * @param canvas
      * @param guideBean
      */
     private void drawShuoMingPic(Canvas canvas, GuideBean guideBean,int targetCenter) {
+        //Log.e("日志","中间线位置为："+targetCenter);
         //根据不同的方位情况进行控件绘制
         if (guideBean.getPosition() == Config.BOTTOM){
             canvas.drawBitmap(guideBean.getBitmap(),targetCenter+guideBean.getMarginLeft(),guideBean.getRect().bottom+guideBean.getMarginTop()+guideBean.getMarginBottom(),paint);
@@ -429,7 +431,7 @@ public class GuideView extends View {
             rect.top = Math.abs(rect.top - GuideViewUtils.getStatusBarHeight(act));
             rect.bottom = Math.abs(rect.bottom - GuideViewUtils.getStatusBarHeight(act));
         }
-        Log.e("日志","修改前：left:"+rect.left+",rightA:"+rect.right+",屏幕宽度为："+act.getResources().getDisplayMetrics().widthPixels);
+        //Log.e("日志","修改前：left:"+rect.left+",rightA:"+rect.right+",屏幕宽度为："+act.getResources().getDisplayMetrics().widthPixels);
 
         //左右位置避免被viewpager影响
         if (tempRect.left < 0){
@@ -449,12 +451,12 @@ public class GuideView extends View {
             //获取view的宽度
             int width = Math.abs(tempRect.right - tempRect.left);
             rect.left = screenNum * screenWidth - Math.abs(rect.left) - width;
-            rect.right = Math.abs(rect.left) - width;
+            rect.right = Math.abs(rect.left) + width;
         }else if (tempRect.left != 0 && tempRect.left%act.getResources().getDisplayMetrics().widthPixels == 0){
             rect.left = 0;
             int width = Math.abs(tempRect.right - tempRect.left);
             rect.right = Math.abs(rect.left) + width;
-            Log.e("日志","修改后：left:"+rect.left+",rightA:"+rect.right);
+           // Log.e("日志","修改后：left:"+rect.left+",rightA:"+rect.right);
         }
 
     }
@@ -462,6 +464,7 @@ public class GuideView extends View {
     /**
      * 显示高亮区，延迟显示，如果页面过于复杂，view的绘制无法马上完成，可能需要用到此方法。
      * @param delayedTime 延时操作的时间。单位为毫秒
+     * @deprecated
      */
     public void showGuide(int delayedTime){
         this.setVisibility(VISIBLE);

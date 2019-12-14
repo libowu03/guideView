@@ -65,6 +65,12 @@ public class GuideBean {
         return padding;
     }
 
+
+    /**
+     * 设置高亮区的padding，只针对高亮区为几何图形时有效
+     * @param padding
+     * @return
+     */
     public GuideBean setPadding(int padding) {
         this.padding = padding;
         return this;
@@ -106,6 +112,16 @@ public class GuideBean {
         return shape;
     }
 
+
+    /**
+     * 设置集合图像的形状，可选项为：
+     * 矩形{@link com.kit.guide.view.GuideView.Config.RECT}
+     * 原型{@link com.kit.guide.view.GuideView.Config.CIRCLE}
+     * 椭圆形{@link com.kit.guide.view.GuideView.Config.OVAL}
+     * 圆角矩形{@link com.kit.guide.view.GuideView.Config.ROUNDED_RECT}
+     * @param shape
+     * @return
+     */
     public GuideBean setShape(byte shape) {
         this.shape = shape;
         this.isSimpleShape = true;
@@ -116,15 +132,30 @@ public class GuideBean {
         return marginRight;
     }
 
+    /**
+     * 设置右边距
+     * @param marginRight
+     * @return
+     */
     public GuideBean setMarginRight(int marginRight) {
         this.marginRight = marginRight;
         return this;
     }
 
+
     public int getPosition() {
         return position;
     }
 
+    /**
+     * 设置说明图片位于高亮区的那个方位，可选项为：
+     * {@link com.kit.guide.view.GuideView.Config.LEFT},{@link com.kit.guide.view.GuideView.Config.RIGHT}
+     * {@link com.kit.guide.view.GuideView.Config.TOP},{@link com.kit.guide.view.GuideView.Config.BOTTOM}
+     * {@link com.kit.guide.view.GuideView.Config.LEFT_BOTTOM},{@link com.kit.guide.view.GuideView.Config.LEFT_TOP}
+     * {@link com.kit.guide.view.GuideView.Config.RIGHT_TOP},{@link com.kit.guide.view.GuideView.Config.RIGHT_BOTTOM}
+     * @param position
+     * @return
+     */
     public GuideBean setPosition(int position) {
         this.position = position;
         return this;
@@ -138,6 +169,11 @@ public class GuideBean {
         return marginTop;
     }
 
+    /**
+     * 设置说明图片的顶边距
+     * @param marginTop
+     * @return
+     */
     public GuideBean setMarginTop(int marginTop) {
         this.marginTop = marginTop;
         return this;
@@ -147,6 +183,11 @@ public class GuideBean {
         return marginBottom;
     }
 
+    /**
+     * 设置说明图片的底边距
+     * @param marginBottom
+     * @return
+     */
     public GuideBean setMarginBottom(int marginBottom) {
         this.marginBottom = marginBottom;
         return this;
@@ -156,6 +197,11 @@ public class GuideBean {
         return marginLeft;
     }
 
+    /**
+     * 设置说明图片的左边距
+     * @param marginLeft
+     * @return
+     */
     public GuideBean setMarginLeft(int marginLeft) {
         this.marginLeft = marginLeft;
         return this;
@@ -165,6 +211,12 @@ public class GuideBean {
         return viewBitmap;
     }
 
+    /**
+     * 调用者无需设置此属性，此属性在guideview的show方法中统一调用
+     * 即使设置了，后面调用show方法时也会被覆盖掉。
+     * @param viewBitmap
+     * @return
+     */
     public GuideBean setViewBitmap(Bitmap viewBitmap) {
         this.viewBitmap = viewBitmap;
         return this;
@@ -174,10 +226,6 @@ public class GuideBean {
         return bitmap;
     }
 
-    public GuideBean setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-        return this;
-    }
 
     public Rect getRect() {
         return rect;
