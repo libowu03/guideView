@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -380,13 +381,16 @@ public class GuideView extends View {
                         if (guideBeans.get(i).getTargetView() != null){
                             //由于未知原因，安卓4.4使用getLocationInWindow测绘时左右会出现问题，但是上下坐标没问题
                             // 而使用getGlobalVisibleRect又会出现viewpager中上下又问题，左右坐标没问题，最终为了解决此问题只能两个结合使用了
-                            guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
-                            int[] local = new int[2];
-                            guideBeans.get(i).getTargetView().getLocationInWindow(local);
-                            rect.top = local[1];
-                          /*  rect.left = local[0];
-                            rect.right = local[0]+guideBeans.get(i).getTargetView().getWidth();*/
-                            rect.bottom = local[1]+guideBeans.get(i).getTargetView().getHeight();
+                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT){
+                                guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
+                                setRectInfo(rect);
+                            }else {
+                                guideBeans.get(i).getTargetView().getGlobalVisibleRect(rect);
+                                int[] local = new int[2];
+                                guideBeans.get(i).getTargetView().getLocationInWindow(local);
+                                rect.top = local[1];
+                                rect.bottom = local[1]+guideBeans.get(i).getTargetView().getHeight();
+                            }
                         }else {
                             rect = guideBeans.get(i).getRect();
                         }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.kit.guide.dialog.GuideDialog;
 import com.test.guide.R;
 import com.kit.guide.bean.GuideBean;
 import com.kit.guide.callBack.GuideViewClickCallBack;
@@ -48,9 +49,14 @@ public class MainActivity extends AppCompatActivity implements GuideViewClickCal
         tab.addTab(tab.newTab().setText("测试"));
         tab.addTab(tab.newTab().setText("测试"));
         viewpager.setOffscreenPageLimit(3);
+        viewpager.setCurrentItem(4);
         tab.setupWithViewPager(viewpager);
 
-        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        List<GuideBean> guideBeans = new ArrayList<>();
+        guideBeans.add(new GuideBean(R.mipmap.guide,this,tab));
+        GuideDialog guideDialog = new GuideDialog(getWindow().getDecorView(),guideBeans);
+        guideDialog.show(getSupportFragmentManager(),getClass().getName());
+       /* viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
                 if (i1 == 0){
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements GuideViewClickCal
 
             }
 
-        });
+        });*/
     }
 
 
