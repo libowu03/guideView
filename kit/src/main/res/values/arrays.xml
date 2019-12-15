@@ -121,6 +121,7 @@
         <attr name="menuLayout" format="reference"/>
         <attr name="footLayout" format="reference"/>
         <attr name="customMenuLayout" format="reference"/>
+        <attr name="toolBarLayout" format="reference"/>
     </declare-styleable>
     
 </resources>

@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:id="@+id/mainui"
         android:layout_height="match_parent"
-        app:headLayout="@layout/mainui_leftmenu_head"
         app:menuLayout="@menu/mainui_leftmenu_body_menu"/>
 
 </android.support.constraint.ConstraintLayout>
