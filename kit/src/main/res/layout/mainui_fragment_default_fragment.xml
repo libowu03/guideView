@@ -5,17 +5,14 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@color/white"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:id="@+id/mainuiAlert"
         android:lineSpacingMultiplier="1.3"
         android:text="请设置默认的fragment\nplease set default fragment"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="1"
-        android:id="@+id/fragmentNum"/>
 </LinearLayout>
