@@ -1,14 +1,19 @@
 package com.kit.ActivityUiFrame;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.NavigationMenu;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +23,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -50,6 +58,10 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     private LinearLayout defaultTab;
     private Fragment oldFragment;
     private List<TabViewInfo> tabViewInfos;
+    private LinearLayout mainuiLeftMenuFoot;
+    private NavigationView mainuiLeftMenuHeadAndBody;
+    private int headLayout,menuLayout,footLayout,customMenuLayout;
+    private MainUiMenuItemClickListener listener;
 
 
     public MainUIFrameView(Context context) {
@@ -63,7 +75,11 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     public MainUIFrameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         getObject(context);
-        initView();
+
+        LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_main,this,true);
+
+        initView(attrs,defStyleAttr);
+
         initListener();
     }
 
@@ -90,6 +106,62 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
             mainuiRightBtn.setOnClickListener(this);
         }
 
+       if (mainuiLeftMenuHeadAndBody != null){
+           mainuiLeftMenuHeadAndBody.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+               @Override
+               public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                   if (listener != null){
+                       return listener.onClick(menuItem);
+                   }else {
+                       return false;
+                   }
+               }
+           });
+       }
+    }
+
+
+    /**
+     * 设置侧边栏菜单点击
+     * @param listener
+     */
+    public void setMainUiMenuItemClickListener(MainUiMenuItemClickListener listener){
+        this.listener = listener;
+    }
+
+    /**
+     * 获取侧边栏的头部
+     * @return
+     */
+    public View getLeftMenuHeadLayout(){
+        if (mainuiLeftMenuHeadAndBody == null){
+            return null;
+        }
+        return mainuiLeftMenuHeadAndBody.getHeaderView(0);
+    }
+
+    /**
+     * 获取侧边栏的中间菜单
+     * @return
+     */
+    public Menu getLeftMenuBodyLayout(){
+        if (mainuiLeftMenuHeadAndBody == null){
+            return null;
+        }
+        return mainuiLeftMenuHeadAndBody.getMenu();
+    }
+
+    public View getLeftMenuBottomLayout(){
+        if (mainuiLeftMenuFoot != null){
+            if (mainuiLeftMenuFoot.getChildCount() == 1){
+                Log.e("日志","获取的侧边栏底部菜单的孩子数量为："+mainuiLeftMenuFoot.getChildCount());
+                return mainuiLeftMenuFoot.getChildAt(0);
+            }else {
+                return mainuiLeftMenuFoot;
+            }
+        }else {
+            return null;
+        }
     }
 
 
@@ -220,8 +292,8 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     /**
      * 初始化界面
      */
-    private void initView() {
-        LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_main,this,true);
+    private void initView(AttributeSet attributeSet,int def) {
+        getAttr(attributeSet,def);
 
         mainUiBox = findViewById(R.id.mainUiBox);
         toolbar = findViewById(R.id.defaultToolbar);
@@ -246,6 +318,50 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         //默认顶部工具栏内部控件
         mainuiOpenMenu = findViewById(R.id.mainuiOpenMenu);
         mainuiRightBtn = findViewById(R.id.mainuiRightBtn);
+
+        mainuiLeftMenuHeadAndBody = findViewById(R.id.mainuiLeftMenuHeadAndBody);
+        mainuiLeftMenuHeadAndBody.setItemIconTintList(null);
+
+        setLeftMenu();
+    }
+
+    /**
+     * 设置侧边栏内容
+     */
+    private void setLeftMenu() {
+        try{
+            if (mainuiLeftMenuHeadAndBody == null){
+                return;
+            }
+            //设置中间菜单
+            if (menuLayout != 0){
+                mainuiLeftMenuHeadAndBody.inflateMenu(menuLayout);
+            }
+            //设置头部
+            if (headLayout != 0){
+                mainuiLeftMenuHeadAndBody.inflateHeaderView(headLayout);
+            }
+
+            //设置底部
+            if (footLayout != 0){
+                mainuiLeftMenuFoot = findViewById(R.id.mainuiLeftMenuFoot);
+                View leftmenuFoot = LayoutInflater.from(getContext()).inflate(footLayout,null);
+                mainuiLeftMenuFoot.addView(leftmenuFoot);
+            }
+        }catch (Exception e){
+            Log.e("kitView","建议：menuLayout传入的时，menu而不是layout或其他的值，headLayoutc传入的时layout而不是其他的值。具体原因如下："+e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * 获取传入的属性
+     */
+    private void getAttr(AttributeSet attributeSet,int def) {
+        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attributeSet,R.styleable.MainUIFrameView,def,0);
+        headLayout = typedArray.getResourceId(R.styleable.MainUIFrameView_headLayout,0);
+        menuLayout = typedArray.getResourceId(R.styleable.MainUIFrameView_menuLayout,0);
+        footLayout = typedArray.getResourceId(R.styleable.MainUIFrameView_footLayout,0);
+        customMenuLayout = typedArray.getResourceId(R.styleable.MainUIFrameView_customMenuLayout,0);
     }
 
 

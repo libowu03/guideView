@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/mainuiGroupOne">
+        <item
+            android:id="@+id/itemOne"
+            android:title="组别一"
+            android:icon="@mipmap/guide">
+            <menu>
+                <item
+                    android:id="@+id/itemTwo"
+                    android:title="选项一"
+                    android:icon="@mipmap/mainui_default"/>
+            </menu>
+
+            <item
+                android:id="@+id/itemThree"
+                android:title="选项一"
+                android:icon="@mipmap/mainui_default"/>
+        </item>
+    </group>
+
+    <group android:id="@+id/mainuiGroupTwo">
+        <item
+            android:id="@+id/groupTwoitemOne"
+            android:title="组别二"
+            android:icon="@mipmap/mainui_default">
+            <menu>
+                <item
+                    android:id="@+id/groupTwoitemTwo"
+                    android:title="选项一"
+                    android:icon="@mipmap/mainui_default"/>
+                <item
+                    android:id="@+id/groupTwoitemThree"
+                    android:title="选项一"
+                    android:icon="@mipmap/mainui_default"/>
+            </menu>
+        </item>
+
+    </group>
+</menu>

@@ -113,4 +113,14 @@
         <attr name="tabIndicatorMarginTop" format="dimension"/>
         <attr name="tabClickNoScroll" format="boolean"/>
     </declare-styleable>
+
+
+    <!--MainUiFrameView属性-->
+    <declare-styleable name="MainUIFrameView">
+        <attr name="headLayout" format="reference"/>
+        <attr name="menuLayout" format="reference"/>
+        <attr name="footLayout" format="reference"/>
+        <attr name="customMenuLayout" format="reference"/>
+    </declare-styleable>
+    
 </resources>
