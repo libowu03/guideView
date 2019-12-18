@@ -2,11 +2,15 @@ package com.test.guide
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.kit.ActivityUiFrame.MainUiDefaultFragment
 import com.kit.ActivityUiFrame.MainUiFrameActivity
 import com.kit.ActivityUiFrame.MainUiMenuItemClickListener
+import com.kit.ActivityUiFrame.TabClickListener
 import com.kit.ActivityUiFrame.TabContent
 import kotlinx.android.synthetic.main.activity_main_ui_frame.*
 
@@ -28,6 +32,12 @@ class MainUiFrameActivity : AppCompatActivity() {
             override fun onClick(item: MenuItem?): Boolean {
                 Toast.makeText(applicationContext,"点击",Toast.LENGTH_SHORT).show()
                 return false
+            }
+
+        })
+
+        mainui.setTabClickListener(object : TabClickListener{
+            override fun onTabClickListener(tabContent: TabContent?, position: Int, currentView: View?) {
             }
 
         })

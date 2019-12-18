@@ -58,6 +58,8 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     private NavigationView mainuiLeftMenuHeadAndBody;
     private int headLayout, menuLayout, footLayout, customMenuLayout, toolBarLayout;
     private MainUiMenuItemClickListener listener;
+    private View userCustomView;
+    private TabClickListener tabClickListener;
 
 
     public MainUIFrameView(Context context) {
@@ -173,8 +175,9 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * @param tabContents
      */
     public void setFragmentsList(final List<TabContent> tabContents) {
+        defaultTab.removeAllViews();
         for (final TabContent tab : tabContents) {
-            View tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, null);
+            final View tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, null);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             llp.height = LayoutParams.WRAP_CONTENT;
             llp.weight = 1;
@@ -205,6 +208,10 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                     transation.commit();
                     oldFragment = tab.getFragment();
                     setCheckAndUncheck(tab);
+
+                    if (tabClickListener != null){
+                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView);
+                    }
                 }
             });
             defaultTab.addView(tabView);
@@ -217,6 +224,63 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         transation.commit();
         oldFragment = tabContents.get(0).getFragment();
         setCheckAndUncheck(tabContents.get(0));
+    }
+
+
+    /**
+     * 设置fragment
+     *
+     * @param tabContents
+     */
+    public void setFragmentsList(final List<TabContent> tabContents, final int viewLayout) {
+        defaultTab.removeAllViews();
+        for (final TabContent tab : tabContents) {
+            final View tabView = LayoutInflater.from(getContext()).inflate(viewLayout, null);
+            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            llp.height = LayoutParams.WRAP_CONTENT;
+            llp.weight = 1;
+            tabView.setLayoutParams(llp);
+            tabViewInfos.add(new TabViewInfo(null, null, tab));
+
+            //设置tab点击事件
+            tabView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //设置默认fragment
+                    FragmentManager fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager();
+                    FragmentTransaction transation = fragmentTransaction.beginTransaction();
+                    transation.hide(oldFragment);
+                    if (!tab.getFragment().isAdded()) {
+                        transation.add(R.id.mainContent, tab.getFragment(), tab.getTabName());
+                    } else {
+                        transation.show(tab.getFragment());
+                    }
+                    transation.commit();
+                    oldFragment = tab.getFragment();
+
+                    if (tabClickListener != null){
+                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView);
+                    }
+                }
+            });
+            defaultTab.addView(tabView);
+        }
+
+        //设置默认fragment
+        FragmentManager fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager();
+        FragmentTransaction transation = fragmentTransaction.beginTransaction();
+        transation.add(R.id.mainContent, tabContents.get(0).getFragment(), tabContents.get(0).getTabName());
+        transation.commit();
+        oldFragment = tabContents.get(0).getFragment();
+    }
+
+
+    /**
+     * 设置tab的监听器
+     * @param tabClickListener 监听器
+     */
+    public void setTabClickListener(TabClickListener tabClickListener){
+        this.tabClickListener = tabClickListener;
     }
 
 
