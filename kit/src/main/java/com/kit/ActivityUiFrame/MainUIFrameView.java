@@ -175,9 +175,8 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * @param tabContents
      */
     public void setFragmentsList(final List<TabContent> tabContents) {
-        defaultTab.removeAllViews();
         for (final TabContent tab : tabContents) {
-            final View tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, null);
+            View tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, null);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             llp.height = LayoutParams.WRAP_CONTENT;
             llp.weight = 1;
