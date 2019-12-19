@@ -117,11 +117,31 @@
 
     <!--MainUiFrameView属性-->
     <declare-styleable name="MainUIFrameView">
+        <!--侧滑动栏头部-->
         <attr name="headLayout" format="reference"/>
+        <!--侧滑动栏中间菜单-->
         <attr name="menuLayout" format="reference"/>
+        <!--侧滑动栏底部view-->
         <attr name="footLayout" format="reference"/>
+        <!--自定义侧边滑动栏-->
         <attr name="customMenuLayout" format="reference"/>
+        <!--顶部工具栏-->
         <attr name="toolBarLayout" format="reference"/>
+        <!--选中字体颜色-->
+        <attr name="selectTextColor" format="color"/>
+        <!--未选中字体颜色-->
+        <attr name="unselectTextColor" format="color"/>
+        <!--tab字体大小-->
+        <attr name="tabTextSize" format="dimension"/>
+        <!--tab文字与icon的距离-->
+        <attr name="tabFontMargin" format="dimension"/>
+        <!--tab背景颜色或图片设置-->
+        <attr name="tabBg" format="color|reference"/>
+        <!--tab图标宽度-->
+        <attr name="tabIconHeight" format="dimension"/>
+        <!--tab图标宽度-->
+        <attr name="tabIconWidth" format="dimension"/>
+        <attr name="toolbarBarBackround" format="color|reference"/>
     </declare-styleable>
     
 </resources>

@@ -36,9 +36,12 @@ class MainUiFrameActivity : AppCompatActivity() {
 
         })
 
+
         mainui.setTabClickListener(object : TabClickListener{
-            override fun onTabClickListener(tabContent: TabContent?, position: Int, currentView: View?) {
+            override fun onTabClickListener(tabContent: TabContent?, position: Int, currentView: View?, tabContents: MutableList<TabContent>?) {
+
             }
+
 
         })
     }

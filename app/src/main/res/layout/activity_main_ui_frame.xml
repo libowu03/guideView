@@ -11,6 +11,15 @@
         android:layout_width="match_parent"
         android:id="@+id/mainui"
         android:layout_height="match_parent"
+        app:tabTextSize="15sp"
+        app:tabFontMargin="2dp"
+        app:tabIconHeight="30dp"
+        app:tabIconWidth="30dp"
         app:menuLayout="@menu/mainui_leftmenu_body_menu"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="15sp"/>
 
 </android.support.constraint.ConstraintLayout>

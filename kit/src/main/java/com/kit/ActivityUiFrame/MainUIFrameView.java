@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +19,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +36,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kit.guide.R;
+import com.kit.guide.utils.GuideViewUtils;
 import com.kit.utils.GetActionBarHeight;
 
 import java.util.ArrayList;
@@ -60,6 +64,16 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     private MainUiMenuItemClickListener listener;
     private View userCustomView;
     private TabClickListener tabClickListener;
+    private List<TabContent> tabContents;
+    private int selectTextColor;
+    private int unselectTextColor;
+    private float tabTextSize;
+    private float tabTextMargin;
+    private Drawable tabBackground;
+    private int tabBackgroundColor;
+    private float tabIconHeight,tabIconWidth;
+    private Drawable toolbarBarBackround;
+    private int toolbarBarBackroundColor;
 
 
     public MainUIFrameView(Context context) {
@@ -175,21 +189,50 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * @param tabContents
      */
     public void setFragmentsList(final List<TabContent> tabContents) {
+        if (tabContents == null){
+            return;
+        }
+        this.tabContents = tabContents;
+        defaultTab.removeAllViews();
+
         for (final TabContent tab : tabContents) {
-            View tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, null);
+            //存在自定义布局则使用自定义布局，不存在则使用默认布局
+            final View tabView;
+            if (tab.getCustomView() != null){
+                tabView = tab.getCustomView();
+            }else {
+                tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, this,false);
+            }
+
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             llp.height = LayoutParams.WRAP_CONTENT;
             llp.weight = 1;
             tabView.setLayoutParams(llp);
-            TextView name = tabView.findViewById(R.id.mainuiTabName);
-            ImageView tabIcon = tabView.findViewById(R.id.mainuiTabIcon);
-            if (tab.getTabName() != null && !tab.getTabName().isEmpty()) {
-                name.setTag(tab.getTabName());
-                name.setText(tab.getTabName());
-            } else {
-                name.setVisibility(GONE);
+            if (tab.getCustomView() == null){
+                TextView name = tabView.findViewById(R.id.mainuiTabName);
+                ImageView tabIcon = tabView.findViewById(R.id.mainuiTabIcon);
+
+                ConstraintLayout.LayoutParams iconLp = (ConstraintLayout.LayoutParams) tabIcon.getLayoutParams();
+                iconLp.width = (int) tabIconWidth;
+                iconLp.height = (int) tabIconHeight;
+                tabIcon.setLayoutParams(iconLp);
+
+                if (tab.getTabName() != null && !tab.getTabName().isEmpty()) {
+                    ConstraintLayout.LayoutParams textLp = (ConstraintLayout.LayoutParams) name.getLayoutParams();
+                    textLp.topMargin = (int) tabTextMargin;
+                    name.setLayoutParams(textLp);
+
+                    name.setTag(tab.getTabName());
+                    name.setText(tab.getTabName());
+
+                    name.setTextSize(GuideViewUtils.px2dip(getContext(),tabTextSize));
+                } else {
+                    name.setVisibility(GONE);
+                }
+                tabViewInfos.add(new TabViewInfo(tabIcon, name, tab));
+            }else {
+                tabViewInfos.add(new TabViewInfo(null, null, tab));
             }
-            tabViewInfos.add(new TabViewInfo(tabIcon, name, tab));
 
             //设置tab点击事件
             tabView.setOnClickListener(new OnClickListener() {
@@ -206,10 +249,14 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                     }
                     transation.commit();
                     oldFragment = tab.getFragment();
-                    setCheckAndUncheck(tab);
+
+                    //自定义布局忽略布局选中状态，状态由调用者自行修改
+                    if (tab.getCustomView() == null){
+                        setCheckAndUncheck(tab);
+                    }
 
                     if (tabClickListener != null){
-                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView);
+                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView,tabContents);
                     }
                 }
             });
@@ -222,16 +269,25 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         transation.add(R.id.mainContent, tabContents.get(0).getFragment(), tabContents.get(0).getTabName());
         transation.commit();
         oldFragment = tabContents.get(0).getFragment();
-        setCheckAndUncheck(tabContents.get(0));
+
+        //自定义布局忽略布局选中状态，状态由调用者自行修改
+        if (tabContents.get(0).getCustomView() == null){
+            setCheckAndUncheck(tabContents.get(0));
+        }
     }
 
 
     /**
      * 设置fragment
-     *
+     * @param viewLayout 自定义布局，这个每个布局的样式都是传入的布局样式，需要每个tab布局都不同，需要调用上面的方法,即在每个tabcontent中传入自定义布局
      * @param tabContents
      */
     public void setFragmentsList(final List<TabContent> tabContents, final int viewLayout) {
+        if (tabContents == null){
+            return;
+        }
+        this.tabContents = tabContents;
+
         defaultTab.removeAllViews();
         for (final TabContent tab : tabContents) {
             final View tabView = LayoutInflater.from(getContext()).inflate(viewLayout, null);
@@ -258,7 +314,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                     oldFragment = tab.getFragment();
 
                     if (tabClickListener != null){
-                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView);
+                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView,tabContents);
                     }
                 }
             });
@@ -272,6 +328,16 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         transation.commit();
         oldFragment = tabContents.get(0).getFragment();
     }
+
+
+    /**
+     * 获取tab内容
+     * @return
+     */
+    public List<TabContent> getTabContentList(){
+        return tabContents;
+    }
+
 
 
     /**
@@ -289,13 +355,14 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * @param tabContent
      */
     public void setCheckAndUncheck(TabContent tabContent) {
+        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         for (TabViewInfo info : tabViewInfos) {
             if (info.getTabContent().getTabName().equals(tabContent.getTabName())) {
-                info.getTabName().setTextColor(Color.RED);
+                info.getTabName().setTextColor(selectTextColor);
                 setCheckAndUncheckImg(true, tabContent, info);
             } else {
                 setCheckAndUncheckImg(false, tabContent, info);
-                info.getTabName().setTextColor(Color.GRAY);
+                info.getTabName().setTextColor(unselectTextColor);
             }
         }
     }
@@ -392,6 +459,11 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         mainuiLeftMenuHeadAndBody = findViewById(R.id.mainuiLeftMenuHeadAndBody);
         mainuiLeftMenuHeadAndBody.setItemIconTintList(null);
 
+        if (tabBackground != null){
+            defaultTab.setBackground(tabBackground);
+        }else {
+            defaultTab.setBackgroundColor(tabBackgroundColor);
+        }
         setLeftMenu();
     }
 
@@ -434,6 +506,20 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         footLayout = typedArray.getResourceId(R.styleable.MainUIFrameView_footLayout, 0);
         customMenuLayout = typedArray.getResourceId(R.styleable.MainUIFrameView_customMenuLayout, 0);
         toolBarLayout = typedArray.getResourceId(R.styleable.MainUIFrameView_toolBarLayout, 0);
+        selectTextColor = typedArray.getColor(R.styleable.MainUIFrameView_selectTextColor, getContext().getResources().getColor(R.color.selectTextColor));
+        unselectTextColor = typedArray.getColor(R.styleable.MainUIFrameView_unselectTextColor, getContext().getResources().getColor(R.color.unselectTextColor));
+        tabTextSize = typedArray.getDimensionPixelSize(R.styleable.MainUIFrameView_tabTextSize, getContext().getResources().getDimensionPixelSize(R.dimen.tabTextSize));
+        tabTextMargin = typedArray.getDimension(R.styleable.MainUIFrameView_tabFontMargin, getContext().getResources().getDimension(R.dimen.tabTextMargin));
+        tabBackground = typedArray.getDrawable(R.styleable.MainUIFrameView_tabBg);
+        if (tabBackground == null){
+            tabBackgroundColor = typedArray.getColor(R.styleable.MainUIFrameView_tabBg,getContext().getResources().getColor(R.color.defaultThemeColor));
+        }
+        tabIconHeight = typedArray.getDimension(R.styleable.MainUIFrameView_tabIconHeight,getContext().getResources().getDimensionPixelSize(R.dimen.tabIconHeight));
+        tabIconWidth = typedArray.getDimension(R.styleable.MainUIFrameView_tabIconHeight,getContext().getResources().getDimensionPixelSize(R.dimen.tabIconWidth));
+        toolbarBarBackround = typedArray.getDrawable(R.styleable.MainUIFrameView_toolbarBarBackround);
+        if (toolbarBarBackround == null){
+            toolbarBarBackroundColor = typedArray.getColor(R.styleable.MainUIFrameView_toolbarBarBackround,getContext().getResources().getColor(R.color.defaultThemeColor));
+        }
     }
 
 

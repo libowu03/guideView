@@ -1,12 +1,14 @@
 package com.kit.ActivityUiFrame;
 
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 public class TabContent {
     private Fragment fragment;
     private String tabName;
     private Object tabIcon;
     private Object tabSelectIcon;
+    private View customView;
 
     public TabContent(Fragment fragment, String tabName) {
         this.fragment = fragment;
@@ -39,5 +41,14 @@ public class TabContent {
     public TabContent setTabSelectIcon(Object tabSelectIcon) {
         this.tabSelectIcon = tabSelectIcon;
         return this;
+    }
+
+    public TabContent setCustomView(View customView){
+        this.customView = customView;
+        return this;
+    }
+
+    public View getCustomView(){
+        return customView;
     }
 }
