@@ -168,10 +168,14 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         return mainuiLeftMenuHeadAndBody.getMenu();
     }
 
+
+    /**
+     * 获取侧滑动栏底部view
+     * @return
+     */
     public View getLeftMenuBottomLayout() {
         if (mainuiLeftMenuFoot != null) {
             if (mainuiLeftMenuFoot.getChildCount() == 1) {
-                Log.e("日志", "获取的侧边栏底部菜单的孩子数量为：" + mainuiLeftMenuFoot.getChildCount());
                 return mainuiLeftMenuFoot.getChildAt(0);
             } else {
                 return mainuiLeftMenuFoot;
@@ -180,6 +184,16 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
             return null;
         }
     }
+
+
+    /**
+     * 获取默认工具栏
+     * @return
+     */
+    public View getDefaultToolbar(){
+        return toolbar;
+    }
+
 
 
 
