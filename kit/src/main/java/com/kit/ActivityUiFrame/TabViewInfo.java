@@ -8,12 +8,22 @@ import android.widget.TextView;
 public class TabViewInfo {
     private ImageView tabIcon;
     private TextView tabName;
+    private View parentView;
     private TabContent tabContent;
 
-    public TabViewInfo(ImageView tabIcon, TextView tabName, TabContent tabContent) {
+    public TabViewInfo(ImageView tabIcon, TextView tabName, TabContent tabContent,View parentView) {
         this.tabIcon = tabIcon;
         this.tabName = tabName;
         this.tabContent = tabContent;
+        this.parentView = parentView;
+    }
+
+    public View getParentView() {
+        return parentView;
+    }
+
+    public void setParentView(View parentView) {
+        this.parentView = parentView;
     }
 
     public ImageView getTabIcon() {

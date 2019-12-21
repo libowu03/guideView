@@ -23,10 +23,7 @@ class MainUiFrameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main_ui_frame)
         list = mutableListOf()
         list?.add(TabContent(MainUiDefaultFragment(),"首页").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
-        list?.add(TabContent(MainUiDefaultFragment(),"运势").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
-        list?.add(TabContent(MainUiDefaultFragment(),"测算").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
-        list?.add(TabContent(MainUiDefaultFragment(),"大师").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
-        list?.add(TabContent(MainUiDefaultFragment(),"我的").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(CustomFragment(),"运势").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
         mainui.setFragmentsList(list)
         mainui.setMainUiMenuItemClickListener(object:MainUiMenuItemClickListener{
             override fun onClick(item: MenuItem?): Boolean {
@@ -39,10 +36,9 @@ class MainUiFrameActivity : AppCompatActivity() {
 
         mainui.setTabClickListener(object : TabClickListener{
             override fun onTabClickListener(tabContent: TabContent?, position: Int, currentView: View?, tabContents: MutableList<TabContent>?) {
-
+                mainui.toolbarTitle.setText(tabContent?.tabName)
             }
-
-
         })
+        mainui.setCurrentIndex(0)
     }
 }
