@@ -33,12 +33,23 @@ class MainUiFrameActivity : AppCompatActivity() {
 
         })
 
-
         mainui.setTabClickListener(object : TabClickListener{
-            override fun onTabClickListener(tabContent: TabContent?, position: Int, currentView: View?, tabContents: MutableList<TabContent>?) {
-                mainui.toolbarTitle.setText(tabContent?.tabName)
+
+
+            override fun onPageScrollStateChanged(i: Int) {
+
             }
+
+            override fun onPageScrolled(i: Int, v: Float, i1: Int) {
+
+            }
+
+            override fun onPageSelected(i: Int, tabContent: TabContent?, currentView: View?, tabContents: MutableList<TabContent>?) {
+
+            }
+
         })
-        mainui.setCurrentIndex(0)
+
+       // mainui.setCurrentIndex(0)
     }
 }

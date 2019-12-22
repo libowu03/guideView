@@ -16,6 +16,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -54,6 +55,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     private DrawerLayout mainUiBox;
     private LinearLayout toolbar;
     private ImageView mainuiOpenMenu;
+    private MainUiViewPager mainContent;
     private ImageView mainuiRightBtn;
     private LinearLayout defaultTab;
     private Fragment oldFragment;
@@ -75,6 +77,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     private Drawable toolbarBarBackround;
     private int toolbarBarBackroundColor;
     private int currentIndex;
+    private ViewPagerAdapter viewPagerAdapter;
 
 
     public MainUIFrameView(Context context) {
@@ -90,10 +93,22 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         getObject(context);
 
         LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_main, this, true);
-
+        if (!(context instanceof AppCompatActivity)){
+            Log.e("kitViewError","unsupport activity");
+            return;
+        }
         initView(attrs, defStyleAttr);
-
+        initAdapter();
         initListener();
+    }
+
+
+    /**
+     * 初始化适配器
+     */
+    private void initAdapter() {
+        viewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) getContext()).getSupportFragmentManager());
+        mainContent.setAdapter(viewPagerAdapter);
     }
 
 
@@ -132,6 +147,29 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                 }
             });
         }
+
+        mainContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                if (tabClickListener != null ){
+                    tabClickListener.onPageScrolled(i,v,i1);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (tabClickListener != null ){
+                    tabClickListener.onPageSelected(i,tabContents.get(i),tabViewInfos.get(i).getParentView(),tabContents);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                if (tabClickListener != null ){
+                    tabClickListener.onPageScrollStateChanged(i);
+                }
+            }
+        });
     }
 
 
@@ -210,10 +248,12 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         if (currentIndex >= tabContents.size()){
             currentIndex = tabContents.size() -1;
         }
+
         this.tabContents = tabContents;
         defaultTab.removeAllViews();
 
         for (final TabContent tab : tabContents) {
+            viewPagerAdapter.addFragment(tab.getFragment());
             //存在自定义布局则使用自定义布局，不存在则使用默认布局
             final View tabView;
             if (tab.getCustomView() != null){
@@ -256,38 +296,18 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
             tabView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //设置默认fragment
-                    FragmentManager fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager();
-                    FragmentTransaction transation = fragmentTransaction.beginTransaction();
-                    transation.hide(oldFragment);
-                    if (!tab.getFragment().isAdded()) {
-                        transation.add(R.id.mainContent, tab.getFragment(), tab.getTabName());
-                    } else {
-                        transation.show(tab.getFragment());
-                    }
-                    transation.commit();
-                    oldFragment = tab.getFragment();
-
                     //自定义布局忽略布局选中状态，状态由调用者自行修改
                     if (tab.getCustomView() == null){
                         setCheckAndUncheck(tab);
-                    }
-
-                    if (tabClickListener != null){
-                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView,tabContents);
                     }
                 }
             });
             defaultTab.addView(tabView);
         }
+        viewPagerAdapter.build();
 
         //设置默认fragment
-        FragmentManager fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager();
-        FragmentTransaction transation = fragmentTransaction.beginTransaction();
-        transation.add(R.id.mainContent, tabContents.get(currentIndex).getFragment(), tabContents.get(currentIndex).getTabName());
-        transation.commit();
-        oldFragment = tabContents.get(currentIndex).getFragment();
-
+        mainContent.setCurrentItem(currentIndex);
         //自定义布局忽略布局选中状态，状态由调用者自行修改
         if (tabContents.get(currentIndex).getCustomView() == null){
             setCheckAndUncheck(tabContents.get(currentIndex));
@@ -311,6 +331,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
         defaultTab.removeAllViews();
         for (final TabContent tab : tabContents) {
+            viewPagerAdapter.addFragment(tab.getFragment());
             final View tabView = LayoutInflater.from(getContext()).inflate(viewLayout, null);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             llp.height = LayoutParams.WRAP_CONTENT;
@@ -323,30 +344,14 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                 @Override
                 public void onClick(View view) {
                     //设置默认fragment
-                    FragmentManager fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager();
-                    FragmentTransaction transation = fragmentTransaction.beginTransaction();
-                    transation.hide(oldFragment);
-                    if (!tab.getFragment().isAdded()) {
-                        transation.add(R.id.mainContent, tab.getFragment(), tab.getTabName());
-                    } else {
-                        transation.show(tab.getFragment());
-                    }
-                    transation.commit();
-                    oldFragment = tab.getFragment();
-
-                    if (tabClickListener != null){
-                        tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabView,tabContents);
-                    }
+                    mainContent.setCurrentItem(currentIndex);
                 }
             });
             defaultTab.addView(tabView);
         }
-
+        viewPagerAdapter.build();
         //设置默认fragment
-        FragmentManager fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager();
-        FragmentTransaction transation = fragmentTransaction.beginTransaction();
-        transation.add(R.id.mainContent, tabContents.get(currentIndex).getFragment(), tabContents.get(currentIndex).getTabName());
-        transation.commit();
+        mainContent.setCurrentItem(currentIndex);
         oldFragment = tabContents.get(currentIndex).getFragment();
     }
 
@@ -355,21 +360,12 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * 控制哪个fragment的显示或隐藏
      * @param tab
      */
-    private void setCurrentFragment(TabContent tab){
-        FragmentManager fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager();
-        FragmentTransaction transation = fragmentTransaction.beginTransaction();
-        transation.hide(oldFragment);
-        if (!tab.getFragment().isAdded()) {
-            transation.add(R.id.mainContent, tab.getFragment(), tab.getTabName());
-        } else {
-            transation.show(tab.getFragment());
+    private void setCurrentFragment(TabContent tab,int index){
+        if (currentIndex == index){
+            return;
         }
-        transation.commit();
-        oldFragment = tab.getFragment();
+        mainContent.setCurrentItem(currentIndex);
 
-        if (tabClickListener != null){
-            tabClickListener.onTabClickListener(tab,tabContents.indexOf(tab),tabViewInfos.get(tabContents.indexOf(tab)).getParentView(),tabContents);
-        }
         setCheckAndUncheck(tab);
     }
 
@@ -423,6 +419,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         ImageView tabIcon = info.getTabIcon();
         //设置tab的icon
         if (!isChoose) {
+            //未选中状态图片
             if (tab.getTabIcon() == null) {
                 tabIcon.setVisibility(GONE);
             } else if (tab.getTabIcon() instanceof String) {
@@ -439,9 +436,10 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                 tabIcon.setImageBitmap((Bitmap) tab.getTabIcon());
             }
         } else {
+            //选中状态图片设置
             if (tab.getTabSelectIcon() == null) {
                 tabIcon.setVisibility(GONE);
-            } else if (tab.getTabIcon() instanceof String) {
+            } else if (tab.getTabSelectIcon() instanceof String) {
                 //是网络图片才进行加载显示，否则直接隐藏掉icon
                 String url = (String) tab.getTabSelectIcon();
                 if (url.contains("https://") || url.contains("http://")) {
@@ -449,9 +447,9 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                 } else {
                     tabIcon.setVisibility(GONE);
                 }
-            } else if (tab.getTabIcon() instanceof Integer) {
+            } else if (tab.getTabSelectIcon() instanceof Integer) {
                 tabIcon.setImageResource((Integer) tab.getTabSelectIcon());
-            } else if (tab.getTabIcon() instanceof Bitmap) {
+            } else if (tab.getTabSelectIcon() instanceof Bitmap) {
                 tabIcon.setImageBitmap((Bitmap) tab.getTabSelectIcon());
             }
         }
@@ -478,6 +476,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         mainUiBox = findViewById(R.id.mainUiBox);
         toolbar = findViewById(R.id.defaultToolbar);
         defaultTab = findViewById(R.id.defaultTab);
+        mainContent = findViewById(R.id.mainContent);
 
         //添加默认工具栏
         if (toolBarLayout != 0){
@@ -688,7 +687,8 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         if (currentIndex >= tabContents.size()){
             currentIndex = tabContents.size() -1;
         }
-        setCurrentFragment(tabContents.get(currentIndex));
+        setCurrentFragment(tabContents.get(currentIndex),currentIndex);
+        this.currentIndex = currentIndex;
     }
 
 

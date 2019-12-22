@@ -107,6 +107,9 @@ public class CustomFragment extends Fragment {
     }
 
     public void showDialog(){
+        if (!this.isAdded()){
+            return;
+        }
         //将要说明的控件添加到集合中
         guides = new ArrayList<>();
         //GuideBean的构造方法比较多，后面会提到各个构造方法的作用
