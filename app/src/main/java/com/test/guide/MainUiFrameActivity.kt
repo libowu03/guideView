@@ -21,9 +21,10 @@ class MainUiFrameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_ui_frame)
+        mainui.setCurrentIndex(10)
         list = mutableListOf()
-        list?.add(TabContent(MainUiDefaultFragment(),"首页").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
-        list?.add(TabContent(CustomFragment(),"运势").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(MainUiDefaultFragment(),"冬月").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(CustomFragment(),"腊月").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
         mainui.setFragmentsList(list)
         mainui.setMainUiMenuItemClickListener(object:MainUiMenuItemClickListener{
             override fun onClick(item: MenuItem?): Boolean {
@@ -32,7 +33,6 @@ class MainUiFrameActivity : AppCompatActivity() {
             }
 
         })
-
         mainui.setTabClickListener(object : TabClickListener{
 
 
@@ -41,7 +41,11 @@ class MainUiFrameActivity : AppCompatActivity() {
             }
 
             override fun onPageScrolled(i: Int, v: Float, i1: Int) {
-
+                if (i1 == 0) {
+                    if (i == 1){
+                        (list!!.get(1).fragment as CustomFragment).showDialog()
+                    }
+                }
             }
 
             override fun onPageSelected(i: Int, tabContent: TabContent?, currentView: View?, tabContents: MutableList<TabContent>?) {
@@ -50,6 +54,5 @@ class MainUiFrameActivity : AppCompatActivity() {
 
         })
 
-       // mainui.setCurrentIndex(0)
     }
 }

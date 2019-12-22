@@ -14,15 +14,11 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,7 +37,6 @@ import com.kit.guide.utils.GuideViewUtils;
 import com.kit.utils.GetActionBarHeight;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -73,7 +68,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     private float tabTextMargin;
     private Drawable tabBackground;
     private int tabBackgroundColor;
-    private float tabIconHeight,tabIconWidth;
+    private float tabIconHeight, tabIconWidth;
     private Drawable toolbarBarBackround;
     private int toolbarBarBackroundColor;
     private int currentIndex;
@@ -95,8 +90,8 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         getObject(context);
 
         LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_main, this, true);
-        if (!(context instanceof AppCompatActivity)){
-            Log.e("kitViewError","unsupport activity");
+        if (!(context instanceof AppCompatActivity)) {
+            Log.e("kitViewError", "unsupport activity");
             return;
         }
         initView(attrs, defStyleAttr);
@@ -152,22 +147,22 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         mainContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
-                if (tabClickListener != null ){
-                    tabClickListener.onPageScrolled(i,v,i1);
+                if (tabClickListener != null) {
+                    tabClickListener.onPageScrolled(i, v, i1);
                 }
             }
 
             @Override
             public void onPageSelected(int i) {
-                if (tabClickListener != null ){
-                    tabClickListener.onPageSelected(i,tabContents.get(i),tabViewInfos.get(i).getParentView(),tabContents);
+                if (tabClickListener != null) {
+                    tabClickListener.onPageSelected(i, tabContents.get(i), tabViewInfos.get(i).getParentView(), tabContents);
                 }
                 setCheckAndUncheck(tabContents.get(i));
             }
 
             @Override
             public void onPageScrollStateChanged(int i) {
-                if (tabClickListener != null ){
+                if (tabClickListener != null) {
                     tabClickListener.onPageScrollStateChanged(i);
                 }
             }
@@ -212,6 +207,7 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
     /**
      * 获取侧滑动栏底部view
+     *
      * @return
      */
     public View getLeftMenuBottomLayout() {
@@ -229,13 +225,12 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
     /**
      * 获取默认工具栏
+     *
      * @return
      */
-    public View getDefaultToolbar(){
+    public View getDefaultToolbar() {
         return toolbar;
     }
-
-
 
 
     /**
@@ -244,11 +239,11 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * @param tabContents
      */
     public void setFragmentsList(final List<TabContent> tabContents) {
-        if (tabContents == null){
+        if (tabContents == null) {
             return;
         }
-        if (currentIndex >= tabContents.size()){
-            currentIndex = tabContents.size() -1;
+        if (currentIndex >= tabContents.size()) {
+            currentIndex = tabContents.size() - 1;
         }
 
         this.tabContents = tabContents;
@@ -259,17 +254,17 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
             //viewPagerAdapter.addFragment(tab.getFragment());
             //存在自定义布局则使用自定义布局，不存在则使用默认布局
             final View tabView;
-            if (tab.getCustomView() != null){
+            if (tab.getCustomView() != null) {
                 tabView = tab.getCustomView();
-            }else {
-                tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, this,false);
+            } else {
+                tabView = LayoutInflater.from(getContext()).inflate(R.layout.mainui_view_tab, this, false);
             }
 
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             llp.height = LayoutParams.WRAP_CONTENT;
             llp.weight = 1;
             tabView.setLayoutParams(llp);
-            if (tab.getCustomView() == null){
+            if (tab.getCustomView() == null) {
                 TextView name = tabView.findViewById(R.id.mainuiTabName);
                 ImageView tabIcon = tabView.findViewById(R.id.mainuiTabIcon);
 
@@ -286,13 +281,13 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                     name.setTag(tab.getTabName());
                     name.setText(tab.getTabName());
 
-                    name.setTextSize(GuideViewUtils.px2dip(getContext(),tabTextSize));
+                    name.setTextSize(GuideViewUtils.px2dip(getContext(), tabTextSize));
                 } else {
                     name.setVisibility(GONE);
                 }
-                tabViewInfos.add(new TabViewInfo(tabIcon, name, tab,tabView));
-            }else {
-                tabViewInfos.add(new TabViewInfo(null, null, tab,tabView));
+                tabViewInfos.add(new TabViewInfo(tabIcon, name, tab, tabView));
+            } else {
+                tabViewInfos.add(new TabViewInfo(null, null, tab, tabView));
             }
 
             //设置tab点击事件
@@ -300,21 +295,28 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
                 @Override
                 public void onClick(View view) {
                     //自定义布局忽略布局选中状态，状态由调用者自行修改
-                    if (tab.getCustomView() == null){
+                    if (tab.getCustomView() == null) {
                         setCheckAndUncheck(tab);
                     }
-                    mainContent.setCurrentItem(tabContents.indexOf(tab),enableScrollAnimation);
+                    if (getToolbarTitle() != null) {
+                        getToolbarTitle().setText(tab.getTabName());
+                    }
+                    mainContent.setCurrentItem(tabContents.indexOf(tab), enableScrollAnimation);
                 }
             });
             defaultTab.addView(tabView);
         }
-       // viewPagerAdapter.build();
-        viewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) getContext()).getSupportFragmentManager(),fragmentList);
+        // viewPagerAdapter.build();
+        viewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) getContext()).getSupportFragmentManager(), fragmentList);
         mainContent.setAdapter(viewPagerAdapter);
 
 
+        if (getToolbarTitle() != null) {
+            getToolbarTitle().setText(tabContents.get(currentIndex).getTabName());
+        }
+        mainContent.setCurrentItem(currentIndex);
         //自定义布局忽略布局选中状态，状态由调用者自行修改
-        if (tabContents.get(currentIndex).getCustomView() == null){
+        if (tabContents.get(currentIndex).getCustomView() == null) {
             setCheckAndUncheck(tabContents.get(currentIndex));
         }
     }
@@ -322,39 +324,47 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
     /**
      * 设置fragment
-     * @param viewLayout 自定义布局，这个每个布局的样式都是传入的布局样式，需要每个tab布局都不同，需要调用上面的方法,即在每个tabcontent中传入自定义布局
+     *
+     * @param viewLayout  自定义布局，这个每个布局的样式都是传入的布局样式，需要每个tab布局都不同，需要调用上面的方法,即在每个tabcontent中传入自定义布局
      * @param tabContents
      */
     public void setFragmentsList(final List<TabContent> tabContents, final int viewLayout) {
-        if (tabContents == null){
+        if (tabContents == null) {
             return;
         }
-        if (currentIndex >= tabContents.size()){
-            currentIndex = tabContents.size() -1;
+        if (currentIndex >= tabContents.size()) {
+            currentIndex = tabContents.size() - 1;
         }
         this.tabContents = tabContents;
+        List<Fragment> fragmentList = new ArrayList<>();
 
         defaultTab.removeAllViews();
         for (final TabContent tab : tabContents) {
-            viewPagerAdapter.addFragment(tab.getFragment());
+            fragmentList.add(tab.getFragment());
+
             final View tabView = LayoutInflater.from(getContext()).inflate(viewLayout, null);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             llp.height = LayoutParams.WRAP_CONTENT;
             llp.weight = 1;
             tabView.setLayoutParams(llp);
-            tabViewInfos.add(new TabViewInfo(null, null, tab,tabView));
+            tabViewInfos.add(new TabViewInfo(null, null, tab, tabView));
 
             //设置tab点击事件
             tabView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //设置默认fragment
-                    mainContent.setCurrentItem(currentIndex,enableScrollAnimation);
+                    if (getToolbarTitle() != null) {
+                        getToolbarTitle().setText(tab.getTabName());
+                    }
+                    mainContent.setCurrentItem(tabContents.indexOf(tab), enableScrollAnimation);
                 }
             });
             defaultTab.addView(tabView);
         }
-        viewPagerAdapter.build();
+
+        viewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) getContext()).getSupportFragmentManager(), fragmentList);
+        mainContent.setAdapter(viewPagerAdapter);
+
         //设置默认fragment
         mainContent.setCurrentItem(currentIndex);
         oldFragment = tabContents.get(currentIndex).getFragment();
@@ -362,53 +372,41 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
 
     /**
-     * 控制哪个fragment的显示或隐藏
-     * @param tab
-     */
-    private void setCurrentFragment(TabContent tab,int index){
-        if (currentIndex == index){
-            return;
-        }
-        mainContent.setCurrentItem(currentIndex);
-
-        setCheckAndUncheck(tab);
-    }
-
-
-    /**
      * 获取viewpager的方法
+     *
      * @return
      */
-    public ViewPager getViewPager(){
+    public ViewPager getViewPager() {
         return mainContent;
     }
 
 
     /**
      * 设置界面预加载数量
+     *
      * @param num 预加载数量
      */
-    public void setOffscreenPageLimit(int num){
+    public void setOffscreenPageLimit(int num) {
         mainContent.setOffscreenPageLimit(num);
     }
 
 
-
     /**
      * 获取tab内容
+     *
      * @return
      */
-    public List<TabContent> getTabContentList(){
+    public List<TabContent> getTabContentList() {
         return tabContents;
     }
 
 
-
     /**
      * 设置tab的监听器
+     *
      * @param tabClickListener 监听器
      */
-    public void setTabClickListener(TabClickListener tabClickListener){
+    public void setTabClickListener(TabClickListener tabClickListener) {
         this.tabClickListener = tabClickListener;
     }
 
@@ -419,9 +417,11 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      * @param tabContent
      */
     public void setCheckAndUncheck(TabContent tabContent) {
-        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         for (TabViewInfo info : tabViewInfos) {
-            if (info.getTabContent().getTabName().equals(tabContent.getTabName())) {
+            if (info.getTabName() == null) {
+                return;
+            }
+            if (tabContent.getFragment() == info.getTabContent().getFragment()) {
                 info.getTabName().setTextColor(selectTextColor);
                 setCheckAndUncheckImg(true, tabContent, info);
             } else {
@@ -441,6 +441,9 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
      */
     public void setCheckAndUncheckImg(boolean isChoose, TabContent tab, TabViewInfo info) {
         ImageView tabIcon = info.getTabIcon();
+        if (tabIcon == null) {
+            return;
+        }
         //设置tab的icon
         if (!isChoose) {
             //未选中状态图片
@@ -503,12 +506,23 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         mainContent = findViewById(R.id.mainContent);
         mainContent.setCanScorll(enableScrollChangePager);
         //添加默认工具栏
-        if (toolBarLayout != 0){
-            View defaultToolbar = LayoutInflater.from(getContext()).inflate(toolBarLayout, this,false);
+        if (toolBarLayout != 0) {
+            View defaultToolbar = LayoutInflater.from(getContext()).inflate(toolBarLayout, this, false);
             toolbar.addView(defaultToolbar);
+        } else {
+            View defaultToolbar = LayoutInflater.from(getContext()).inflate(R.layout.mainui_default_main_toolbar, this, false);
+            toolbar.addView(defaultToolbar);
+        }
+
+        //设置状态了颜色
+        if (toolbarBarBackround != null){
+            if (toolbar.getChildAt(0) != null){
+                toolbar.getChildAt(0).setBackground(toolbarBarBackround);
+            }
         }else {
-            View defaultToolbar = LayoutInflater.from(getContext()).inflate(R.layout.mainui_default_main_toolbar, this,false);
-            toolbar.addView(defaultToolbar);
+            if (toolbar.getChildAt(0) != null){
+                toolbar.getChildAt(0).setBackgroundColor(toolbarBarBackroundColor);
+            }
         }
 
         //隐藏app默认状态栏
@@ -527,12 +541,15 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         mainuiLeftMenuHeadAndBody = findViewById(R.id.mainuiLeftMenuHeadAndBody);
         mainuiLeftMenuHeadAndBody.setItemIconTintList(null);
 
-        if (tabBackground != null){
+        if (tabBackground != null) {
             defaultTab.setBackground(tabBackground);
-        }else {
+        } else {
             defaultTab.setBackgroundColor(tabBackgroundColor);
         }
         setLeftMenu();
+
+
+
     }
 
     /**
@@ -579,17 +596,17 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         tabTextSize = typedArray.getDimensionPixelSize(R.styleable.MainUIFrameView_tabTextSize, getContext().getResources().getDimensionPixelSize(R.dimen.tabTextSize));
         tabTextMargin = typedArray.getDimension(R.styleable.MainUIFrameView_tabFontMargin, getContext().getResources().getDimension(R.dimen.tabTextMargin));
         tabBackground = typedArray.getDrawable(R.styleable.MainUIFrameView_tabBg);
-        if (tabBackground == null){
-            tabBackgroundColor = typedArray.getColor(R.styleable.MainUIFrameView_tabBg,getContext().getResources().getColor(R.color.defaultThemeColor));
+        if (tabBackground == null) {
+            tabBackgroundColor = typedArray.getColor(R.styleable.MainUIFrameView_tabBg, getContext().getResources().getColor(R.color.defaultThemeColor));
         }
-        tabIconHeight = typedArray.getDimension(R.styleable.MainUIFrameView_tabIconHeight,getContext().getResources().getDimensionPixelSize(R.dimen.tabIconHeight));
-        tabIconWidth = typedArray.getDimension(R.styleable.MainUIFrameView_tabIconHeight,getContext().getResources().getDimensionPixelSize(R.dimen.tabIconWidth));
+        tabIconHeight = typedArray.getDimension(R.styleable.MainUIFrameView_tabIconHeight, getContext().getResources().getDimensionPixelSize(R.dimen.tabIconHeight));
+        tabIconWidth = typedArray.getDimension(R.styleable.MainUIFrameView_tabIconHeight, getContext().getResources().getDimensionPixelSize(R.dimen.tabIconWidth));
         toolbarBarBackround = typedArray.getDrawable(R.styleable.MainUIFrameView_toolbarBarBackground);
-        if (toolbarBarBackround == null){
-            toolbarBarBackroundColor = typedArray.getColor(R.styleable.MainUIFrameView_toolbarBarBackground,getContext().getResources().getColor(R.color.defaultThemeColor));
+        if (toolbarBarBackround == null) {
+            toolbarBarBackroundColor = typedArray.getColor(R.styleable.MainUIFrameView_toolbarBarBackground, getContext().getResources().getColor(R.color.defaultThemeColor));
         }
-        enableScrollChangePager = typedArray.getBoolean(R.styleable.MainUIFrameView_enableScrollChangePager,false);
-        enableScrollAnimation = typedArray.getBoolean(R.styleable.MainUIFrameView_enableScrollAnimation,false);
+        enableScrollChangePager = typedArray.getBoolean(R.styleable.MainUIFrameView_enableScrollChangePager, false);
+        enableScrollAnimation = typedArray.getBoolean(R.styleable.MainUIFrameView_enableScrollAnimation, false);
     }
 
 
@@ -673,16 +690,17 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
     /**
      * 获取工具栏
+     *
      * @return
      */
-    public View getToolbar(){
-        if (toolbar != null){
-            if (toolbar.getChildCount() == 1){
+    public View getToolbar() {
+        if (toolbar != null) {
+            if (toolbar.getChildCount() == 1) {
                 return toolbar.getChildAt(0);
-            }else {
+            } else {
                 return toolbar;
             }
-        }else {
+        } else {
             return null;
         }
     }
@@ -690,10 +708,11 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
     /**
      * 获取工具栏的标题栏view
+     *
      * @return
      */
-    public TextView getToolbarTitle(){
-        if (toolbar != null){
+    public TextView getToolbarTitle() {
+        if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.mainuiToolbarTitle);
             return title;
         }
@@ -702,21 +721,53 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
 
 
     /**
+     * 获取工具栏左边按钮
+     *
+     * @return
+     */
+    public ImageView getToolbarLeftBtn() {
+        if (toolbar != null) {
+            return toolbar.findViewById(R.id.mainuiOpenMenu);
+        }
+        return null;
+    }
+
+    /**
+     * 获取工具栏右边图像按钮，此按钮默认隐藏
+     *
+     * @return
+     */
+    public ImageView getToolbarRightBtn() {
+        if (toolbar != null) {
+            return toolbar.findViewById(R.id.mainuiRightBtn);
+        }
+        return null;
+    }
+
+
+    /**
      * 设置默认界面
+     *
      * @param currentIndex 界面索引
      */
-    public void setCurrentIndex(int currentIndex){
-        if (tabContents == null || tabContents.size() == 0){
+    public void setCurrentIndex(int currentIndex) {
+        if (tabContents == null || tabContents.size() == 0) {
             this.currentIndex = currentIndex;
             return;
         }
-        if (currentIndex >= tabContents.size()){
-            currentIndex = tabContents.size() -1;
+        if (currentIndex >= tabContents.size()) {
+            currentIndex = tabContents.size() - 1;
         }
-        setCurrentFragment(tabContents.get(currentIndex),currentIndex);
+
+        //设置默认标题栏内容
+        if (getToolbarTitle() != null) {
+            getToolbarTitle().setText(tabContents.get(currentIndex).getTabName());
+        }
+        //设置默认fragment及设置图片状态
+        mainContent.setCurrentItem(currentIndex);
+        setCheckAndUncheck(tabContents.get(currentIndex));
         this.currentIndex = currentIndex;
     }
-
 
 
     /**
@@ -732,6 +783,19 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         }
     }
 
+    /**
+     * 去除左边的活动栏
+     * @param isUse
+     */
+    public void useLeftMenu(boolean isUse){
+        if (!isUse){
+            mainUiBox.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            if (getToolbarLeftBtn() != null){
+                getToolbarLeftBtn().setVisibility(GONE);
+            }
+        }
+    }
+
 
     /**
      * 获取侧滑动
@@ -741,6 +805,8 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
     public DrawerLayout getDrawerLayout() {
         return mainUiBox;
     }
+
+
 
 
     @Override

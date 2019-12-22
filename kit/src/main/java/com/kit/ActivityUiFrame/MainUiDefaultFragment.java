@@ -21,7 +21,5 @@ public class MainUiDefaultFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView textView = view.findViewById(R.id.mainuiAlert);
-        textView.setText(textView.getText().toString()+"\n"+Math.random()*10);
     }
 }
