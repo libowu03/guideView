@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.test.guide.MainUiFrameActivity">
 
-    <com.kit.ActivityUiFrame.MainUIFrameView
+    <com.kit.ActivityUiFrame.view.MainUIFrameView
         android:layout_width="match_parent"
         android:id="@+id/mainui"
         android:layout_height="match_parent"

@@ -14,9 +14,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kit.pagerCard.PagerCardBean;
-import com.kit.pagerCard.PagerCardView;
-import com.test.guide.R;
 import com.kit.guide.bean.GuideBean;
 import com.kit.guide.callBack.GuideViewClickCallBack;
 import com.kit.guide.dialog.GuideDialog;

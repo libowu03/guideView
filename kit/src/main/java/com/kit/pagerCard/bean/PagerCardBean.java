@@ -1,4 +1,4 @@
-package com.kit.pagerCard;
+package com.kit.pagerCard.bean;
 
 /**
  * pagerCard的数据内容，如果需要自定义，请继承自此类

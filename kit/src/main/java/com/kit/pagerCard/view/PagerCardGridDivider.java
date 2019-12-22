@@ -1,4 +1,4 @@
-package com.kit.pagerCard;
+package com.kit.pagerCard.view;
 
 import android.graphics.Rect;
 import android.support.annotation.NonNull;

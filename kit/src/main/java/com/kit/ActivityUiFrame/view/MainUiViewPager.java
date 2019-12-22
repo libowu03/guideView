@@ -1,4 +1,4 @@
-package com.kit.ActivityUiFrame;
+package com.kit.ActivityUiFrame.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

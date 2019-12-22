@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/defaultToolbar"
             android:orientation="horizontal"/>
-        <com.kit.ActivityUiFrame.MainUiViewPager
+        <com.kit.ActivityUiFrame.view.MainUiViewPager
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

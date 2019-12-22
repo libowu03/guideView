@@ -1,4 +1,4 @@
-package com.kit.pagerCard;
+package com.kit.pagerCard.bean;
 
 import android.graphics.drawable.Drawable;
 

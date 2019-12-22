@@ -1,4 +1,4 @@
-package com.kit.pagerCard;
+package com.kit.pagerCard.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,6 +21,10 @@ import android.widget.LinearLayout;
 
 import com.kit.guide.R;
 import com.kit.guide.utils.GuideViewUtils;
+import com.kit.pagerCard.adapter.ViewPagerAdapter;
+import com.kit.pagerCard.adapter.CardPagerAdapter;
+import com.kit.pagerCard.bean.PagerCardAttribute;
+import com.kit.pagerCard.bean.PagerCardBean;
 import com.kit.utils.L;
 
 import java.util.ArrayList;

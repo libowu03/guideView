@@ -1,4 +1,4 @@
-package com.kit.ActivityUiFrame;
+package com.kit.ActivityUiFrame.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -32,6 +32,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kit.ActivityUiFrame.listener.MainUiMenuItemClickListener;
+import com.kit.ActivityUiFrame.listener.TabClickListener;
+import com.kit.ActivityUiFrame.adapter.ViewPagerAdapter;
+import com.kit.ActivityUiFrame.bean.TabContent;
+import com.kit.ActivityUiFrame.bean.TabViewInfo;
 import com.kit.guide.R;
 import com.kit.guide.utils.GuideViewUtils;
 import com.kit.utils.GetActionBarHeight;
@@ -758,7 +763,10 @@ public class MainUIFrameView extends LinearLayout implements View.OnClickListene
         if (currentIndex >= tabContents.size()) {
             currentIndex = tabContents.size() - 1;
         }
-
+        if (currentIndex < 0){
+            currentIndex = 0;
+            this.currentIndex = 0;
+        }
         //设置默认标题栏内容
         if (getToolbarTitle() != null) {
             getToolbarTitle().setText(tabContents.get(currentIndex).getTabName());

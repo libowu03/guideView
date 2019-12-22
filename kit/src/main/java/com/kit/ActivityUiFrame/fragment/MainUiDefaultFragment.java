@@ -1,4 +1,4 @@
-package com.kit.ActivityUiFrame;
+package com.kit.ActivityUiFrame.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import com.kit.guide.R;
 
+/**
+ * 默认测试的一个fragment，实际上外部调用是这个类是没用处的
+ * @author libowu
+ */
 public class MainUiDefaultFragment extends Fragment {
     @Nullable
     @Override

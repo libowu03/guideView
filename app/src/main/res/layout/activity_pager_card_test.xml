@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.test.guide.PagerCardTestActivity"
     android:orientation="vertical">
-    <com.kit.pagerCard.PagerCardView
+    <com.kit.pagerCard.view.PagerCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardview"
         app:pagerCardRedPointColor="@color/colorRed"
         app:pagerCardRedPointTextColor="@color/white"
         app:pagerCardRedPointTextSize="8dp" />
-    <com.kit.pagerCard.PagerCardView
+    <com.kit.pagerCard.view.PagerCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardviewTwo"
@@ -23,7 +23,7 @@
         app:pagerCardRedPointTextColor="@color/white"
         app:seIndicatorColor="@color/colorRed"/>
 
-    <com.kit.pagerCard.PagerCardView
+    <com.kit.pagerCard.view.PagerCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardviewThree"

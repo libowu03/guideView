@@ -9,12 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.kit.guide.dialog.GuideDialog;
-import com.test.guide.R;
 import com.kit.guide.bean.GuideBean;
 import com.kit.guide.callBack.GuideViewClickCallBack;
-import com.kit.pagerCard.PagerCardBean;
-import com.kit.pagerCard.PagerCardView;
+import com.kit.pagerCard.bean.PagerCardBean;
+import com.kit.pagerCard.view.PagerCardView;
 
 import java.util.ArrayList;
 import java.util.List;

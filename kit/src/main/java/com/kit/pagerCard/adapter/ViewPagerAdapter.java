@@ -1,4 +1,4 @@
-package com.kit.pagerCard;
+package com.kit.pagerCard.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;

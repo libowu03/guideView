@@ -1,4 +1,4 @@
-package com.kit.pagerCard;
+package com.kit.pagerCard.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -19,6 +19,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.kit.guide.R;
 import com.kit.guide.utils.GuideViewUtils;
+import com.kit.pagerCard.bean.PagerCardAttribute;
+import com.kit.pagerCard.bean.PagerCardBean;
 
 import java.util.List;
 

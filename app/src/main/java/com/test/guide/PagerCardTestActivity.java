@@ -1,10 +1,9 @@
 package com.test.guide;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
-import com.kit.pagerCard.PagerCardBean;
-import com.kit.pagerCard.PagerCardView;
+import com.kit.pagerCard.bean.PagerCardBean;
+import com.kit.pagerCard.view.PagerCardView;
 
 /**
  * pagerCard的测试类

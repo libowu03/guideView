@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <com.kit.pagerCard.SelfViewPagerView
+    <com.kit.pagerCard.view.SelfViewPagerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pagerCard" />
