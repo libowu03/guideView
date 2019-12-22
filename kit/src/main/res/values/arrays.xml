@@ -141,7 +141,11 @@
         <attr name="tabIconHeight" format="dimension"/>
         <!--tab图标宽度-->
         <attr name="tabIconWidth" format="dimension"/>
-        <attr name="toolbarBarBackround" format="color|reference"/>
+        <attr name="toolbarBarBackground" format="color|reference"/>
+        <!--是否支持滑动切换fragment-->
+        <attr name="enableScrollChangePager" format="boolean"/>
+        <!--点击切换fragment时是否打开动画-->
+        <attr name="enableScrollAnimation" format="boolean"/>
     </declare-styleable>
     
 </resources>

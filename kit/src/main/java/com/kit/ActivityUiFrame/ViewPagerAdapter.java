@@ -10,8 +10,9 @@ import java.util.List;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> list;
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm,List<Fragment> list) {
         super(fm);
+        this.list = list;
     }
 
     public void setList(List<Fragment> list){
@@ -33,17 +34,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        if (list != null){
-            list.get(i);
-        }
-        return null;
+        return list.get(i);
     }
 
     @Override
     public int getCount() {
-        if (list != null){
-            return list.size();
-        }
-        return 0;
+        return list.size();
     }
 }

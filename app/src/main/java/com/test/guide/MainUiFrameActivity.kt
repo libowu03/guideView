@@ -45,7 +45,7 @@ class MainUiFrameActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(i: Int, tabContent: TabContent?, currentView: View?, tabContents: MutableList<TabContent>?) {
-
+                Log.e("日志","内容为："+tabContent?.tabName)
             }
 
         })
