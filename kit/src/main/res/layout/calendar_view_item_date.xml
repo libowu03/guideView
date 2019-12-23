@@ -20,7 +20,9 @@
             android:layout_gravity="center"
             android:textSize="16dp"
             android:textStyle="bold"
+            android:id="@+id/calendarDay"
             android:gravity="center"
+            android:textColor="@color/currentMonthColor"
             android:text="21" />
         <TextView
             android:layout_width="match_parent"
@@ -28,6 +30,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="13dp"
+            android:id="@+id/calendarFestivalOrLunar"
+            android:textColor="@color/currentMonthColor"
             android:text="冬至"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

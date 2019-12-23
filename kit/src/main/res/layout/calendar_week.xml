@@ -9,12 +9,6 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:text="周日"
-        android:layout_weight="1"
-        android:gravity="center"/>
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:text="周一"
         android:layout_weight="1"
         android:gravity="center"/>
@@ -46,6 +40,12 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="周六"
+        android:layout_weight="1"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="周日"
         android:layout_weight="1"
         android:gravity="center"/>
 
