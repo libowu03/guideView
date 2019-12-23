@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.calendar.utils.LunarCalendar
@@ -104,6 +105,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
             day.setTextColor(Color.parseColor("#cccccc"))
             festival.setTextColor(Color.parseColor("#cccccc"))
         }
+        view.setOnClickListener(OnClickListener {
+            Toast.makeText(context,day.text.toString(),Toast.LENGTH_SHORT).show()
+        })
         parentView.addView(view)
     }
 
@@ -179,7 +183,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 currentMonth = cal.get(Calendar.MONTH)+1
                 currentYear = cal.get(Calendar.YEAR)
                 dateList = CalendarUtils.getDayOfMonthList(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1)
-                setNewData(++currentYear,currentMonth)
+                setNewData(currentYear,currentMonth)
             }
         }
     }

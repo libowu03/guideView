@@ -2,4 +2,5 @@
 <resources>
     <color name="currentMonthColor">#333333</color>
     <color name="notCurrentMonthColor">#cccccc</color>
+    <color name="themeColor">@color/colorAccent</color>
 </resources>
