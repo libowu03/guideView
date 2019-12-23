@@ -96,6 +96,7 @@ public class GuideView extends View {
         super.onLayout(changed, left, top, right, bottom);
         width = right - left;
         height = bottom - top;
+        Log.e("日志","执行onLayout");
     }
 
     @Override
@@ -439,6 +440,7 @@ public class GuideView extends View {
             });
         }
     }
+
 
     /**
      * 设置控件矩阵的顶部坐标和底部坐标，这两个坐标与状态栏和标题栏高度有关
