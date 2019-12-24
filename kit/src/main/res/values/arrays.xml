@@ -147,5 +147,25 @@
         <!--点击切换fragment时是否打开动画-->
         <attr name="enableScrollAnimation" format="boolean"/>
     </declare-styleable>
-    
+
+    <!--日历插件的属性配置-->
+    <declare-styleable name="CalendarView">
+        <!--日期的文字大小-->
+        <attr name="dateDayTextSize" format="dimension"/>
+        <!--日期下面的节日或农历文字大小-->
+        <attr name="dateFestivalTextSize" format="dimension"/>
+        <!--非当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期-->
+        <attr name="notCurrentMonthDayTextColor" format="color"/>
+        <!--非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期-->
+        <attr name="notCurrentMonthFestivalTextColor" format="color"/>
+        <!--当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期-->
+        <attr name="currentMonthDayTextColor" format="color"/>
+        <!--非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期-->
+        <attr name="currentMonthFestivalTextColor" format="color"/>
+        <!--日历的顶部周一至周日的字体颜色-->
+        <attr name="headWeekTextColor" format="color"/>
+        <!--日历顶部周一至周六的字体大小-->
+        <attr name="headWeekTextSize" format="dimension"/>
+        <attr name="selectToday" format="boolean"/>
+    </declare-styleable>
 </resources>

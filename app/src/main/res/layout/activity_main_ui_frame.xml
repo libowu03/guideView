@@ -17,8 +17,8 @@
         app:footLayout="@layout/mainui_leftmenu_foot"
         app:toolbarBarBackground="@color/colorAccent"
         app:tabBg="@color/colorAccent"
-        app:tabIconHeight="30dp"
-        app:tabIconWidth="30dp"/>
+        app:tabIconHeight="20dp"
+        app:tabIconWidth="20dp"/>
 
     <TextView
         android:layout_width="match_parent"

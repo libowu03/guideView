@@ -5,23 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:paddingTop="6dp"
+    android:id="@+id/calendarWeekBar"
     android:paddingBottom="6dp">
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="周一"
         android:layout_weight="1"
+        android:textColor="@color/weekBarTextColor"
         android:gravity="center"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="周二"
         android:layout_weight="1"
+        android:textColor="@color/weekBarTextColor"
         android:gravity="center"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="周三"
+        android:textColor="@color/weekBarTextColor"
         android:layout_weight="1"
         android:gravity="center"/>
     <TextView
@@ -29,17 +33,20 @@
         android:layout_height="match_parent"
         android:text="周四"
         android:layout_weight="1"
+        android:textColor="@color/weekBarTextColor"
         android:gravity="center"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="周五"
         android:layout_weight="1"
+        android:textColor="@color/weekBarTextColor"
         android:gravity="center"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="周六"
+        android:textColor="@color/weekBarTextColor"
         android:layout_weight="1"
         android:gravity="center"/>
     <TextView
@@ -47,6 +54,7 @@
         android:layout_height="match_parent"
         android:text="周日"
         android:layout_weight="1"
+        android:textColor="@color/weekBarTextColor"
         android:gravity="center"/>
 
 </LinearLayout>

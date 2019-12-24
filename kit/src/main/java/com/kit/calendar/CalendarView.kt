@@ -3,18 +3,19 @@ package com.kit.calendar
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.calendar.utils.LunarCalendar
 import com.kit.guide.R
+import com.kit.guide.utils.GuideViewUtils
 import kotlinx.android.synthetic.main.calendar_head.view.*
 import kotlinx.android.synthetic.main.calendar_view.view.*
+import kotlinx.android.synthetic.main.calendar_week.view.*
 import java.util.*
 
 /**
@@ -25,20 +26,71 @@ import java.util.*
  */
 class CalendarView : LinearLayout, View.OnClickListener {
     private var dateViewItem : MutableList<View> ?= null
+    //当前年份
     private var currentYear:Int = 0
+    //当前月份
     private var currentMonth:Int = 0
-
+    //当前日期
+    private var currentDay:Int = 0
+    //当前日期，初始化后就确定为今天所在的月份了，后面不会再变动。
+    private var todayMonth : Int = 0
+    //点击监听
+    private var dateItemClickListener:OnDateItemClickListener ?= null
+    //日期信息，里面记录了年，月，日，农历，节日，是否是假期等信息。
     private var dateList: MutableList<DateInfo>?= null
+    //是否默认选中今天
+    private var selectToday: Boolean = true
+
+    //=======================界面属性值=============================
+
+    //日期的文字大小
+    private var dateDayTextSize:Float ?= 0f
+    //日期下面的节日或农历文字大小
+    private var dateFestivalTextSize:Float ?= 0f
+    //非当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
+    private var notCurrentMonthDayTextColor:Int ?=0
+    //非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
+    private var notCurrentMonthFestivalTextColor:Int ?= 0
+    //当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
+    private var currentMonthDayTextColor:Int ?= 0
+    //非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
+    private var currentMonthFestivalTextColor:Int ?= 0
+    //日历的顶部周一至周日的字体颜色
+    private var headWeekTextColor:Int ?= 0
+    //日历顶部周一至周六的字体大小
+    private var headWeekTextSize:Float ?= 0f
+
+    //=======================界面属性值End=============================
 
     constructor(context:Context) : this(context,null)
 
     constructor(context: Context?, nothing: AttributeSet?) : this(context,nothing,0)
 
     constructor(context: Context?, nothing: AttributeSet?,def:Int?) : super(context,nothing,0) {
+        initArr(context,nothing,def)
         initView()
         initListener()
     }
 
+    /**
+     * 初始化界面属性
+     */
+    private fun initArr(context: Context?, nothing: AttributeSet?,def:Int?) {
+        val typedArray = context!!.theme.obtainStyledAttributes(nothing, R.styleable.CalendarView, def!!, 0)
+        dateDayTextSize = typedArray.getDimension(R.styleable.CalendarView_dateDayTextSize,16f)
+        dateFestivalTextSize = typedArray.getDimension(R.styleable.CalendarView_dateFestivalTextSize,13f)
+        notCurrentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthDayTextColor,context.resources.getColor(R.color.notCurrentMonthColor))
+        notCurrentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthFestivalTextColor,context.resources.getColor(R.color.notCurrentMonthColor))
+        currentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthDayTextColor,context.resources.getColor(R.color.currentMonthColor))
+        currentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthDayTextColor,context.resources.getColor(R.color.currentMonthColor))
+        headWeekTextColor = typedArray.getColor(R.styleable.CalendarView_headWeekTextColor,context.resources.getColor(R.color.weekBarTextColor))
+        headWeekTextSize = typedArray.getDimension(R.styleable.CalendarView_headWeekTextSize,16f)
+        selectToday = typedArray.getBoolean(R.styleable.CalendarView_selectToday,true)
+    }
+
+    /**
+     * 初始化监听器
+     */
     private fun initListener() {
         calendarMonthNext.setOnClickListener(this)
         calendarMonthPre.setOnClickListener(this)
@@ -55,16 +107,27 @@ class CalendarView : LinearLayout, View.OnClickListener {
         LayoutInflater.from(context).inflate(R.layout.calendar_view,this,true)
         calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head,this,false))
 
+        //设置周一至周日的字体颜色及大小
+        for (index in 0..calendarWeekBar.childCount){
+            if (calendarWeekBar.getChildAt(index) is TextView){
+                (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
+                (calendarWeekBar.getChildAt(index) as TextView).setTextSize( headWeekTextSize!! )
+            }
+        }
+
         //日历默认值(当前时间)
         var cal = Calendar.getInstance()
         currentMonth = cal.get(Calendar.MONTH)+1
+        todayMonth = cal.get(Calendar.MONTH)+1
         currentYear = cal.get(Calendar.YEAR)
+        currentDay = cal.get(Calendar.DAY_OF_MONTH)
         dateList = CalendarUtils.getDayOfMonthList(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1)
         dateViewItem = mutableListOf()
 
         //设置当前头部的日期
         calendarMonthTextTv.setText("${currentMonth}")
         calendarYearTextTv.setText("${currentYear}")
+        calendarHeadTime.setText("${cal.get(Calendar.HOUR_OF_DAY)}：${cal.get(Calendar.MINUTE)}")
 
         for(index in 0..6){
             var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date,this,false)
@@ -101,14 +164,31 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var festival = view.findViewById<TextView>(R.id.calendarFestivalOrLunar)
         day.setText("${dateList?.get(startIndex+index)?.day}")
         festival.setText("${CalendarUtils.lunarCn.get(dateList?.get(index)?.lunar?.get(2))}")
+
+        //设置字体颜色
         if (!dateList?.get(startIndex+index)?.isCurrentMonth!!){
-            day.setTextColor(Color.parseColor("#cccccc"))
-            festival.setTextColor(Color.parseColor("#cccccc"))
+            day.setTextColor(notCurrentMonthDayTextColor!!)
+            festival.setTextColor(notCurrentMonthFestivalTextColor!!)
+        }else{
+            day.setTextColor(currentMonthDayTextColor!!)
+            festival.setTextColor(currentMonthFestivalTextColor!!)
         }
+
         view.setOnClickListener(OnClickListener {
-            Toast.makeText(context,day.text.toString(),Toast.LENGTH_SHORT).show()
+            dateItemClickListener?.dateItemClickListener(startIndex+index,view,dateList?.get(startIndex+index))
         })
+        //设置今天日期的样式
+        if (dateList?.get(startIndex+index).day == currentDay && selectToday){
+            view.setBackgroundColor(context.resources.getColor(R.color.colorTitle))
+            day.setTextColor(context.resources.getColor(R.color.white))
+            festival.setTextColor(context.resources.getColor(R.color.white))
+        }
         parentView.addView(view)
+    }
+
+
+    fun setOnDateItemClickListener(listener: OnDateItemClickListener){
+        this.dateItemClickListener = listener
     }
 
 
@@ -124,19 +204,66 @@ class CalendarView : LinearLayout, View.OnClickListener {
             day?.setText("${dateList?.get(index)?.day}")
 
             if (!dateList?.get(index)?.isCurrentMonth!!){
-                day?.setTextColor(context.resources.getColor(R.color.notCurrentMonthColor))
-                festival?.setTextColor(context.resources.getColor(R.color.notCurrentMonthColor))
+                day?.setTextColor(notCurrentMonthDayTextColor!!)
+                festival?.setTextColor(notCurrentMonthFestivalTextColor!!)
                 festival?.setText("${CalendarUtils.lunarCn.get(dateList?.get(index)?.lunar?.get(2))}")
             }else{
-                day?.setTextColor(context.resources.getColor(R.color.currentMonthColor))
-                festival?.setTextColor(context.resources.getColor(R.color.currentMonthColor))
-                festival?.setText("${CalendarUtils.lunarCn.get(dateList?.get(index)?.lunar?.get(2))}")
+                if ((dateList?.get(index)!!.day == currentDay) && dateList?.get(index)!!.month == todayMonth && selectToday){
+                    view?.setBackgroundColor(context.resources.getColor(R.color.colorTitle))
+                    day?.setTextColor(context.resources.getColor(R.color.white))
+                    festival?.setTextColor(context.resources.getColor(R.color.white))
+                }else{
+                    day?.setTextColor(currentMonthDayTextColor!!)
+                    festival?.setTextColor(currentMonthFestivalTextColor!!)
+                    view?.setBackgroundColor(context.resources.getColor(R.color.transparent))
+                    festival?.setText("${CalendarUtils.lunarCn.get(dateList?.get(index)?.lunar?.get(2))}")
+                }
             }
+
+
+
+            view?.setOnClickListener(OnClickListener {
+                dateItemClickListener?.dateItemClickListener(index,view, dateList?.get(index)!!)
+            })
         }
 
         //设置日期和时间
         calendarMonthTextTv.setText("${currentMonth}")
         calendarYearTextTv.setText("${currentYear}")
+    }
+
+    /**
+     * 获取当前日期的42宫格内容
+     */
+    fun getDateInfoList(): MutableList<DateInfo>? {
+        return dateList
+    }
+
+    /**
+     * 获取42宫格的view
+     */
+    fun getDateViewList():MutableList<View>?{
+        return dateViewItem
+    }
+
+    /**
+     * 获取头部信息
+     * @return 头部的view
+     */
+    fun getHeadView():View{
+        return calendarHead
+    }
+
+    /**
+     * 隐藏头部内容
+     */
+    fun hideHeadView(){
+        if (calendarHead != null){
+            calendarHead.visibility = View.GONE
+        }
+        if (calendarHeadLine != null){
+            calendarHeadLine.visibility = View.GONE
+        }
     }
 
     override fun onClick(p0: View?) {
@@ -186,5 +313,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 setNewData(currentYear,currentMonth)
             }
         }
+    }
+
+    interface OnDateItemClickListener{
+        fun dateItemClickListener(index:Int,currentView:View,dateInfo:DateInfo)
     }
 }
