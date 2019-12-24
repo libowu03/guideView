@@ -25,6 +25,8 @@ import java.util.*
  * 冬至撸代码，别有一番风味
  */
 class CalendarView : LinearLayout, View.OnClickListener {
+    private var footLayout: Int = 0
+    private var headLayout: Int = 0
     private var dateViewItem : MutableList<View> ?= null
     //当前年份
     private var currentYear:Int = 0
@@ -40,8 +42,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var dateList: MutableList<DateInfo>?= null
     //是否默认选中今天
     private var selectToday: Boolean = true
+    //上一次点击的view
+    private var oldDateItem:View ?= null
 
-    //=======================界面属性值=============================
 
     //日期的文字大小
     private var dateDayTextSize:Float ?= 0f
@@ -59,8 +62,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var headWeekTextColor:Int ?= 0
     //日历顶部周一至周六的字体大小
     private var headWeekTextSize:Float ?= 0f
-
-    //=======================界面属性值End=============================
 
     constructor(context:Context) : this(context,null)
 
@@ -86,17 +87,19 @@ class CalendarView : LinearLayout, View.OnClickListener {
         headWeekTextColor = typedArray.getColor(R.styleable.CalendarView_headWeekTextColor,context.resources.getColor(R.color.weekBarTextColor))
         headWeekTextSize = typedArray.getDimension(R.styleable.CalendarView_headWeekTextSize,16f)
         selectToday = typedArray.getBoolean(R.styleable.CalendarView_selectToday,true)
+        headLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarHeadLayout,0)
+        footLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarFootLayout,0)
     }
 
     /**
      * 初始化监听器
      */
     private fun initListener() {
-        calendarMonthNext.setOnClickListener(this)
-        calendarMonthPre.setOnClickListener(this)
-        calendarYearPre.setOnClickListener(this)
-        calendarYearNext.setOnClickListener(this)
-        calendarHeadBackToTodayTv.setOnClickListener(this)
+        calendarMonthNext?.setOnClickListener(this)
+        calendarMonthPre?.setOnClickListener(this)
+        calendarYearPre?.setOnClickListener(this)
+        calendarYearNext?.setOnClickListener(this)
+        calendarHeadBackToTodayTv?.setOnClickListener(this)
     }
 
 
@@ -105,7 +108,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.calendar_view,this,true)
-        calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head,this,false))
 
         //设置周一至周日的字体颜色及大小
         for (index in 0..calendarWeekBar.childCount){
@@ -124,10 +126,21 @@ class CalendarView : LinearLayout, View.OnClickListener {
         dateList = CalendarUtils.getDayOfMonthList(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1)
         dateViewItem = mutableListOf()
 
-        //设置当前头部的日期
-        calendarMonthTextTv.setText("${currentMonth}")
-        calendarYearTextTv.setText("${currentYear}")
-        calendarHeadTime.setText("${cal.get(Calendar.HOUR_OF_DAY)}：${cal.get(Calendar.MINUTE)}")
+        if (headLayout != 0){
+            calendarHead.addView(LayoutInflater.from(context).inflate(headLayout,this,false))
+        }else{
+            calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head,this,false))
+            //设置当前头部的日期
+            calendarMonthTextTv.setText("${currentMonth}")
+            calendarYearTextTv.setText("${currentYear}")
+            calendarHeadTime.setText("${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH)+1}-${cal.get(Calendar.DAY_OF_MONTH)}")
+        }
+
+        if (footLayout == 0){
+            calendarFoot.addView(LayoutInflater.from(context).inflate(R.layout.calendar_foot,this,false))
+        }else{
+            calendarFoot.addView(LayoutInflater.from(context).inflate(footLayout,this,false))
+        }
 
         for(index in 0..6){
             var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date,this,false)
@@ -178,7 +191,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             dateItemClickListener?.dateItemClickListener(startIndex+index,view,dateList?.get(startIndex+index))
         })
         //设置今天日期的样式
-        if (dateList?.get(startIndex+index).day == currentDay && selectToday){
+        if (dateList?.get(startIndex+index).day == currentDay && selectToday && dateList?.get(startIndex+index).isCurrentMonth){
             view.setBackgroundColor(context.resources.getColor(R.color.colorTitle))
             day.setTextColor(context.resources.getColor(R.color.white))
             festival.setTextColor(context.resources.getColor(R.color.white))
@@ -232,6 +245,18 @@ class CalendarView : LinearLayout, View.OnClickListener {
         calendarYearTextTv.setText("${currentYear}")
     }
 
+
+    /**
+     * 更新到当前时间
+     */
+    fun updateDate(){
+        var cal = Calendar.getInstance()
+        currentMonth = cal.get(Calendar.MONTH)+1
+        currentYear = cal.get(Calendar.YEAR)
+        dateList = CalendarUtils.getDayOfMonthList(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1)
+        setNewData(currentYear,currentMonth)
+    }
+
     /**
      * 获取当前日期的42宫格内容
      */
@@ -259,11 +284,22 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     fun hideHeadView(){
         if (calendarHead != null){
-            calendarHead.visibility = View.GONE
+            calendarHead?.visibility = View.GONE
         }
         if (calendarHeadLine != null){
-            calendarHeadLine.visibility = View.GONE
+            calendarHeadLine?.visibility = View.GONE
         }
+    }
+
+    /**
+     * 隐藏尾部
+     */
+    fun hideFootView(){
+        calendarFoot.visibility = View.GONE
+    }
+
+    fun getFootView() : View{
+        return calendarFoot
     }
 
     override fun onClick(p0: View?) {
@@ -306,11 +342,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
             calendarHeadBackToTodayTv -> {
                 //日历默认值(当前时间)
-                var cal = Calendar.getInstance()
-                currentMonth = cal.get(Calendar.MONTH)+1
-                currentYear = cal.get(Calendar.YEAR)
-                dateList = CalendarUtils.getDayOfMonthList(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1)
-                setNewData(currentYear,currentMonth)
+                updateDate()
             }
         }
     }

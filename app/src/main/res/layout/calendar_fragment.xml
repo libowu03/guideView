@@ -9,11 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        app:currentMonthDayTextColor="@color/colorRed"
-        app:currentMonthFestivalTextColor="@color/colorRed"
+        app:currentMonthDayTextColor="@color/currentMonthColor"
+        app:currentMonthFestivalTextColor="@color/currentMonthColor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:selectToday="false"
-        app:headWeekTextColor="@color/colorRed"
-        app:notCurrentMonthDayTextColor="@color/colorPrimary"
-        app:notCurrentMonthFestivalTextColor="@color/colorPrimary" />
+        app:selectToday="true"
+        app:headWeekTextColor="@color/colorTitle"
+        app:notCurrentMonthDayTextColor="@color/notCurrentMonthColor"
+        app:notCurrentMonthFestivalTextColor="@color/notCurrentMonthColor" />
 </android.support.constraint.ConstraintLayout>

@@ -166,6 +166,11 @@
         <attr name="headWeekTextColor" format="color"/>
         <!--日历顶部周一至周六的字体大小-->
         <attr name="headWeekTextSize" format="dimension"/>
+        <!--是否默认选中当前时间，默认值为true-->
         <attr name="selectToday" format="boolean"/>
+        <!--头部-->
+        <attr name="calendarHeadLayout" format="reference"/>
+        <!--尾部-->
+        <attr name="calendarFootLayout" format="reference"/>
     </declare-styleable>
 </resources>
