@@ -176,5 +176,7 @@
         <attr name="enableHeadLayout" format="boolean"/>
         <!--是否打开对尾部的支持，默认打开-->
         <attr name="enableFootLayout" format="boolean"/>
+        <!--自定义dateItem的view-->
+        <attr name="dateItemLayout" format="reference"/>
     </declare-styleable>
 </resources>

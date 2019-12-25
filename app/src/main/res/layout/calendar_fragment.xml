@@ -16,8 +16,6 @@
         app:dateFestivalTextSize="12sp"
         app:headWeekTextColor="@color/colorRed"
         app:headWeekTextSize="18sp"
-        app:enableFootLayout="false"
-        app:enableHeadLayout="false"
         app:notCurrentMonthDayTextColor="@color/colorPrimary"
         app:notCurrentMonthFestivalTextColor="@color/colorPrimary"
         app:selectToday="false"

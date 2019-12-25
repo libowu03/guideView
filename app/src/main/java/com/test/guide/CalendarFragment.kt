@@ -25,7 +25,6 @@ class CalendarFragment : Fragment(){
                 Log.e("日志","获取的星期天数为："+dateInfo.week+",中文周为："+dateInfo.weekCn[0])
             }
         })
-        Log.e("日志",calendar.getDayViewByDate(23)?.findViewById<TextView>(R.id.calendarFestivalOrLunar)?.text.toString())
     }
 
 }
