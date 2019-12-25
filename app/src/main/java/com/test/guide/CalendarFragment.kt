@@ -2,6 +2,7 @@ package com.test.guide
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ class CalendarFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         calendar.setOnDateItemClickListener(object : CalendarView.OnDateItemClickListener{
             override fun dateItemClickListener(index: Int, currentView: View, dateInfo: DateInfo) {
-                Toast.makeText(context,"${dateInfo.day}",Toast.LENGTH_SHORT).show()
+                Log.e("日志","获取的星期天数为："+dateInfo.week+",中文周为："+dateInfo.weekCn[0])
             }
         })
     }

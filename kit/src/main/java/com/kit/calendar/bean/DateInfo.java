@@ -1,5 +1,7 @@
 package com.kit.calendar.bean;
 
+import com.kit.calendar.utils.CalendarUtils;
+
 public class DateInfo {
     private int day;
     private int month;
@@ -9,8 +11,10 @@ public class DateInfo {
     private boolean isCurrentMonth;
     private boolean isHoliday;
     private int[] lunar;
+    private int week = 0;
+    private String[] weekCn;
 
-    public DateInfo(int day, int month, int year, String festival, String lunarCalendar, boolean isCurrentMonth,boolean isHoliday,int[] lunar) {
+    public DateInfo(int day, int month, int year, String festival, String lunarCalendar, boolean isCurrentMonth,boolean isHoliday,int[] lunar,int week) {
         this.day = day;
         this.month = month;
         this.festival = festival;
@@ -18,6 +22,23 @@ public class DateInfo {
         this.isCurrentMonth = isCurrentMonth;
         this.isHoliday = isHoliday;
         this.lunar = lunar;
+        this.week = week;
+    }
+
+    public String[] getWeekCn() {
+        if (CalendarUtils.weekCn != null && CalendarUtils.weekCn.get(week) != null){
+            return CalendarUtils.weekCn.get(week).split(",");
+        }
+        return null;
+    }
+
+
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
     }
 
     public int[] getLunar() {

@@ -16,6 +16,7 @@ public class CalendarUtils {
     public static final int[] commonYearMonthDayNum = new int[]{31,28,31,30,31,30,31,31,30,31,30,31};
     public static final int[] leapYearMonthDayNum = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
     public static final HashMap<Integer,String> lunarCn = new HashMap<>();
+    public static final HashMap<Integer,String> weekCn = new HashMap<>();
     private int year_ganZhi;
     private int month_ganZhi;
     private int day_ganZhi;
@@ -51,6 +52,13 @@ public class CalendarUtils {
         lunarCn.put(28,"廿八");
         lunarCn.put(29,"廿九");
         lunarCn.put(30,"三十");
+        weekCn.put(0,"星期日,周日,七");
+        weekCn.put(1,"星期一,周一,一");
+        weekCn.put(2,"星期二,周二,二");
+        weekCn.put(3,"星期三,周三,三");
+        weekCn.put(4,"星期四,周四,四");
+        weekCn.put(5,"星期五,周五,五");
+        weekCn.put(6,"星期六,周六,六");
     }
 
     public static void main(String[] args) {
@@ -121,28 +129,41 @@ public class CalendarUtils {
         System.out.println("星期为："+w);
 
         List<DateInfo> list = new ArrayList<>();
+        int week = 0;
         for (int i=w-1;i>=0;i--){
             //int day, int month, int year, String festival, String lunarCalendar, boolean isCurrentMonth, boolean usCurrentYear
+            week++;
             if (isCurrentYear){
-                list.add(new DateInfo(preMonthDay-i,month-1,year,"","",false,false,LunarCalendar.solarToLunar(year,month-1,preMonthDay-i)));
+                list.add(new DateInfo(preMonthDay-i,month-1,year,"","",false,false,LunarCalendar.solarToLunar(year,month-1,preMonthDay-i),week));
             }else {
-                list.add(new DateInfo(preMonthDay-i,12,year-1,"","",false,false,LunarCalendar.solarToLunar(year-1,12,preMonthDay-i)));
+                list.add(new DateInfo(preMonthDay-i,12,year-1,"","",false,false,LunarCalendar.solarToLunar(year-1,12,preMonthDay-i),week));
+            }
+            if (week == 6){
+                week = -1;
             }
         }
 
         for (int i=1;i<=currentMonthDay;i++){
-            list.add(new DateInfo(i,month,year,"","",true,false,LunarCalendar.solarToLunar(year,month,i)));
+            week++;
+            list.add(new DateInfo(i,month,year,"","",true,false,LunarCalendar.solarToLunar(year,month,i),week));
+            if (week == 6){
+                week = -1;
+            }
+
         }
 
         int nextLength = 42 - list.size();
         for (int i=1;i<=nextLength;i++){
+            week++;
             //如果是12月份的，这尾部则是下一年一月份的内容
             if (month == 12){
-                list.add(new DateInfo(i,1,year+1,"","",false,false,LunarCalendar.solarToLunar(year+1,1,i)));
+                list.add(new DateInfo(i,1,year+1,"","",false,false,LunarCalendar.solarToLunar(year+1,1,i),week));
             }else {
-                list.add(new DateInfo(i,month+1,year,"","",false,false,LunarCalendar.solarToLunar(year,month+1,i)));
+                list.add(new DateInfo(i,month+1,year,"","",false,false,LunarCalendar.solarToLunar(year,month+1,i),week));
             }
-
+            if (week == 6){
+                week = -1;
+            }
         }
         return list;
     }
