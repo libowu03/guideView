@@ -8,17 +8,19 @@
     <com.kit.calendar.CalendarView
         android:id="@+id/calendar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:background="@color/colorGray"
         app:currentMonthDayTextColor="@color/colorRed"
         app:currentMonthFestivalTextColor="@color/colorRed"
         app:dateDayTextSize="18sp"
         app:dateFestivalTextSize="12sp"
         app:headWeekTextColor="@color/colorRed"
         app:headWeekTextSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:enableFootLayout="false"
+        app:enableHeadLayout="false"
         app:notCurrentMonthDayTextColor="@color/colorPrimary"
         app:notCurrentMonthFestivalTextColor="@color/colorPrimary"
         app:selectToday="false"
+        android:padding="10dp"
         tools:layout_editor_absoluteX="0dp" />
 </android.support.constraint.ConstraintLayout>

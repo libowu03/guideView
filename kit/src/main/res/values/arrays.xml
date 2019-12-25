@@ -172,5 +172,9 @@
         <attr name="calendarHeadLayout" format="reference"/>
         <!--尾部-->
         <attr name="calendarFootLayout" format="reference"/>
+        <!--是否打开对头部的支持，默认打开-->
+        <attr name="enableHeadLayout" format="boolean"/>
+        <!--是否打开对尾部的支持，默认打开-->
+        <attr name="enableFootLayout" format="boolean"/>
     </declare-styleable>
 </resources>

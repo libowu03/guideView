@@ -62,6 +62,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var headWeekTextColor:Int = 0
     //日历顶部周一至周六的字体大小
     private var headWeekTextSize:Int = 0
+    //是否打开对头部的支持
+    private var enableHeadLayout:Boolean = true
+    //是否打开对尾部的支持
+    private var enableFootLayout:Boolean = true
 
     constructor(context:Context) : this(context,null)
 
@@ -89,6 +93,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
         selectToday = typedArray.getBoolean(R.styleable.CalendarView_selectToday,true)
         headLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarHeadLayout,0)
         footLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarFootLayout,0)
+        enableFootLayout = typedArray.getBoolean(R.styleable.CalendarView_enableFootLayout,true)
+        enableHeadLayout = typedArray.getBoolean(R.styleable.CalendarView_enableHeadLayout,true)
     }
 
     /**
@@ -167,6 +173,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
         for(index in 0..6){
             var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date,this,false)
             setDateData(calendarLineSix,view,35,dateList,index)
+        }
+
+        if (!enableHeadLayout){
+            hideHeadView()
+        }
+        if (!enableFootLayout){
+            hideFootView()
         }
     }
 
