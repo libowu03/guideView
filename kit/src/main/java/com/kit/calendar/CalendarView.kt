@@ -44,21 +44,21 @@ class CalendarView : LinearLayout, View.OnClickListener {
     //=======================界面属性值=============================
 
     //日期的文字大小
-    private var dateDayTextSize:Float ?= 0f
+    private var dateDayTextSize:Int = 0
     //日期下面的节日或农历文字大小
-    private var dateFestivalTextSize:Float ?= 0f
+    private var dateFestivalTextSize:Int = 0
     //非当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
-    private var notCurrentMonthDayTextColor:Int ?=0
+    private var notCurrentMonthDayTextColor:Int =0
     //非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
-    private var notCurrentMonthFestivalTextColor:Int ?= 0
+    private var notCurrentMonthFestivalTextColor:Int = 0
     //当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
-    private var currentMonthDayTextColor:Int ?= 0
+    private var currentMonthDayTextColor:Int = 0
     //非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期
-    private var currentMonthFestivalTextColor:Int ?= 0
+    private var currentMonthFestivalTextColor:Int = 0
     //日历的顶部周一至周日的字体颜色
-    private var headWeekTextColor:Int ?= 0
+    private var headWeekTextColor:Int = 0
     //日历顶部周一至周六的字体大小
-    private var headWeekTextSize:Float ?= 0f
+    private var headWeekTextSize:Int = 0
 
     //=======================界面属性值End=============================
 
@@ -77,14 +77,14 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun initArr(context: Context?, nothing: AttributeSet?,def:Int?) {
         val typedArray = context!!.theme.obtainStyledAttributes(nothing, R.styleable.CalendarView, def!!, 0)
-        dateDayTextSize = typedArray.getDimension(R.styleable.CalendarView_dateDayTextSize,16f)
-        dateFestivalTextSize = typedArray.getDimension(R.styleable.CalendarView_dateFestivalTextSize,13f)
+        dateDayTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateDayTextSize,16)
+        dateFestivalTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateFestivalTextSize,13)
         notCurrentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthDayTextColor,context.resources.getColor(R.color.notCurrentMonthColor))
         notCurrentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthFestivalTextColor,context.resources.getColor(R.color.notCurrentMonthColor))
         currentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthDayTextColor,context.resources.getColor(R.color.currentMonthColor))
         currentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthDayTextColor,context.resources.getColor(R.color.currentMonthColor))
         headWeekTextColor = typedArray.getColor(R.styleable.CalendarView_headWeekTextColor,context.resources.getColor(R.color.weekBarTextColor))
-        headWeekTextSize = typedArray.getDimension(R.styleable.CalendarView_headWeekTextSize,16f)
+        headWeekTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_headWeekTextSize,16)
         selectToday = typedArray.getBoolean(R.styleable.CalendarView_selectToday,true)
     }
 
@@ -111,7 +111,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         for (index in 0..calendarWeekBar.childCount){
             if (calendarWeekBar.getChildAt(index) is TextView){
                 (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
-                (calendarWeekBar.getChildAt(index) as TextView).setTextSize( headWeekTextSize!! )
+                if (headWeekTextSize != 16){
+                    (calendarWeekBar.getChildAt(index) as TextView).setTextSize( GuideViewUtils.px2dip(context,headWeekTextSize!!.toFloat()).toFloat() )
+                }
             }
         }
 
@@ -164,6 +166,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var festival = view.findViewById<TextView>(R.id.calendarFestivalOrLunar)
         day.setText("${dateList?.get(startIndex+index)?.day}")
         festival.setText("${CalendarUtils.lunarCn.get(dateList?.get(index)?.lunar?.get(2))}")
+
+        if (dateDayTextSize != 16){
+            day.setTextSize(GuideViewUtils.px2dip(context,dateDayTextSize.toFloat()).toFloat())
+        }
+        if (dateFestivalTextSize != 16){
+            festival.setTextSize(GuideViewUtils.px2dip(context,dateFestivalTextSize.toFloat()).toFloat())
+        }
 
         //设置字体颜色
         if (!dateList?.get(startIndex+index)?.isCurrentMonth!!){
