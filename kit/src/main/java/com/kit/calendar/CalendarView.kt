@@ -226,6 +226,78 @@ class CalendarView : LinearLayout, View.OnClickListener {
         this.dateItemClickListener = listener
     }
 
+    /**
+     * 获取当前时间的view
+     * @day 日期
+     */
+    fun getDayViewByDate(day:Int): View? {
+        if (day > 32 || day <= 0){
+            return null
+        }
+        if (dateList != null) {
+            for (item in dateList!!.withIndex()){
+                if (item.value.day == day && item.value.isCurrentMonth){
+                    return dateViewItem!!.get(item.index)
+                }
+            }
+        }
+        return null
+    }
+
+    /**
+     * 获取当前时间的dateInfo
+     * @day 日期
+     */
+    fun getDateInfoByDate(day:Int):DateInfo?{
+        if (day > 32 || day <= 0){
+            return null
+        }
+        if (dateList != null) {
+            for (item in dateList!!.withIndex()){
+                if (item.value.day == day && item.value.isCurrentMonth){
+                    return item.value!!
+                }
+            }
+        }
+        return null
+    }
+
+    /**
+     * 获取当前时间的dateInfo
+     */
+    fun getTodayDateInfo():DateInfo?{
+        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        if (day > 32 || day <= 0){
+            return null
+        }
+        if (dateList != null) {
+            for (item in dateList!!.withIndex()){
+                if (item.value.day == day && item.value.isCurrentMonth){
+                    return item.value!!
+                }
+            }
+        }
+        return null
+    }
+
+    /**
+     * 获取当前时间的dateInfo
+     * @day 日期
+     */
+    fun getTodayDateView():View?{
+        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        if (day > 32 || day <= 0){
+            return null
+        }
+        if (dateList != null) {
+            for (item in dateList!!.withIndex()){
+                if (item.value.day == day && item.value.isCurrentMonth){
+                    return dateViewItem!!.get(item.index)
+                }
+            }
+        }
+        return null
+    }
 
     /**
      * 通过按钮触发改变日历界面数据

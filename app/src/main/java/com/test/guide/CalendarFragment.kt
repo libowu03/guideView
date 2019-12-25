@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import com.kit.calendar.CalendarView
 import com.kit.calendar.bean.DateInfo
@@ -24,6 +25,7 @@ class CalendarFragment : Fragment(){
                 Log.e("日志","获取的星期天数为："+dateInfo.week+",中文周为："+dateInfo.weekCn[0])
             }
         })
+        Log.e("日志",calendar.getDayViewByDate(23)?.findViewById<TextView>(R.id.calendarFestivalOrLunar)?.text.toString())
     }
 
 }
