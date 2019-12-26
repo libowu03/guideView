@@ -3,6 +3,7 @@ package com.kit.calendar
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -252,10 +253,11 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun setDateData(parentView: LinearLayout, view: View, startIndex: Int, dateList: MutableList<DateInfo>?, index: Int) {
         dateViewItem?.add(view)
+        //Log.e("日志","获取的农历为："+ dateList?.get(index)?.lunar!![2])
         var day = view.findViewById<TextView>(R.id.calendarDay)
         var festival = view.findViewById<TextView>(R.id.calendarFestivalOrLunar)
         day.setText("${dateList?.get(startIndex + index)?.day}")
-        festival.setText("${CalendarUtils.lunarCn.get(dateList?.get(index)?.lunar?.get(2))}")
+        festival.setText("${CalendarUtils.lunarCn.get(dateList?.get(startIndex+index)?.lunar?.get(2))}")
 
         if (dateDayTextSize != 16) {
             day.setTextSize(GuideViewUtils.px2dip(context, dateDayTextSize.toFloat()).toFloat())

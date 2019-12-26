@@ -1,5 +1,7 @@
 package com.kit.calendar.bean;
 
+import android.util.Log;
+
 import com.kit.calendar.utils.CalendarUtils;
 
 public class DateInfo {
@@ -23,6 +25,7 @@ public class DateInfo {
         this.isHoliday = isHoliday;
         this.lunar = lunar;
         this.week = week;
+        Log.e("日志","农历计算天数为："+lunar[0]+","+lunar[1]+","+lunar[2]+","+lunar[3]);
     }
 
     public String[] getWeekCn() {
