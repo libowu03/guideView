@@ -168,6 +168,21 @@ public class CalendarUtils {
         return list;
     }
 
+
+    /**
+     * 获取节日信息
+     * @param year 年份
+     * @param month 月份
+     * @param day 日
+     * @param lunar 农历
+     * @param includeUnNecessary 是否需要非必须的节日
+     * @return
+     */
+    public static String getFestival(int year,int month,int day,int lunar,boolean includeUnNecessary){
+        return null;
+    }
+
+
     /**
      * 是否是平年
      * Common year：平年

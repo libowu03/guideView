@@ -21,6 +21,7 @@ import com.kit.guide.utils.GuideViewUtils;
 import com.kit.guide.view.GuideView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -101,6 +102,7 @@ public class CustomFragment extends Fragment {
         guideDialog.setMarkColor(Color.parseColor("#DD000000"));
         //执行显示高亮控件
         guideDialog.show(getFragmentManager(),getClass().getName());
+
     }
 
     public void showDialog(){
