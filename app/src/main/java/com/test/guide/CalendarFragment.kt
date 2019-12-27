@@ -22,9 +22,10 @@ class CalendarFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         calendar.setOnDateItemClickListener(object : CalendarView.OnDateItemClickListener{
             override fun dateItemClickListener(index: Int, currentView: View, dateInfo: DateInfo) {
-                Log.e("日志","获取的星期天数为："+dateInfo.week+",中文周为："+dateInfo.weekCn[0])
+                Log.e("日志",dateInfo.weekCn[0]+"农历月份为："+dateInfo.lunar[1]+",农历日为："+dateInfo.lunar[2])
             }
         })
+        Log.e("日志","时间戳为："+calendar.getTodayDateInfo()?.timeMillis)
     }
 
 }

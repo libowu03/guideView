@@ -1,9 +1,13 @@
 package com.kit.calendar.utils;
 
-import android.content.pm.PackageManager;
+import android.app.Application;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.kit.calendar.bean.DateInfo;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ public class CalendarUtils {
     public static final int[] leapYearMonthDayNum = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
     public static final HashMap<Integer,String> lunarCn = new HashMap<>();
     public static final HashMap<Integer,String> weekCn = new HashMap<>();
+    private static HashMap<String,String> festival;
     private int year_ganZhi;
     private int month_ganZhi;
     private int day_ganZhi;
@@ -52,7 +57,7 @@ public class CalendarUtils {
         lunarCn.put(28,"廿八");
         lunarCn.put(29,"廿九");
         lunarCn.put(30,"三十");
-        weekCn.put(0,"星期日,周日,七");
+        weekCn.put(0,"星期日,周日,日");
         weekCn.put(1,"星期一,周一,一");
         weekCn.put(2,"星期二,周二,二");
         weekCn.put(3,"星期三,周三,三");
@@ -60,6 +65,9 @@ public class CalendarUtils {
         weekCn.put(5,"星期五,周五,五");
         weekCn.put(6,"星期六,周六,六");
     }
+
+
+
 
     public static void main(String[] args) {
         Calendar cal = Calendar.getInstance();
@@ -73,6 +81,26 @@ public class CalendarUtils {
             }else {
                 System.out.print(list.get(i).getDay()+" ");
             }
+        }
+    }
+
+    /**
+     * 获取节日信息
+     * @dateKey 日期比如H0601，L0308，N0101(H：要显示在日历上的节日,N:农历节日，优先级最高,L:无需显示出来的节日)
+     * @return
+     */
+    public static HashMap<String,String> getFestivalMap( Application application){
+        try{
+            if (festival == null){
+                Gson gson = new Gson();
+                InputStream festivalSteam = application.getResources().getAssets().open("calendar/festival.json");
+                festival = gson.fromJson(new InputStreamReader(festivalSteam),HashMap.class);
+                return festival;
+            }
+            return festival;
+        }catch (Exception e){
+            Log.e("kitViewError","reason============>"+e.getLocalizedMessage());
+            return null;
         }
     }
 
@@ -166,20 +194,6 @@ public class CalendarUtils {
             }
         }
         return list;
-    }
-
-
-    /**
-     * 获取节日信息
-     * @param year 年份
-     * @param month 月份
-     * @param day 日
-     * @param lunar 农历
-     * @param includeUnNecessary 是否需要非必须的节日
-     * @return
-     */
-    public static String getFestival(int year,int month,int day,int lunar,boolean includeUnNecessary){
-        return null;
     }
 
 
