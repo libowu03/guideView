@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.kit.calendar.utils.CalendarUtils;
+import com.kit.calendar.utils.SolaTermsUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,19 +16,15 @@ public class DateInfo {
     private int day;
     private int month;
     private int year;
-    private String festival;
-    private String lunarCalendar;
     private boolean isCurrentMonth;
     private boolean isHoliday;
     private int[] lunar;
     private int week;
     private Festival festivalInfo;
 
-    public DateInfo(int day, int month, int year, String festival, String lunarCalendar, boolean isCurrentMonth,boolean isHoliday,int[] lunar,int week) {
+    public DateInfo(int day, int month, int year ,boolean isCurrentMonth,boolean isHoliday,int[] lunar,int week) {
         this.day = day;
         this.month = month;
-        this.festival = festival;
-        this.lunarCalendar = lunarCalendar;
         this.isCurrentMonth = isCurrentMonth;
         this.isHoliday = isHoliday;
         this.lunar = lunar;
@@ -92,21 +89,16 @@ public class DateInfo {
         this.year = year;
     }
 
-    public String getFestival() {
-        return festival;
-    }
 
-    public void setFestival(String festival) {
-        this.festival = festival;
-    }
-
+/*    *//**
+     * 获取农历日月
+     * @return
+     *//*
     public String getLunarCalendar() {
-        return lunarCalendar;
-    }
 
-    public void setLunarCalendar(String lunarCalendar) {
-        this.lunarCalendar = lunarCalendar;
-    }
+        return lunarCalendar;
+    }*/
+
 
     /**
      * 获取周的中文
@@ -122,13 +114,9 @@ public class DateInfo {
     /**
      * 获取节日
      * @param application 用于读取assets下的内容
-     * @param month 月份
-     * @param day 日
-     * @param lunarMonth 农历月份
-     * @param lunarDay 农历日
      * @return 节日的对象
      */
-    public Festival getFesitval(Application application,int month, int day, int lunarMonth, int lunarDay){
+    public Festival getFesitval(Application application){
         if (festivalInfo != null){
             return festivalInfo;
         }
@@ -146,15 +134,15 @@ public class DateInfo {
         }else {
             dayStr = String.valueOf(day);
         }
-        if (lunarDay < 10){
-            lunarStr = "0"+lunarDay;
+        if (lunar[2] < 10){
+            lunarStr = "0"+lunar[2];
         }else {
-            lunarStr = String.valueOf(lunarDay);
+            lunarStr = String.valueOf(lunar[2]);
         }
-        if (lunarMonth < 10){
-            lunarMonthStr = "0"+lunarMonth;
+        if (lunar[1] < 10){
+            lunarMonthStr = "0"+lunar[1];
         }else {
-            lunarMonthStr = String.valueOf(lunarMonth);
+            lunarMonthStr = String.valueOf(lunar[1]);
         }
 
         HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap(application);
@@ -180,6 +168,10 @@ public class DateInfo {
                 String[] otherFestivalResult =  otherFestival.split(",");
                 festival.setOtherFestival(otherFestivalResult);
             }
+
+            //获取二十四节气
+            SolaTerms solaTerms = SolaTermsUtils.getSolarTerms(year,month,day);
+            festival.setSolaTerms(solaTerms);
             festivalInfo = festival;
             return festival;
         }

@@ -16,6 +16,7 @@ import com.kit.calendar.utils.CalendarUtils
 import com.kit.calendar.utils.LunarCalendar
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils
+import kotlinx.android.synthetic.main.calendar_foot.view.*
 import kotlinx.android.synthetic.main.calendar_head.view.*
 import kotlinx.android.synthetic.main.calendar_view.view.*
 import kotlinx.android.synthetic.main.calendar_week.view.*
@@ -47,6 +48,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var selectToday: Boolean = true
     //上一次点击的view
     private var oldDateItem: View? = null
+    //今天的日期
+    private var todayDateInfo:DateInfo ?= null
 
 
     //日期的文字大小
@@ -120,14 +123,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
-        /* //设置日期下面的农历或节日
-        calendarHeadFestival.setText(getTodayDateInfo()?.lunarCalendar)
-         var festivalInfo = getTodayDateInfo()?.getFesitval((context as Activity).application,getTodayDateInfo()!!.month,getTodayDateInfo()!!.day,getTodayDateInfo()!!.lunar[1],getTodayDateInfo()!!.lunar[2])
-         if (festivalInfo != null){
-             if (festivalInfo.getImportantFestival() != null){
-
-             }
-         }*/
 
         //设置周一至周日的字体颜色及大小
         for (index in 0..calendarWeekBar.childCount) {
@@ -148,6 +143,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         dateList = CalendarUtils.getDayOfMonthList(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1)
         dateViewItem = mutableListOf()
 
+        //设置头部
         if (headLayout != 0) {
             calendarHead.addView(LayoutInflater.from(context).inflate(headLayout, this, false))
         } else {
@@ -156,10 +152,26 @@ class CalendarView : LinearLayout, View.OnClickListener {
             calendarMonthTextTv.setText("${currentMonth}")
             calendarYearTextTv.setText("${currentYear}")
             calendarHeadTime.setText("${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-${cal.get(Calendar.DAY_OF_MONTH)}")
+            //设置日期下面的农历或节日
+            calendarHeadFestival.setText("农历："+getTodayDateInfo()!!.lunar[0]+"-"+ getTodayDateInfo()!!.lunar[1]+"-"+ getTodayDateInfo()?.lunar!![2])
+            var festivalInfo = getTodayDateInfo()?.getFesitval((context as Activity).application)
+            if (festivalInfo != null){
+                if (festivalInfo.getImportantFestival() != null){
+                    calendarHeadFestival.setText(festivalInfo.getImportantFestival()[0])
+                }
+                if (festivalInfo.getLunarFestival() != null){
+                    calendarHeadFestival.setText(festivalInfo.getLunarFestival()[0])
+                }
+                if (festivalInfo.getSolaTerms() != null){
+                    calendarHeadFestival.setText(festivalInfo.getSolaTerms().name)
+                }
+            }
         }
 
+        //设置尾部
         if (footLayout == 0) {
             calendarFoot.addView(LayoutInflater.from(context).inflate(R.layout.calendar_foot, this, false))
+            setDefaultCalendarFootInfo(getTodayDateInfo()!!)
         } else {
             calendarFoot.addView(LayoutInflater.from(context).inflate(footLayout, this, false))
         }
@@ -258,6 +270,104 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
     }
 
+    private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
+        var festivalList = dateInfo?.getFesitval( (context as Activity).application)
+        calendarFootDate.setText(""+dateInfo!!.lunar[0]+"-"+ dateInfo!!.lunar[1]+"-"+ dateInfo?.lunar!![2])
+        festivalList?.let {
+            calendarFootFestival.removeAllViews()
+            //设置农历节日
+            var lunarFestival = festivalList.lunarFestival
+            lunarFestival?.let {
+                for (item in lunarFestival){
+                    if (item.contains(",")){
+                        var festivalChild = item.split(",")
+                        for (itemChild in festivalChild){
+                            var festival = TextView(context)
+                            var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                            lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                            festival.layoutParams = lp
+                            festival.setText(itemChild)
+                            calendarFootFestival.addView(festival)
+                        }
+                    }else{
+                        var festival = TextView(context)
+                        var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                        lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                        festival.layoutParams = lp
+                        festival.setText(item)
+                        calendarFootFestival.addView(festival)
+                    }
+                }
+            }
+
+            //设置重要节日
+            var importantFestival = festivalList.importantFestival
+            importantFestival?.let {
+                for (item in importantFestival){
+                    if (item.contains(",")){
+                        var festivalChild = item.split(",")
+                        for (itemChild in festivalChild){
+                            var festival = TextView(context)
+                            var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                            lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                            festival.layoutParams = lp
+                            festival.setText(itemChild)
+                            festival.setTextColor(context.resources.getColor(R.color.colorTitle))
+                            calendarFootFestival.addView(festival)
+                        }
+                    }else{
+                        var festival = TextView(context)
+                        var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                        lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                        festival.layoutParams = lp
+                        festival.setText(item)
+                        festival.setTextColor(context.resources.getColor(R.color.colorTitle))
+                        calendarFootFestival.addView(festival)
+                    }
+                }
+            }
+
+            //设置其他节日
+            var otherFestival = festivalList.otherFestival
+            otherFestival?.let {
+                for (item in otherFestival){
+                    if (item.contains(",")){
+                        var festivalChild = item.split(",")
+                        for (itemChild in festivalChild){
+                            var festival = TextView(context)
+                            var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                            lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                            festival.layoutParams = lp
+                            festival.setText(itemChild)
+                            calendarFootFestival.addView(festival)
+                        }
+                    }else{
+                        var festival = TextView(context)
+                        var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                        lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                        festival.layoutParams = lp
+                        festival.setText(item)
+                        calendarFootFestival.addView(festival)
+                    }
+                }
+            }
+
+            if (calendarFootFestival.childCount == 0){
+                calendarFootFestivalBox.visibility = View.GONE
+            }else{
+                calendarFootFestivalBox.visibility = View.VISIBLE
+            }
+
+            //设置节气
+            if (festivalList.solaTerms != null){
+                calendarFootSolarTerms.setText(festivalList.solaTerms.name)
+                calendarFootSolarTermsBox.visibility = View.VISIBLE
+            }else{
+                calendarFootSolarTermsBox.visibility = View.GONE
+            }
+        }
+    }
+
     /**
      * 初始化时设置默认数据
      */
@@ -286,7 +396,20 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
 
         view.setOnClickListener(OnClickListener {
+            festival.setTextColor(Color.WHITE)
+            day.setTextColor(Color.WHITE)
+            if (oldDateItem != null && getTodayDateView() != oldDateItem){
+                if (dateList.get(dateViewItem!!.indexOf(oldDateItem!!)).isCurrentMonth){
+                    oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(currentMonthFestivalTextColor)
+                    oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(currentMonthDayTextColor)
+                }else{
+                    oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(notCurrentMonthFestivalTextColor)
+                    oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(notCurrentMonthDayTextColor)
+                }
+            }
             dateItemClickListener?.dateItemClickListener(startIndex + index, view, dateList?.get(startIndex + index))
+            oldDateItem = view
+            setDefaultCalendarFootInfo(dateList.get(startIndex+index))
         })
         //设置今天日期的样式
         if (dateList?.get(startIndex + index).day == currentDay && selectToday && dateList?.get(startIndex + index).isCurrentMonth) {
@@ -298,9 +421,12 @@ class CalendarView : LinearLayout, View.OnClickListener {
         parentView.addView(view)
     }
 
+    /**
+     * 设置节日或节气
+     */
     fun setFestival(index:Int,dateList:MutableList<DateInfo>?,festival:TextView){
         var item = dateList?.get(index)
-        var festivalResult = item?.getFesitval( (context as Activity).application,item.month,item.day,item.lunar[1],item.lunar[2])
+        var festivalResult = item?.getFesitval( (context as Activity).application)
         if (festivalResult != null){
             if (festivalResult.getImportantFestival() != null){
                 //是否存在简称，有则优先显示简称
@@ -318,6 +444,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
                     festival.setText(festivalResult.getLunarFestival()[0])
                 }
             }
+            if (festivalResult.getSolaTerms() != null){
+                festival.setText(festivalResult.solaTerms.name)
+            }
+
         }
     }
 
@@ -365,6 +495,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * 获取当前时间的dateInfo
      */
     fun getTodayDateInfo(): DateInfo? {
+        if (todayDateInfo != null){
+            return todayDateInfo
+        }
         var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         var month = Calendar.getInstance().get(Calendar.MONTH) + 1
         var year = Calendar.getInstance().get(Calendar.YEAR)
@@ -415,6 +548,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             if (!dateList?.get(index)?.isCurrentMonth!!) {
                 day?.setTextColor(notCurrentMonthDayTextColor!!)
                 festival?.setTextColor(notCurrentMonthFestivalTextColor!!)
+                view?.setBackgroundColor(context.resources.getColor(R.color.transparent))
                 festival?.setText("${CalendarUtils.lunarCn.get(dateList?.get(index)?.lunar?.get(2))}")
             } else {
                 if ((dateList?.get(index)!!.day == currentDay) && dateList?.get(index)!!.month == todayMonth && selectToday) {
@@ -429,7 +563,20 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
 
             view?.setOnClickListener(OnClickListener {
+                festival!!.setTextColor(Color.WHITE)
+                day!!.setTextColor(Color.WHITE)
+                if (oldDateItem != null && getTodayDateView() != oldDateItem){
+                    if (dateList!!.get(dateViewItem!!.indexOf(oldDateItem!!)).isCurrentMonth){
+                        oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(currentMonthFestivalTextColor)
+                        oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(currentMonthDayTextColor)
+                    }else{
+                        oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(notCurrentMonthFestivalTextColor)
+                        oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(notCurrentMonthDayTextColor)
+                    }
+                }
                 dateItemClickListener?.dateItemClickListener(index, view, dateList?.get(index)!!)
+                oldDateItem = view
+                setDefaultCalendarFootInfo(dateList!!.get(index))
             })
 
             setFestival(index,dateList,festival!!)

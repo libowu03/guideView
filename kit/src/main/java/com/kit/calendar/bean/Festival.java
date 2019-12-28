@@ -4,6 +4,15 @@ public class Festival {
     public String[] lunarFestival;
     public String[] importantFestival;
     public String[] otherFestival;
+    public SolaTerms solaTerms;
+
+    public SolaTerms getSolaTerms() {
+        return solaTerms;
+    }
+
+    public void setSolaTerms(SolaTerms solaTerms) {
+        this.solaTerms = solaTerms;
+    }
 
     public String[] getLunarFestival() {
         return lunarFestival;

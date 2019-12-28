@@ -18,7 +18,7 @@
         app:headWeekTextSize="18sp"
         app:notCurrentMonthDayTextColor="@color/colorPrimary"
         app:notCurrentMonthFestivalTextColor="@color/colorPrimary"
-        app:selectToday="false"
+        app:selectToday="true"
         android:padding="10dp"
         tools:layout_editor_absoluteX="0dp" />
 </android.support.constraint.ConstraintLayout>
