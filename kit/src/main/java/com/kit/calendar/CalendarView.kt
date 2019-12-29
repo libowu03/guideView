@@ -57,6 +57,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var isAuthorSetTextSize : Boolean = false
     //今天的日期
     private var cal:Calendar ?= null
+    //比较合适的屏幕尺寸
+    private val SUITABLE_WIDTH : Float= 1080f
+    //合适的高度
+    private val SUITABLE_HEIGHT : Float = 1313f
 
 
     //日期的文字大小
@@ -95,6 +99,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
         initListener()
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
     /**
      * 初始化界面属性
      */
@@ -109,11 +117,11 @@ class CalendarView : LinearLayout, View.OnClickListener {
         headWeekTextColor = typedArray.getColor(R.styleable.CalendarView_headWeekTextColor, context.resources.getColor(R.color.weekBarTextColor))
         headWeekTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_headWeekTextSize, 16)
         selectToday = typedArray.getBoolean(R.styleable.CalendarView_selectToday, true)
-        headLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarHeadLayout, R.layout.calendar_head)
-        footLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarFootLayout, R.layout.calendar_foot)
+        headLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarHeadLayout, 0)
+        footLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarFootLayout, 0)
         enableFootLayout = typedArray.getBoolean(R.styleable.CalendarView_enableFootLayout, false)
         enableHeadLayout = typedArray.getBoolean(R.styleable.CalendarView_enableHeadLayout, true)
-        dateItemLayout = typedArray.getResourceId(R.styleable.CalendarView_dateItemLayout, R.layout.calendar_view_item_date)
+        dateItemLayout = typedArray.getResourceId(R.styleable.CalendarView_dateItemLayout, 0)
     }
 
     /**
@@ -156,8 +164,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
         dateViewItem = mutableListOf()
 
         //设置头部
-        if (headLayout != R.layout.calendar_head) {
-            calendarHead.addView(LayoutInflater.from(context).inflate(headLayout, this, false))
+        if (headLayout != 0) {
+            calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head, this, false))
         } else {
             calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head, this, false))
             //设置当前头部的日期
@@ -181,7 +189,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
 
         //设置尾部
-        if (footLayout == R.layout.calendar_foot) {
+        if (footLayout == 0) {
             calendarFoot.addView(LayoutInflater.from(context).inflate(R.layout.calendar_foot, this, false))
             setDefaultCalendarFootInfo(getTodayDateInfo()!!)
         } else {
@@ -189,7 +197,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
 
         for (index in 0..6) {
-            if (R.layout.calendar_view_item_date == dateItemLayout) {
+            if (0 == dateItemLayout) {
                 var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
                 setDateData(calendarLineOne, view, 0, dateList, index)
             } else {
@@ -203,7 +211,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
         }
         for (index in 0..6) {
-            if (R.layout.calendar_view_item_date == dateItemLayout) {
+            if (0 == dateItemLayout) {
                 var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
                 setDateData(calendarLineTwo, view, 7, dateList, index)
             } else {
@@ -217,7 +225,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
         }
         for (index in 0..6) {
-            if (R.layout.calendar_view_item_date == dateItemLayout) {
+            if (0 == dateItemLayout) {
                 var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
                 setDateData(calendarLineThree, view, 14, dateList, index)
             } else {
@@ -231,7 +239,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
         }
         for (index in 0..6) {
-            if (R.layout.calendar_view_item_date == dateItemLayout) {
+            if (0 == dateItemLayout) {
                 var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
                 setDateData(calendarLineFour, view, 21, dateList, index)
             } else {
@@ -245,7 +253,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
         }
         for (index in 0..6) {
-            if (R.layout.calendar_view_item_date == dateItemLayout) {
+            if (0 == dateItemLayout) {
                 var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
                 setDateData(calendarLineFive, view, 28, dateList, index)
             } else {
@@ -260,7 +268,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
         }
         for (index in 0..6) {
-            if (R.layout.calendar_view_item_date == dateItemLayout) {
+            if (0 == dateItemLayout) {
                 var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
                 setDateData(calendarLineSix, view, 35, dateList, index)
             } else {
@@ -286,32 +294,31 @@ class CalendarView : LinearLayout, View.OnClickListener {
         super.onDraw(canvas)
         canvas?.let {
             //标准请款下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)
-            if (context.resources.displayMetrics.widthPixels == canvas.width){
+            if (context.resources.displayMetrics.widthPixels == canvas.width || isInEditMode){
                 isAuthorSetTextSize = true
                 return
             }
-            var percentage = 16 / (context.resources.displayMetrics.widthPixels*1.0)
-            Log.e("日志","+"+(headLayout == R.layout.calendar_head) +","+ (dateItemLayout == R.layout.calendar_view_item_date) +","+ (footLayout == R.layout.calendar_foot))
-            if (!isAuthorSetTextSize && headLayout == R.layout.calendar_head && dateItemLayout == R.layout.calendar_view_item_date && footLayout == R.layout.calendar_foot){
+            var percentage = 16 / SUITABLE_WIDTH
+            if (!isAuthorSetTextSize && headLayout ==0 && dateItemLayout == 0 && footLayout == 0){
                 if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
-                    dateDayTextSize = (canvas.width * percentage).toInt()
-                    dateFestivalTextSize = (canvas.width * percentage).toInt()
-                    headWeekTextSize = (canvas.width * percentage).toInt()
+                   var dateDayTextSize = (canvas.width * percentage)
+                   var dateFestivalTextSize = (canvas.width * percentage)
+                   var headWeekTextSize = (canvas.width * percentage)
 
                     var dateItemView = getDateViewList()
                     dateItemView?.let {
                         for (item in dateItemView){
                             var day = item.findViewById<TextView>(R.id.calendarDay)
                             var festival = item.findViewById<TextView>(R.id.calendarFestivalOrLunar)
-                            day.setTextSize(dateDayTextSize.toFloat())
-                            festival.setTextSize(dateFestivalTextSize.toFloat())
+                            day.textSize = dateDayTextSize
+                            festival.textSize = dateFestivalTextSize
                         }
                     }
 
                     for (index in 0..calendarWeekBar.childCount) {
                         if (calendarWeekBar.getChildAt(index) is TextView) {
                             (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
-                            if (headWeekTextSize != 16) {
+                            if (headWeekTextSize != 16f) {
                                 (calendarWeekBar.getChildAt(index) as TextView).setTextSize(headWeekTextSize.toFloat())
                             }
                         }
@@ -319,12 +326,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 }
 
                 //设置头部字体
-                if (headLayout == R.layout.calendar_head || isInEditMode){
-                    var percentage = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleOne_20)) / (context.resources.displayMetrics.widthPixels*1.0)
+                if (headLayout == 0 || isInEditMode){
+                    var percentage = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleOne_20)) / SUITABLE_WIDTH
                     Log.e("日志","resour资源："+GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleOne_20)))
-                    var percentage12 = resources.getDimension(R.dimen.titleTwo_12) / (context.resources.displayMetrics.widthPixels*1.0)
+                    var percentage10 = 10 / SUITABLE_WIDTH
                     var headDate = (canvas.width * percentage).toInt()
                     var headLunarDate = (canvas.width * percentage).toInt()
+                    var headLayout10 = (canvas.width * percentage10).toInt()
                     calendarHeadTime.setTextSize(headDate.toFloat())
                     calendarHeadFestival.setTextSize(headLunarDate.toFloat())
                     calendarHeadBackToTodayTv.setTextSize(headLunarDate.toFloat())
@@ -334,14 +342,18 @@ class CalendarView : LinearLayout, View.OnClickListener {
                     calendarYearNext.setTextSize(headDate.toFloat())
                     calendarMonthNext.setTextSize(headDate.toFloat())
                     calendarMonthPre.setTextSize(headDate.toFloat())
+
+                    calendarBox.setPadding(headLayout10,headLayout10,headLayout10,headLayout10)
                 }
 
                 //设置尾部
-                if (footLayout == R.layout.calendar_foot || isInEditMode){
-                    var percentageFootTitle = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_12)) / (context.resources.displayMetrics.widthPixels*1.0)
-                    var percentageFootContent = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_16)) / (context.resources.displayMetrics.widthPixels*1.0)
+                if (footLayout == 0 || isInEditMode){
+                    var percentageFootTitle = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_12)) / SUITABLE_WIDTH
+                    var percentageFootContent = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_16)) / SUITABLE_WIDTH
+                    var percentageFootBox = GuideViewUtils.dip2px(context,110f) / SUITABLE_HEIGHT
                     var title12 = (canvas.width * percentageFootTitle).toInt()
                     var title16 = (canvas.width * percentageFootContent).toInt()
+                    var titleBox = (canvas.width * percentageFootBox).toInt()
                     footDefaultFestivalTextSize = title16
                     calendarFootLunarTitle.setTextSize(title12.toFloat())
                     calendarFootFestivalTitle.setTextSize(title12.toFloat())
@@ -351,6 +363,11 @@ class CalendarView : LinearLayout, View.OnClickListener {
                     for (index in 0..calendarFootFestival.childCount-1){
                         (calendarFootFestival.getChildAt(index) as TextView).setTextSize(title16.toFloat())
                     }
+
+                    //设置尾部的高度到最适合的大小
+                    var lp = calendarFootBox.layoutParams
+                    lp.height = GuideViewUtils.dip2px(context,titleBox.toFloat())
+                    calendarFootBox.layoutParams = lp
                 }
 
                 //设置整个日历的padding
@@ -368,7 +385,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
         var festivalList = dateInfo?.getFesitval( context.applicationContext)
-        if (footLayout == R.layout.calendar_foot){
+        if (footLayout == 0){
             calendarFootDate?.setText(""+dateInfo!!.lunar[0]+"-"+ dateInfo!!.lunar[1]+"-"+ dateInfo?.lunar!![2])
             festivalList?.let {
                 calendarFootFestival.removeAllViews()
@@ -541,7 +558,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var festivalResult = item?.getFesitval( context.applicationContext)
         if (festivalResult != null){
             var g = Gson()
-            Log.e("日志","节日输出结果："+g.toJson(festivalResult))
             if (festivalResult.getImportantFestival() != null){
                 //是否存在简称，有则优先显示简称
                 if (festivalResult.getImportantFestival()[0].contains("-")){
