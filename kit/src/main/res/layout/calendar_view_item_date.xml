@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_weight="1"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/calendar_date_item_click_bg"
     android:layout_gravity="center">
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -23,6 +24,10 @@
             android:textStyle="bold"
             android:id="@+id/calendarDay"
             android:gravity="center"
+            tools:text="21"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:textColor="@color/currentMonthColor"
             android:text="21" />
         <TextView
@@ -31,8 +36,22 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="13dp"
+            tools:text="十二"
+            app:layout_constraintTop_toBottomOf="@id/calendarDay"
             android:id="@+id/calendarFestivalOrLunar"
+            app:layout_constraintLeft_toLeftOf="@id/calendarDay"
+            app:layout_constraintRight_toRightOf="@id/calendarDay"
             android:textColor="@color/currentMonthColor"
             android:text="冬至"/>
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:text="休"
+            android:id="@+id/calendarHolidayStatus"
+            app:layout_constraintLeft_toRightOf="@id/calendarDay"
+            app:layout_constraintBottom_toBottomOf="@id/calendarDay"
+            android:textColor="@color/colorRed"
+            android:textSize="8sp"/>
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

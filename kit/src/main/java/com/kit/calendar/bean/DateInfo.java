@@ -18,16 +18,15 @@ public class DateInfo {
     private int month;
     private int year;
     private boolean isCurrentMonth;
-    private boolean isHoliday;
+    private int holidayStatus;
     private int[] lunar;
     private int week;
     private Festival festivalInfo;
 
-    public DateInfo(int day, int month, int year ,boolean isCurrentMonth,boolean isHoliday,int[] lunar,int week) {
+    public DateInfo(int day, int month, int year ,boolean isCurrentMonth,int[] lunar,int week) {
         this.day = day;
         this.month = month;
         this.isCurrentMonth = isCurrentMonth;
-        this.isHoliday = isHoliday;
         this.lunar = lunar;
         this.week = week;
         this.year = year;
@@ -49,13 +48,6 @@ public class DateInfo {
         this.lunar = lunar;
     }
 
-    public boolean isHoliday() {
-        return isHoliday;
-    }
-
-    public void setHoliday(boolean holiday) {
-        isHoliday = holiday;
-    }
 
     public boolean isCurrentMonth() {
         return isCurrentMonth;
@@ -91,15 +83,13 @@ public class DateInfo {
     }
 
 
-/*    *//**
-     * 获取农历日月
+    /**
+     * 获取日期是不是节假日
      * @return
-     *//*
-    public String getLunarCalendar() {
-
-        return lunarCalendar;
-    }*/
-
+     */
+    public int isHoliday() {
+        return CalendarUtils.isHoliday(year,month,day);
+    }
 
     /**
      * 获取周的中文
@@ -114,10 +104,9 @@ public class DateInfo {
 
     /**
      * 获取节日
-     * @param application 用于读取assets下的内容
      * @return 节日的对象
      */
-    public Festival getFesitval(Context application){
+    public Festival getFesitval(){
         if (festivalInfo != null){
             return festivalInfo;
         }
@@ -146,7 +135,7 @@ public class DateInfo {
             lunarMonthStr = String.valueOf(lunar[1]);
         }
 
-        HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap(application);
+        HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap();
         if (festivalMap == null){
             return null;
         }else {

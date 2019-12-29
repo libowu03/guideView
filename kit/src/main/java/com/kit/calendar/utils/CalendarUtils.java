@@ -5,7 +5,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.kit.calendar.CalendarView;
 import com.kit.calendar.bean.DateInfo;
+import com.kit.utils.Applications;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,10 +24,13 @@ public class CalendarUtils {
     public static final int[] leapYearMonthDayNum = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
     public static final HashMap<Integer,String> lunarCn = new HashMap<>();
     public static final HashMap<Integer,String> weekCn = new HashMap<>();
+    public static HashMap<String,String>  holidayMap;
     private static HashMap<String,String> festival;
     private int year_ganZhi;
     private int month_ganZhi;
     private int day_ganZhi;
+    private static int preYear;
+
 
     static {
         lunarCn.put(1,"初一");
@@ -90,11 +95,11 @@ public class CalendarUtils {
      * @dateKey 日期比如H0601，L0308，N0101(H：要显示在日历上的节日,N:农历节日，优先级最高,L:无需显示出来的节日)
      * @return
      */
-    public static HashMap<String,String> getFestivalMap( Context application){
+    public static HashMap<String,String> getFestivalMap(){
         try{
             if (festival == null){
                 Gson gson = new Gson();
-                InputStream festivalSteam = application.getResources().getAssets().open("calendar/festival.json");
+                InputStream festivalSteam = Applications.context().getResources().getAssets().open("calendar/festival.json");
                 festival = gson.fromJson(new InputStreamReader(festivalSteam),HashMap.class);
                 return festival;
             }
@@ -102,6 +107,50 @@ public class CalendarUtils {
         }catch (Exception e){
             Log.e("kitViewError","reason============>"+e.getLocalizedMessage());
             return null;
+        }
+    }
+
+    /**
+     * 获取日期是不是节假日
+     * @param year
+     * @param month
+     * @param day
+     * @return
+     */
+    public static int isHoliday(int year,int month,int day){
+        try{
+            String monthStr;
+            String dayStr;
+            if (month < 10){
+                monthStr = "0"+month;
+            }else {
+                monthStr = String.valueOf(month);
+            }
+            if (day < 10){
+                dayStr = "0"+day;
+            }else {
+                dayStr = String.valueOf(day);
+            }
+
+            if (holidayMap == null || year != preYear){
+                Gson gson = new Gson();
+                InputStream festivalSteam = Applications.context().getResources().getAssets().open("calendar/"+year+"_holiday.json");
+                holidayMap = gson.fromJson(new InputStreamReader(festivalSteam),HashMap.class);
+                preYear = year;
+            }
+            String name = holidayMap.get(monthStr+dayStr);
+            if (name == null){
+                return CalendarView.Holiday.COMMON_DAY;
+            }else {
+                if (name.startsWith("w")){
+                    return CalendarView.Holiday.WORK;
+                }else {
+                    return CalendarView.Holiday.HOLIDAY;
+                }
+            }
+        }catch (Exception e){
+            Log.e("kitViewError","reason============>"+e.getLocalizedMessage());
+            return CalendarView.Holiday.COMMON_DAY;
         }
     }
 
@@ -163,9 +212,9 @@ public class CalendarUtils {
             //int day, int month, int year, String festival, String lunarCalendar, boolean isCurrentMonth, boolean usCurrentYear
             week++;
             if (isCurrentYear){
-                list.add(new DateInfo(preMonthDay-i,month-1,year,false,false,LunarCalendar.solarToLunar(year,month-1,preMonthDay-i),week));
+                list.add(new DateInfo(preMonthDay-i,month-1,year,false,LunarCalendar.solarToLunar(year,month-1,preMonthDay-i),week));
             }else {
-                list.add(new DateInfo(preMonthDay-i,12,year-1,false,false,LunarCalendar.solarToLunar(year-1,12,preMonthDay-i),week));
+                list.add(new DateInfo(preMonthDay-i,12,year-1,false,LunarCalendar.solarToLunar(year-1,12,preMonthDay-i),week));
             }
             if (week == 6){
                 week = -1;
@@ -174,7 +223,7 @@ public class CalendarUtils {
 
         for (int i=1;i<=currentMonthDay;i++){
             week++;
-            list.add(new DateInfo(i,month,year,true,false,LunarCalendar.solarToLunar(year,month,i),week));
+            list.add(new DateInfo(i,month,year,true,LunarCalendar.solarToLunar(year,month,i),week));
             if (week == 6){
                 week = -1;
             }
@@ -186,9 +235,9 @@ public class CalendarUtils {
             week++;
             //如果是12月份的，这尾部则是下一年一月份的内容
             if (month == 12){
-                list.add(new DateInfo(i,1,year+1,false,false,LunarCalendar.solarToLunar(year+1,1,i),week));
+                list.add(new DateInfo(i,1,year+1,false,LunarCalendar.solarToLunar(year+1,1,i),week));
             }else {
-                list.add(new DateInfo(i,month+1,year,false,false,LunarCalendar.solarToLunar(year,month+1,i),week));
+                list.add(new DateInfo(i,month+1,year,false,LunarCalendar.solarToLunar(year,month+1,i),week));
             }
             if (week == 6){
                 week = -1;

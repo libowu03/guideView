@@ -25,7 +25,7 @@ class CalendarFragment : Fragment(){
                 Log.e("日志",dateInfo.weekCn[0]+"农历月份为："+dateInfo.lunar[1]+",农历日为："+dateInfo.lunar[2])
             }
         })
-        Log.e("日志","时间戳为："+calendar.getTodayDateInfo()?.timeMillis)
+        //Log.e("日志","时间戳为："+calendar.getTodayDateInfo()?.timeMillis)
     }
 
 }

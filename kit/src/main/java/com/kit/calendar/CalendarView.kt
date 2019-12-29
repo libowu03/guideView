@@ -88,6 +88,15 @@ class CalendarView : LinearLayout, View.OnClickListener {
     //默认尾部节日的字体大小
     private var footDefaultFestivalTextSize = 16
 
+    object Holiday{
+        //节日
+        const val HOLIDAY : Int = 1
+        //放假后的补班
+        const val WORK : Int = 0
+        //普通日期，即不放假也不补班
+        const val COMMON_DAY : Int = -1
+    }
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context?, nothing: AttributeSet?) : this(context, nothing, 0)
@@ -174,7 +183,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             calendarHeadTime.setText("${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-${cal.get(Calendar.DAY_OF_MONTH)}")
             //设置日期下面的农历或节日
             calendarHeadFestival.setText("农历："+getTodayDateInfo()!!.lunar[0]+"-"+ getTodayDateInfo()!!.lunar[1]+"-"+ getTodayDateInfo()?.lunar!![2])
-            var festivalInfo = getTodayDateInfo()?.getFesitval(context.applicationContext)
+            var festivalInfo = getTodayDateInfo()?.getFesitval()
             if (festivalInfo != null){
                 if (festivalInfo.getImportantFestival() != null){
                     calendarHeadFestival.setText(festivalInfo.getImportantFestival()[0])
@@ -384,7 +393,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * @param dateInfo 日期详情
      */
     private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
-        var festivalList = dateInfo?.getFesitval( context.applicationContext)
+        var festivalList = dateInfo?.getFesitval()
         if (footLayout == 0){
             calendarFootDate?.setText(""+dateInfo!!.lunar[0]+"-"+ dateInfo!!.lunar[1]+"-"+ dateInfo?.lunar!![2])
             festivalList?.let {
@@ -525,6 +534,20 @@ class CalendarView : LinearLayout, View.OnClickListener {
             festival.setTextColor(currentMonthFestivalTextColor!!)
         }
 
+        if (dateList.get(startIndex+index).isHoliday == Holiday.HOLIDAY){
+            var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
+            holiday.setText("休")
+            holiday.visibility = View.VISIBLE
+        }else if (dateList.get(startIndex+index).isHoliday == Holiday.WORK){
+            var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
+            holiday.setText("班")
+            holiday.visibility = View.VISIBLE
+
+        }else{
+            var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
+            holiday.setText("班")
+            holiday.visibility = View.GONE
+        }
         view.setOnClickListener(OnClickListener {
             if (oldDateItem == view){
                 return@OnClickListener
@@ -555,7 +578,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     fun setFestival(index:Int,dateList:MutableList<DateInfo>?,festival:TextView){
         var item = dateList?.get(index)
         festival.setText(CalendarUtils.lunarCn.get(item!!.lunar[2]))
-        var festivalResult = item?.getFesitval( context.applicationContext)
+        var festivalResult = item?.getFesitval()
         if (festivalResult != null){
             var g = Gson()
             if (festivalResult.getImportantFestival() != null){
@@ -683,6 +706,20 @@ class CalendarView : LinearLayout, View.OnClickListener {
             } else {
                 day?.setTextColor(currentMonthDayTextColor!!)
                 festival.setTextColor(currentMonthFestivalTextColor!!)
+            }
+
+            if (dateList!!.get(index).isHoliday == Holiday.HOLIDAY){
+                var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
+                holiday?.setText("休")
+                holiday?.visibility = View.VISIBLE
+            }else if (dateList!!.get(index).isHoliday == Holiday.WORK){
+                var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
+                holiday?.setText("班")
+                holiday?.visibility = View.VISIBLE
+
+            }else{
+                var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
+                holiday?.visibility = View.GONE
             }
 
             view?.setOnClickListener(OnClickListener {
