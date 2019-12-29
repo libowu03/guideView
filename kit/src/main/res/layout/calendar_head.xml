@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
+    android:id="@+id/calendarBox"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -31,6 +32,7 @@
         android:text="返回今天"
         android:background="#00000000"
         android:textStyle="bold"
+        android:textSize="@dimen/titleTwo_12"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/calendarHeadBackToTodayTv"/>
     <TextView
@@ -49,7 +51,7 @@
         android:text="12"
         android:textSize="@dimen/titleTwo_16"
         android:id="@+id/calendarMonthTextTv"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginRight="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="@id/calendarHeadFestival"
         android:id="@+id/calendarMonthPre"
         app:layout_constraintRight_toLeftOf="@id/calendarMonthTextTv"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginRight="5dp"/>
 
 
     <TextView
@@ -67,7 +69,7 @@
         android:text="》"
         android:textSize="@dimen/titleTwo_16"
         app:layout_constraintRight_toLeftOf="@id/calendarMonthPre"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintBottom_toBottomOf="@id/calendarHeadFestival"
         android:id="@+id/calendarYearNext"/>
     <TextView
@@ -78,7 +80,7 @@
         android:text="2019"
         android:textSize="@dimen/titleTwo_16"
         android:id="@+id/calendarYearTextTv"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginRight="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,5 +89,5 @@
         app:layout_constraintBottom_toBottomOf="@id/calendarHeadFestival"
         android:id="@+id/calendarYearPre"
         app:layout_constraintRight_toLeftOf="@id/calendarYearTextTv"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginRight="5dp"/>
 </android.support.constraint.ConstraintLayout>

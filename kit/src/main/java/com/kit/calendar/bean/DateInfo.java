@@ -1,6 +1,7 @@
 package com.kit.calendar.bean;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.kit.calendar.utils.CalendarUtils;
@@ -116,7 +117,7 @@ public class DateInfo {
      * @param application 用于读取assets下的内容
      * @return 节日的对象
      */
-    public Festival getFesitval(Application application){
+    public Festival getFesitval(Context application){
         if (festivalInfo != null){
             return festivalInfo;
         }

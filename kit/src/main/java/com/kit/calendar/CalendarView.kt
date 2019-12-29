@@ -3,6 +3,7 @@ package com.kit.calendar
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.calendar_foot.view.*
 import kotlinx.android.synthetic.main.calendar_head.view.*
 import kotlinx.android.synthetic.main.calendar_view.view.*
 import kotlinx.android.synthetic.main.calendar_week.view.*
+import org.w3c.dom.Text
 import java.util.*
 
 /**
@@ -50,6 +52,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var oldDateItem: View? = null
     //今天的日期
     private var todayDateInfo:DateInfo ?= null
+    //是否执行过自动设置字体大小的步骤了
+    private var isAuthorSetTextSize : Boolean = false
 
 
     //日期的文字大小
@@ -71,9 +75,11 @@ class CalendarView : LinearLayout, View.OnClickListener {
     //是否打开对头部的支持
     private var enableHeadLayout: Boolean = true
     //是否打开对尾部的支持
-    private var enableFootLayout: Boolean = true
+    private var enableFootLayout: Boolean = false
     //dateItem的view id
     private var dateItemLayout: Int = 0
+    //默认尾部节日的字体大小
+    private var footDefaultFestivalTextSize = 0
 
     constructor(context: Context) : this(context, null)
 
@@ -91,7 +97,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private fun initArr(context: Context?, nothing: AttributeSet?, def: Int?) {
         val typedArray = context!!.theme.obtainStyledAttributes(nothing, R.styleable.CalendarView, def!!, 0)
         dateDayTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateDayTextSize, 16)
-        dateFestivalTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateFestivalTextSize, 13)
+        dateFestivalTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateFestivalTextSize, 10)
         notCurrentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthDayTextColor, context.resources.getColor(R.color.notCurrentMonthColor))
         notCurrentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthFestivalTextColor, context.resources.getColor(R.color.notCurrentMonthColor))
         currentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthDayTextColor, context.resources.getColor(R.color.currentMonthColor))
@@ -99,9 +105,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         headWeekTextColor = typedArray.getColor(R.styleable.CalendarView_headWeekTextColor, context.resources.getColor(R.color.weekBarTextColor))
         headWeekTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_headWeekTextSize, 16)
         selectToday = typedArray.getBoolean(R.styleable.CalendarView_selectToday, true)
-        headLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarHeadLayout, 0)
-        footLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarFootLayout, 0)
-        enableFootLayout = typedArray.getBoolean(R.styleable.CalendarView_enableFootLayout, true)
+        headLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarHeadLayout, R.layout.calendar_head)
+        footLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarFootLayout, R.layout.calendar_foot)
+        enableFootLayout = typedArray.getBoolean(R.styleable.CalendarView_enableFootLayout, false)
         enableHeadLayout = typedArray.getBoolean(R.styleable.CalendarView_enableHeadLayout, true)
         dateItemLayout = typedArray.getResourceId(R.styleable.CalendarView_dateItemLayout, R.layout.calendar_view_item_date)
     }
@@ -130,6 +136,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
                 if (headWeekTextSize != 16) {
                     (calendarWeekBar.getChildAt(index) as TextView).setTextSize(GuideViewUtils.px2dip(context, headWeekTextSize!!.toFloat()).toFloat())
+                }else{
+                    (calendarWeekBar.getChildAt(index) as TextView).setTextSize(headWeekTextSize.toFloat())
                 }
             }
         }
@@ -144,7 +152,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         dateViewItem = mutableListOf()
 
         //设置头部
-        if (headLayout != 0) {
+        if (headLayout != R.layout.calendar_head) {
             calendarHead.addView(LayoutInflater.from(context).inflate(headLayout, this, false))
         } else {
             calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head, this, false))
@@ -154,7 +162,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             calendarHeadTime.setText("${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-${cal.get(Calendar.DAY_OF_MONTH)}")
             //设置日期下面的农历或节日
             calendarHeadFestival.setText("农历："+getTodayDateInfo()!!.lunar[0]+"-"+ getTodayDateInfo()!!.lunar[1]+"-"+ getTodayDateInfo()?.lunar!![2])
-            var festivalInfo = getTodayDateInfo()?.getFesitval((context as Activity).application)
+            var festivalInfo = getTodayDateInfo()?.getFesitval(context.applicationContext)
             if (festivalInfo != null){
                 if (festivalInfo.getImportantFestival() != null){
                     calendarHeadFestival.setText(festivalInfo.getImportantFestival()[0])
@@ -169,7 +177,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
 
         //设置尾部
-        if (footLayout == 0) {
+        if (footLayout == R.layout.calendar_foot) {
             calendarFoot.addView(LayoutInflater.from(context).inflate(R.layout.calendar_foot, this, false))
             setDefaultCalendarFootInfo(getTodayDateInfo()!!)
         } else {
@@ -270,102 +278,195 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
     }
 
-    private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
-        var festivalList = dateInfo?.getFesitval( (context as Activity).application)
-        calendarFootDate.setText(""+dateInfo!!.lunar[0]+"-"+ dateInfo!!.lunar[1]+"-"+ dateInfo?.lunar!![2])
-        festivalList?.let {
-            calendarFootFestival.removeAllViews()
-            //设置农历节日
-            var lunarFestival = festivalList.lunarFestival
-            lunarFestival?.let {
-                for (item in lunarFestival){
-                    if (item.contains(",")){
-                        var festivalChild = item.split(",")
-                        for (itemChild in festivalChild){
-                            var festival = TextView(context)
-                            var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-                            lp.marginEnd = GuideViewUtils.dip2px(context,5f)
-                            festival.layoutParams = lp
-                            festival.setText(itemChild)
-                            calendarFootFestival.addView(festival)
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        canvas?.let {
+            //标准请款下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)
+            if (context.resources.displayMetrics.widthPixels == canvas.width){
+                isAuthorSetTextSize = true
+                return
+            }
+            var percentage = 16 / (context.resources.displayMetrics.widthPixels*1.0)
+            Log.e("日志","+"+(headLayout == R.layout.calendar_head) +","+ (dateItemLayout == R.layout.calendar_view_item_date) +","+ (footLayout == R.layout.calendar_foot))
+            if (!isAuthorSetTextSize && headLayout == R.layout.calendar_head && dateItemLayout == R.layout.calendar_view_item_date && footLayout == R.layout.calendar_foot){
+                if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
+                    dateDayTextSize = (canvas.width * percentage).toInt()
+                    dateFestivalTextSize = (canvas.width * percentage).toInt()
+                    headWeekTextSize = (canvas.width * percentage).toInt()
+
+                    var dateItemView = getDateViewList()
+                    dateItemView?.let {
+                        for (item in dateItemView){
+                            var day = item.findViewById<TextView>(R.id.calendarDay)
+                            var festival = item.findViewById<TextView>(R.id.calendarFestivalOrLunar)
+                            day.setTextSize(dateDayTextSize.toFloat())
+                            festival.setTextSize(dateFestivalTextSize.toFloat())
                         }
-                    }else{
-                        var festival = TextView(context)
-                        var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-                        lp.marginEnd = GuideViewUtils.dip2px(context,5f)
-                        festival.layoutParams = lp
-                        festival.setText(item)
-                        calendarFootFestival.addView(festival)
+                    }
+
+                    for (index in 0..calendarWeekBar.childCount) {
+                        if (calendarWeekBar.getChildAt(index) is TextView) {
+                            (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
+                            if (headWeekTextSize != 16) {
+                                (calendarWeekBar.getChildAt(index) as TextView).setTextSize(headWeekTextSize.toFloat())
+                            }
+                        }
                     }
                 }
-            }
 
-            //设置重要节日
-            var importantFestival = festivalList.importantFestival
-            importantFestival?.let {
-                for (item in importantFestival){
-                    if (item.contains(",")){
-                        var festivalChild = item.split(",")
-                        for (itemChild in festivalChild){
+                //设置头部字体
+                if (headLayout == R.layout.calendar_head || isInEditMode){
+                    var percentage = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleOne_20)) / (context.resources.displayMetrics.widthPixels*1.0)
+                    Log.e("日志","resour资源："+GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleOne_20)))
+                    var percentage12 = resources.getDimension(R.dimen.titleTwo_12) / (context.resources.displayMetrics.widthPixels*1.0)
+                    var headDate = (canvas.width * percentage).toInt()
+                    var headLunarDate = (canvas.width * percentage).toInt()
+                    calendarHeadTime.setTextSize(headDate.toFloat())
+                    calendarHeadFestival.setTextSize(headLunarDate.toFloat())
+                    calendarHeadBackToTodayTv.setTextSize(headLunarDate.toFloat())
+                    calendarYearTextTv.setTextSize(headDate.toFloat())
+                    calendarMonthTextTv.setTextSize(headDate.toFloat())
+                    calendarYearPre.setTextSize(headDate.toFloat())
+                    calendarYearNext.setTextSize(headDate.toFloat())
+                    calendarMonthNext.setTextSize(headDate.toFloat())
+                    calendarMonthPre.setTextSize(headDate.toFloat())
+                }
+
+                //设置尾部
+                if (footLayout == R.layout.calendar_foot || isInEditMode){
+                    var percentageFootTitle = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_12)) / (context.resources.displayMetrics.widthPixels*1.0)
+                    var percentageFootContent = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_16)) / (context.resources.displayMetrics.widthPixels*1.0)
+                    var title12 = (canvas.width * percentageFootTitle).toInt()
+                    var title16 = (canvas.width * percentageFootContent).toInt()
+                    footDefaultFestivalTextSize = title16
+                    calendarFootLunarTitle.setTextSize(title12.toFloat())
+                    calendarFootFestivalTitle.setTextSize(title12.toFloat())
+                    calendarFootSolaTerms.setTextSize(title12.toFloat())
+                    calendarFootDate.setTextSize(title16.toFloat())
+                    calendarFootSolarTerms.setTextSize(title16.toFloat())
+                    for (index in 0..calendarFootFestival.childCount-1){
+                        (calendarFootFestival.getChildAt(index) as TextView).setTextSize(title16.toFloat())
+                    }
+                }
+
+                //设置整个日历的padding
+                var paddingPrecentage = 10 / (context.resources.displayMetrics.widthPixels*1.0)
+                var calendarBoxPadding = (canvas.width * paddingPrecentage).toInt()
+                calendarBox.setPadding(calendarBoxPadding,calendarBoxPadding,calendarBoxPadding,calendarBoxPadding)
+                isAuthorSetTextSize = true
+            }
+        }
+    }
+
+    /**
+     * 设置底部默认布局的文案，比如农历，节日，节气
+     * @param dateInfo 日期详情
+     */
+    private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
+        var festivalList = dateInfo?.getFesitval( context.applicationContext)
+        if (footLayout == R.layout.calendar_foot){
+            calendarFootDate?.setText(""+dateInfo!!.lunar[0]+"-"+ dateInfo!!.lunar[1]+"-"+ dateInfo?.lunar!![2])
+            festivalList?.let {
+                calendarFootFestival.removeAllViews()
+                //设置农历节日
+                var lunarFestival = festivalList.lunarFestival
+                lunarFestival?.let {
+                    for (item in lunarFestival){
+                        if (item.contains(",")){
+                            var festivalChild = item.split(",")
+                            for (itemChild in festivalChild){
+                                var festival = TextView(context)
+                                festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                                var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                                festival.layoutParams = lp
+                                festival.setText(itemChild)
+                                calendarFootFestival.addView(festival)
+                            }
+                        }else{
                             var festival = TextView(context)
+                            festival.setTextSize(footDefaultFestivalTextSize.toFloat())
                             var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                             lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                             festival.layoutParams = lp
-                            festival.setText(itemChild)
+                            festival.setText(item)
+                            calendarFootFestival.addView(festival)
+                        }
+                    }
+                }
+
+                //设置重要节日
+                var importantFestival = festivalList.importantFestival
+                importantFestival?.let {
+                    for (item in importantFestival){
+                        if (item.contains(",")){
+                            var festivalChild = item.split(",")
+                            for (itemChild in festivalChild){
+                                var festival = TextView(context)
+                                festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                                var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                                festival.layoutParams = lp
+                                festival.setText(itemChild)
+                                festival.setTextColor(context.resources.getColor(R.color.colorTitle))
+                                calendarFootFestival.addView(festival)
+                            }
+                        }else{
+                            var festival = TextView(context)
+                            festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                            var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                            lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                            festival.layoutParams = lp
+                            festival.setText(item)
                             festival.setTextColor(context.resources.getColor(R.color.colorTitle))
                             calendarFootFestival.addView(festival)
                         }
-                    }else{
-                        var festival = TextView(context)
-                        var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-                        lp.marginEnd = GuideViewUtils.dip2px(context,5f)
-                        festival.layoutParams = lp
-                        festival.setText(item)
-                        festival.setTextColor(context.resources.getColor(R.color.colorTitle))
-                        calendarFootFestival.addView(festival)
                     }
                 }
-            }
 
-            //设置其他节日
-            var otherFestival = festivalList.otherFestival
-            otherFestival?.let {
-                for (item in otherFestival){
-                    if (item.contains(",")){
-                        var festivalChild = item.split(",")
-                        for (itemChild in festivalChild){
+                //设置其他节日
+                var otherFestival = festivalList.otherFestival
+                otherFestival?.let {
+                    for (item in otherFestival){
+                        if (item.contains(",")){
+                            var festivalChild = item.split(",")
+                            for (itemChild in festivalChild){
+                                var festival = TextView(context)
+                                festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                                var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                lp.marginEnd = GuideViewUtils.dip2px(context,5f)
+                                festival.layoutParams = lp
+                                festival.setText(itemChild)
+                                calendarFootFestival.addView(festival)
+                            }
+                        }else{
                             var festival = TextView(context)
+                            festival.setTextSize(footDefaultFestivalTextSize.toFloat())
                             var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                             lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                             festival.layoutParams = lp
-                            festival.setText(itemChild)
+                            festival.setText(item)
                             calendarFootFestival.addView(festival)
                         }
-                    }else{
-                        var festival = TextView(context)
-                        var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-                        lp.marginEnd = GuideViewUtils.dip2px(context,5f)
-                        festival.layoutParams = lp
-                        festival.setText(item)
-                        calendarFootFestival.addView(festival)
                     }
                 }
-            }
 
-            if (calendarFootFestival.childCount == 0){
-                calendarFootFestivalBox.visibility = View.GONE
-            }else{
-                calendarFootFestivalBox.visibility = View.VISIBLE
-            }
+                if (calendarFootFestival.childCount == 0){
+                    calendarFootFestivalBox.visibility = View.GONE
+                }else{
+                    calendarFootFestivalBox.visibility = View.VISIBLE
+                }
 
-            //设置节气
-            if (festivalList.solaTerms != null){
-                calendarFootSolarTerms.setText(festivalList.solaTerms.name)
-                calendarFootSolarTermsBox.visibility = View.VISIBLE
-            }else{
-                calendarFootSolarTermsBox.visibility = View.GONE
+                //设置节气
+                if (festivalList.solaTerms != null){
+                    calendarFootSolarTerms.setText(festivalList.solaTerms.name)
+                    calendarFootSolarTermsBox.visibility = View.VISIBLE
+                }else{
+                    calendarFootSolarTermsBox.visibility = View.GONE
+                }
             }
         }
+
     }
 
     /**
@@ -381,9 +482,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
         if (dateDayTextSize != 16) {
             day.setTextSize(GuideViewUtils.px2dip(context, dateDayTextSize.toFloat()).toFloat())
+        }else{
+            day.setTextSize(dateDayTextSize.toFloat())
         }
-        if (dateFestivalTextSize != 16) {
+        if (dateFestivalTextSize != 10) {
             festival.setTextSize(GuideViewUtils.px2dip(context, dateFestivalTextSize.toFloat()).toFloat())
+        }else{
+            festival.setTextSize(dateFestivalTextSize.toFloat())
         }
 
         //设置字体颜色
@@ -426,7 +531,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     fun setFestival(index:Int,dateList:MutableList<DateInfo>?,festival:TextView){
         var item = dateList?.get(index)
-        var festivalResult = item?.getFesitval( (context as Activity).application)
+        var festivalResult = item?.getFesitval( context.applicationContext)
         if (festivalResult != null){
             if (festivalResult.getImportantFestival() != null){
                 //是否存在简称，有则优先显示简称

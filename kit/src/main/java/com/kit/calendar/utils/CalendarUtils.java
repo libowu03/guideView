@@ -1,6 +1,7 @@
 package com.kit.calendar.utils;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -89,7 +90,7 @@ public class CalendarUtils {
      * @dateKey 日期比如H0601，L0308，N0101(H：要显示在日历上的节日,N:农历节日，优先级最高,L:无需显示出来的节日)
      * @return
      */
-    public static HashMap<String,String> getFestivalMap( Application application){
+    public static HashMap<String,String> getFestivalMap( Context application){
         try{
             if (festival == null){
                 Gson gson = new Gson();

@@ -13,18 +13,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/calendarFootLunarTitle"
             android:textSize="@dimen/titleTwo_12"
             android:text="农历"/>
         <View
             android:layout_width="2dp"
-            android:layout_height="20dp"
+            android:layout_height="5dp"
             android:background="@drawable/calendar_line"
             android:layout_marginLeft="10dp"/>
 
@@ -41,7 +42,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/calendarFootFestivalBox"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
@@ -49,11 +50,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/calendarFootFestivalTitle"
             android:textSize="@dimen/titleTwo_12"
             android:text="节日"/>
         <View
             android:layout_width="2dp"
-            android:layout_height="20dp"
+            android:layout_height="5dp"
             android:background="@drawable/calendar_line"
             android:layout_marginLeft="10dp"/>
 
@@ -70,7 +72,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:id="@+id/calendarFootSolarTermsBox"
         android:layout_gravity="center_vertical"
@@ -78,11 +80,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/calendarFootSolaTerms"
             android:textSize="@dimen/titleTwo_12"
             android:text="节气"/>
         <View
             android:layout_width="2dp"
-            android:layout_height="20dp"
+            android:layout_height="5dp"
             android:background="@drawable/calendar_line"
             android:layout_marginLeft="10dp"/>
 

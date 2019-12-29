@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal">
 
     <com.kit.calendar.CalendarView
         android:id="@+id/calendar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorGray"
         app:currentMonthDayTextColor="@color/colorRed"
         app:currentMonthFestivalTextColor="@color/colorRed"
-        app:dateDayTextSize="18sp"
-        app:dateFestivalTextSize="12sp"
         app:headWeekTextColor="@color/colorRed"
-        app:headWeekTextSize="18sp"
         app:notCurrentMonthDayTextColor="@color/colorPrimary"
         app:notCurrentMonthFestivalTextColor="@color/colorPrimary"
         app:selectToday="true"
+        app:enableFootLayout="true"
         android:padding="10dp"
         tools:layout_editor_absoluteX="0dp" />
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
