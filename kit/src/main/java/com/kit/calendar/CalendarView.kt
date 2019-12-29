@@ -87,6 +87,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var dateItemLayout: Int = 0
     //默认尾部节日的字体大小
     private var footDefaultFestivalTextSize = 16
+    //节假日提示文字大小
+    private var holidayTipTextSize : Int= 8
+    //节假日文字颜色
+    private var holidayTipTextColor : Int = Color.RED
 
     object Holiday{
         //节日
@@ -131,6 +135,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
         enableFootLayout = typedArray.getBoolean(R.styleable.CalendarView_enableFootLayout, false)
         enableHeadLayout = typedArray.getBoolean(R.styleable.CalendarView_enableHeadLayout, true)
         dateItemLayout = typedArray.getResourceId(R.styleable.CalendarView_dateItemLayout, 0)
+        holidayTipTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_holidayTipTextSize, 8)
+        holidayTipTextColor = typedArray.getColor(R.styleable.CalendarView_holidayTipTextColor, Color.RED)
     }
 
     /**
@@ -308,19 +314,23 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 return
             }
             var percentage = 16 / SUITABLE_WIDTH
+            var percentageHoliday = 8 / SUITABLE_WIDTH
             if (!isAuthorSetTextSize && headLayout ==0 && dateItemLayout == 0 && footLayout == 0){
                 if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
                    var dateDayTextSize = (canvas.width * percentage)
                    var dateFestivalTextSize = (canvas.width * percentage)
                    var headWeekTextSize = (canvas.width * percentage)
+                   var holidayTextSize = (canvas.width * percentageHoliday)
 
                     var dateItemView = getDateViewList()
                     dateItemView?.let {
                         for (item in dateItemView){
                             var day = item.findViewById<TextView>(R.id.calendarDay)
                             var festival = item.findViewById<TextView>(R.id.calendarFestivalOrLunar)
+                            var holiday = item.findViewById<TextView>(R.id.calendarHolidayStatus)
                             day.textSize = dateDayTextSize
                             festival.textSize = dateFestivalTextSize
+                            holiday.textSize = holidayTextSize
                         }
                     }
 
@@ -537,10 +547,14 @@ class CalendarView : LinearLayout, View.OnClickListener {
         if (dateList.get(startIndex+index).isHoliday == Holiday.HOLIDAY){
             var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
             holiday.setText("休")
+            holiday.setTextColor(holidayTipTextColor)
+            holiday.setTextSize(holidayTipTextSize.toFloat())
             holiday.visibility = View.VISIBLE
         }else if (dateList.get(startIndex+index).isHoliday == Holiday.WORK){
             var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
             holiday.setText("班")
+            holiday.setTextColor(holidayTipTextColor)
+            holiday.setTextSize(holidayTipTextSize.toFloat())
             holiday.visibility = View.VISIBLE
 
         }else{
@@ -711,10 +725,12 @@ class CalendarView : LinearLayout, View.OnClickListener {
             if (dateList!!.get(index).isHoliday == Holiday.HOLIDAY){
                 var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
                 holiday?.setText("休")
+                holiday?.setTextColor(holidayTipTextColor)
                 holiday?.visibility = View.VISIBLE
             }else if (dateList!!.get(index).isHoliday == Holiday.WORK){
                 var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
                 holiday?.setText("班")
+                holiday?.setTextColor(holidayTipTextColor)
                 holiday?.visibility = View.VISIBLE
 
             }else{

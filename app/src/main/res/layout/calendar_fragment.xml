@@ -11,14 +11,10 @@
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorGray"
-        app:currentMonthDayTextColor="@color/colorRed"
-        app:currentMonthFestivalTextColor="@color/colorRed"
-        app:headWeekTextColor="@color/colorRed"
-        app:notCurrentMonthDayTextColor="@color/colorPrimary"
-        app:notCurrentMonthFestivalTextColor="@color/colorPrimary"
+        android:background="@color/white"
         app:selectToday="true"
         app:enableFootLayout="true"
         android:padding="10dp"
+        app:holidayTipTextColor="#232323"
         tools:layout_editor_absoluteX="0dp" />
 </LinearLayout>
