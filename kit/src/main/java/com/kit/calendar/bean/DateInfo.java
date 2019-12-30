@@ -4,7 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.kit.calendar.utils.CalendarUtils;
+import com.kit.calendar.utils.Lunar;
 import com.kit.calendar.utils.SolaTermsUtils;
 
 import java.text.ParseException;
@@ -19,17 +21,18 @@ public class DateInfo {
     private int year;
     private boolean isCurrentMonth;
     private int holidayStatus;
-    private int[] lunar;
     private int week;
     private Festival festivalInfo;
+    private Lunar lunar;
 
-    public DateInfo(int day, int month, int year ,boolean isCurrentMonth,int[] lunar,int week) {
+    public DateInfo(int day, int month, int year ,boolean isCurrentMonth,int week) {
         this.day = day;
         this.month = month;
         this.isCurrentMonth = isCurrentMonth;
-        this.lunar = lunar;
         this.week = week;
         this.year = year;
+        this.lunar = lunar;
+        this.lunar = new Lunar(getCalendar());
     }
 
     public int getWeek() {
@@ -40,13 +43,6 @@ public class DateInfo {
         this.week = week;
     }
 
-    public int[] getLunar() {
-        return lunar;
-    }
-
-    public void setLunar(int[] lunar) {
-        this.lunar = lunar;
-    }
 
 
     public boolean isCurrentMonth() {
@@ -82,6 +78,10 @@ public class DateInfo {
         this.year = year;
     }
 
+
+    public Lunar getLunar() {
+        return lunar;
+    }
 
     /**
      * 获取日期是不是节假日
@@ -124,15 +124,15 @@ public class DateInfo {
         }else {
             dayStr = String.valueOf(day);
         }
-        if (lunar[2] < 10){
-            lunarStr = "0"+lunar[2];
+        if (lunar.getDay() < 10){
+            lunarStr = "0"+lunar.getDay();
         }else {
-            lunarStr = String.valueOf(lunar[2]);
+            lunarStr = String.valueOf(lunar.getDay());
         }
-        if (lunar[1] < 10){
-            lunarMonthStr = "0"+lunar[1];
+        if (lunar.getMonth() < 10){
+            lunarMonthStr = "0"+lunar.getMonth();
         }else {
-            lunarMonthStr = String.valueOf(lunar[1]);
+            lunarMonthStr = String.valueOf(lunar.getMonth());
         }
 
         HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap();

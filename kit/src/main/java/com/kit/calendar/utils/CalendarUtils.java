@@ -212,9 +212,9 @@ public class CalendarUtils {
             //int day, int month, int year, String festival, String lunarCalendar, boolean isCurrentMonth, boolean usCurrentYear
             week++;
             if (isCurrentYear){
-                list.add(new DateInfo(preMonthDay-i,month-1,year,false,LunarCalendar.solarToLunar(year,month-1,preMonthDay-i),week));
+                list.add(new DateInfo(preMonthDay-i,month-1,year,false,week));
             }else {
-                list.add(new DateInfo(preMonthDay-i,12,year-1,false,LunarCalendar.solarToLunar(year-1,12,preMonthDay-i),week));
+                list.add(new DateInfo(preMonthDay-i,12,year-1,false,week));
             }
             if (week == 6){
                 week = -1;
@@ -223,7 +223,7 @@ public class CalendarUtils {
 
         for (int i=1;i<=currentMonthDay;i++){
             week++;
-            list.add(new DateInfo(i,month,year,true,LunarCalendar.solarToLunar(year,month,i),week));
+            list.add(new DateInfo(i,month,year,true,week));
             if (week == 6){
                 week = -1;
             }
@@ -235,9 +235,9 @@ public class CalendarUtils {
             week++;
             //如果是12月份的，这尾部则是下一年一月份的内容
             if (month == 12){
-                list.add(new DateInfo(i,1,year+1,false,LunarCalendar.solarToLunar(year+1,1,i),week));
+                list.add(new DateInfo(i,1,year+1,false,week));
             }else {
-                list.add(new DateInfo(i,month+1,year,false,LunarCalendar.solarToLunar(year,month+1,i),week));
+                list.add(new DateInfo(i,month+1,year,false,week));
             }
             if (week == 6){
                 week = -1;

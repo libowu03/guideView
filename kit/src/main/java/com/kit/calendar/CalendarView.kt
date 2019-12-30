@@ -1,7 +1,5 @@
 package com.kit.calendar
 
-import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -15,14 +13,12 @@ import android.widget.TextView
 import com.google.gson.Gson
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.utils.CalendarUtils
-import com.kit.calendar.utils.LunarCalendar
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils
 import kotlinx.android.synthetic.main.calendar_foot.view.*
 import kotlinx.android.synthetic.main.calendar_head.view.*
 import kotlinx.android.synthetic.main.calendar_view.view.*
 import kotlinx.android.synthetic.main.calendar_week.view.*
-import org.w3c.dom.Text
 import java.util.*
 
 /**
@@ -197,7 +193,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             calendarYearTextTv.setText("${currentYear}")
             calendarHeadTime.setText("${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-${cal.get(Calendar.DAY_OF_MONTH)}")
             //设置日期下面的农历或节日
-            calendarHeadFestival.setText("农历："+getTodayDateInfo()!!.lunar[0]+"-"+ getTodayDateInfo()!!.lunar[1]+"-"+ getTodayDateInfo()?.lunar!![2])
+            calendarHeadFestival.setText("农历："+getTodayDateInfo()?.lunar.toString())
             var festivalInfo = getTodayDateInfo()?.getFesitval()
             if (festivalInfo != null){
                 if (festivalInfo.getImportantFestival() != null){
@@ -414,7 +410,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
         var festivalList = dateInfo?.getFesitval()
         if (footLayout == 0){
-            calendarFootDate?.setText(""+dateInfo!!.lunar[0]+"-"+ dateInfo!!.lunar[1]+"-"+ dateInfo?.lunar!![2])
+            calendarFootDate?.setText(dateInfo?.lunar.toString())
             festivalList?.let {
                 calendarFootFestival.removeAllViews()
                 //设置农历节日
@@ -531,7 +527,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var day = view.findViewById<TextView>(R.id.calendarDay)
         var festival = view.findViewById<TextView>(R.id.calendarFestivalOrLunar)
         day.setText("${dateList?.get(startIndex + index)?.day}")
-        festival.setText("${CalendarUtils.lunarCn.get(dateList?.get(startIndex+index)?.lunar?.get(2))}")
+        festival.setText("${dateList?.get(startIndex+index)?.lunar?._date}")
 
         if (dateDayTextSize != 16) {
             day.setTextSize(GuideViewUtils.px2dip(context, dateDayTextSize.toFloat()).toFloat())
@@ -609,7 +605,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     fun setFestival(index:Int,dateList:MutableList<DateInfo>?,festival:TextView){
         var item = dateList?.get(index)
-        festival.setText(CalendarUtils.lunarCn.get(item!!.lunar[2]))
+        festival.setText(dateList?.get(index)?.lunar?._date)
         var festivalResult = item?.getFesitval()
         if (festivalResult != null){
             var g = Gson()
@@ -725,6 +721,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private fun setNewData(year: Int, month: Int) {
         dateList = CalendarUtils.getDayOfMonthList(year, month)
         for (index in 0..41) {
+            //Log.e("日志","农历情况为："+Gson().toJson(dateList?.get(index)))
+
             var view = dateViewItem?.get(index)
             var day = view?.findViewById<TextView>(R.id.calendarDay)
             var festival = view?.findViewById<TextView>(R.id.calendarFestivalOrLunar)
@@ -761,6 +759,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
 
             view?.setOnClickListener(OnClickListener {
+                Log.e("日志","农历情况为："+Gson().toJson(dateList?.get(index)))
+
                 if (!enableItemClick){
                     return@OnClickListener
                 }
