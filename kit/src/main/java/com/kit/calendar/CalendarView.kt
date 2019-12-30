@@ -852,7 +852,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         when (p0) {
             calendarMonthNext -> {
                 if (currentMonth == 12) {
-                    if (currentYear + 1 > LunarCalendar.MAX_YEAR) {
+                    if (currentYear + 1 > 2099) {
                         return
                     }
                     currentYear++
@@ -864,7 +864,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
             calendarMonthPre -> {
                 if (currentMonth == 1) {
-                    if (currentYear - 1 < LunarCalendar.MIN_YEAR) {
+                    if (currentYear - 1 < 1900) {
                         return
                     }
                     currentYear--
@@ -875,13 +875,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 setNewData(currentYear, currentMonth)
             }
             calendarYearPre -> {
-                if (currentYear - 1 < LunarCalendar.MIN_YEAR) {
+                if (currentYear - 1 < 1900) {
                     return
                 }
                 setNewData(--currentYear, currentMonth)
             }
             calendarYearNext -> {
-                if (currentYear + 1 > LunarCalendar.MAX_YEAR) {
+                if (currentYear + 1 > 2099) {
                     return
                 }
                 setNewData(++currentYear, currentMonth)
