@@ -91,6 +91,12 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var holidayTipTextSize : Int= 8
     //节假日文字颜色
     private var holidayTipTextColor : Int = Color.RED
+    //默认选中日期的字体颜色
+    private var selectTodayDayTextColor : Int = Color.WHITE
+    //默认选中日期的节日字体颜色
+    private var selectTodayFestivalTextColor : Int = Color.WHITE
+    //是否允许日期点击
+    private var enableItemClick : Boolean = true
 
     object Holiday{
         //节日
@@ -137,6 +143,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         dateItemLayout = typedArray.getResourceId(R.styleable.CalendarView_dateItemLayout, 0)
         holidayTipTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_holidayTipTextSize, 8)
         holidayTipTextColor = typedArray.getColor(R.styleable.CalendarView_holidayTipTextColor, Color.RED)
+        selectTodayDayTextColor = typedArray.getColor(R.styleable.CalendarView_selectTodayDayTextColor, Color.WHITE)
+        selectTodayFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_selectTodayFestivalTextColor, Color.WHITE)
+        enableItemClick = typedArray.getBoolean(R.styleable.CalendarView_enableItemClick, true)
     }
 
     /**
@@ -542,6 +551,12 @@ class CalendarView : LinearLayout, View.OnClickListener {
         } else {
             day.setTextColor(currentMonthDayTextColor!!)
             festival.setTextColor(currentMonthFestivalTextColor!!)
+            //是今天，则设置选中状态
+//            Log.e("日志","状态："+(dateList?.get(startIndex+index).year == cal?.get(Calendar.YEAR))+","+(dateList?.get(startIndex+index).month == (cal?.get(Calendar.MONTH)!!))+","+(dateList?.get(startIndex+index).day == cal?.get(Calendar.DAY_OF_MONTH)))
+            if (dateList?.get(startIndex+index).year == cal?.get(Calendar.YEAR) && dateList?.get(startIndex+index).month == (cal?.get(Calendar.MONTH)!! +1) && dateList?.get(startIndex+index).day == cal?.get(Calendar.DAY_OF_MONTH)){
+                day.setTextColor(selectTodayDayTextColor!!)
+                festival.setTextColor(selectTodayFestivalTextColor!!)
+            }
         }
 
         if (dateList.get(startIndex+index).isHoliday == Holiday.HOLIDAY){
@@ -563,6 +578,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
             holiday.visibility = View.GONE
         }
         view.setOnClickListener(OnClickListener {
+            if (!enableItemClick){
+                return@OnClickListener
+            }
             if (oldDateItem == view){
                 return@OnClickListener
             }
@@ -720,6 +738,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
             } else {
                 day?.setTextColor(currentMonthDayTextColor!!)
                 festival.setTextColor(currentMonthFestivalTextColor!!)
+                if (dateList?.get(index)!!.year == cal?.get(Calendar.YEAR) && dateList?.get(index)!!.month == (cal?.get(Calendar.MONTH)!! +1) && dateList?.get(index)!!.day == cal?.get(Calendar.DAY_OF_MONTH)){
+                    day?.setTextColor(selectTodayDayTextColor!!)
+                    festival.setTextColor(selectTodayFestivalTextColor!!)
+                }
             }
 
             if (dateList!!.get(index).isHoliday == Holiday.HOLIDAY){
@@ -739,6 +761,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
 
             view?.setOnClickListener(OnClickListener {
+                if (!enableItemClick){
+                    return@OnClickListener
+                }
                 if (oldDateItem == view){
                     return@OnClickListener
                 }

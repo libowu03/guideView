@@ -168,6 +168,10 @@
         <attr name="headWeekTextSize" format="dimension"/>
         <!--是否默认选中当前时间，默认值为true-->
         <attr name="selectToday" format="boolean"/>
+        <!--默认选中的字体颜色-->
+        <attr name="selectTodayDayTextColor" format="color"/>
+        <!--默认选中状态的节日字体颜色-->
+        <attr name="selectTodayFestivalTextColor" format="color"/>
         <!--头部-->
         <attr name="calendarHeadLayout" format="reference"/>
         <!--尾部-->
@@ -182,6 +186,8 @@
         <attr name="holidayTipTextSize" format="dimension"/>
         <!--节假日字体颜色-->
         <attr name="holidayTipTextColor" format="color"/>
-
+        <attr name="enableItemClick" format="boolean"/>
+<!--        <attr name="clickItemDayTextColor" format="color"/>
+        <attr name="clickItemFestivalTextColor" format="color"/>-->
     </declare-styleable>
 </resources>
