@@ -1,8 +1,10 @@
-package com.kit.calendar
+package com.kit.calendar.view
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PagerSnapHelper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +13,8 @@ import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
+import com.kit.calendar.adapter.CalendarAdapter
+import com.kit.calendar.adapter.CalendarRecAdapter
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
@@ -161,6 +165,19 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
+        var adapter = CalendarRecAdapter()
+        var calendarViewTitle = mutableListOf<String>()
+        for (year in cal!!.get(Calendar.YEAR)-1..cal!!.get(Calendar.YEAR)+1){
+            for (month in 1..12){
+                calendarViewTitle.add("${year}-${month}")
+            }
+        }
+        adapter.setTitle(calendarViewTitle)
+        var manager = LinearLayoutManager(context)
+        manager.orientation = LinearLayoutManager.HORIZONTAL
+        calendarViewContent.layoutManager = manager
+        calendarViewContent.adapter = adapter
+        PagerSnapHelper().attachToRecyclerView(calendarViewContent)
 
         //设置周一至周日的字体颜色及大小
         for (index in 0..calendarWeekBar.childCount) {

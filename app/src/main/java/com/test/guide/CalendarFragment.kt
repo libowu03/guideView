@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
-import com.kit.calendar.CalendarView
+import com.kit.calendar.view.CalendarView
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.utils.Lunar
 import kotlinx.android.synthetic.main.calendar_fragment.*

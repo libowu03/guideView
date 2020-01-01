@@ -1,11 +1,9 @@
 package com.kit.calendar.utils;
 
-import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.kit.calendar.CalendarView;
+import com.kit.calendar.view.CalendarView;
 import com.kit.calendar.bean.DateInfo;
 import com.kit.utils.Applications;
 

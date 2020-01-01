@@ -7,7 +7,7 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal">
 
-    <com.kit.calendar.CalendarView
+    <com.kit.calendar.view.CalendarView
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,4 +19,5 @@
         app:selectTodayFestivalTextColor="@color/colorRed"
         app:holidayTipTextColor="#232323"
         tools:layout_editor_absoluteX="0dp" />
+
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.kit.calendar.utils;
 
-import com.kit.calendar.CalendarView;
 import com.kit.calendar.bean.SolaTerms;
 
 /**
