@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.kit.calendar.view.CalendarView
 import com.kit.calendar.bean.DateInfo
+import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.utils.Lunar
 import kotlinx.android.synthetic.main.calendar_fragment.*
 
@@ -19,10 +20,12 @@ class CalendarFragment : Fragment(){
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        calendar.setOnDateItemClickListener(object : CalendarView.OnDateItemClickListener{
-            override fun dateItemClickListener(index: Int, currentView: View, dateInfo: DateInfo) {
-                Log.e("日志",dateInfo.weekCn[0]+"农历月份为："+Lunar(dateInfo.calendar).toString())
+
+        calendar.setItemClickListener(object : DateItemClickListener{
+            override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
+                Log.e("日志","时间戳为："+dateItem.year)
             }
+
         })
         //Log.e("日志","时间戳为："+calendar.getTodayDateInfo()?.timeMillis)
     }

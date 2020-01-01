@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,8 @@ import com.google.gson.Gson
 import com.kit.calendar.adapter.CalendarAdapter
 import com.kit.calendar.adapter.CalendarRecAdapter
 import com.kit.calendar.bean.DateInfo
+import com.kit.calendar.listener.DateItemClickListener
+import com.kit.calendar.listener.PagerListener
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils
@@ -32,6 +35,8 @@ import java.util.*
  * 冬至撸代码，别有一番风味
  */
 class CalendarView : LinearLayout, View.OnClickListener {
+    private lateinit var pager: PagerSnapHelper
+    private lateinit var adapter: CalendarRecAdapter
     private var footLayout: Int = 0
     private var headLayout: Int = 0
     private var dateViewItem: MutableList<View>? = null
@@ -97,6 +102,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var selectTodayFestivalTextColor : Int = Color.WHITE
     //是否允许日期点击
     private var enableItemClick : Boolean = true
+    var clickListener:DateItemClickListener ?= null
 
     object Holiday{
         //节日
@@ -157,6 +163,21 @@ class CalendarView : LinearLayout, View.OnClickListener {
         calendarYearPre?.setOnClickListener(this)
         calendarYearNext?.setOnClickListener(this)
         calendarHeadBackToTodayTv?.setOnClickListener(this)
+
+        calendarViewContent.addOnScrollListener(PagerListener(pager,object : PagerListener.OnPageChangeListener {
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                Log.e("日志","页数为："+position)
+            }
+
+        }))
     }
 
 
@@ -165,9 +186,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
-        var adapter = CalendarRecAdapter()
+        adapter = CalendarRecAdapter()
+        adapter.setClickListener(clickListener)
         var calendarViewTitle = mutableListOf<String>()
-        for (year in cal!!.get(Calendar.YEAR)-1..cal!!.get(Calendar.YEAR)+1){
+        for (year in 1901..2049){
             for (month in 1..12){
                 calendarViewTitle.add("${year}-${month}")
             }
@@ -177,7 +199,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
         manager.orientation = LinearLayoutManager.HORIZONTAL
         calendarViewContent.layoutManager = manager
         calendarViewContent.adapter = adapter
-        PagerSnapHelper().attachToRecyclerView(calendarViewContent)
+        pager = PagerSnapHelper()
+        pager.attachToRecyclerView(calendarViewContent)
 
         //设置周一至周日的字体颜色及大小
         for (index in 0..calendarWeekBar.childCount) {
@@ -325,6 +348,15 @@ class CalendarView : LinearLayout, View.OnClickListener {
         if (!enableFootLayout) {
             hideFootView()
         }
+    }
+
+
+    /**
+     * 设置点击监听
+     */
+    fun setItemClickListener(clickListener: DateItemClickListener){
+        this.clickListener = clickListener
+        adapter.setClickListener(clickListener)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -649,8 +681,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
     }
 
-    fun setOnDateItemClickListener(listener: OnDateItemClickListener) {
-        this.dateItemClickListener = listener
+    fun setOnDateItemClickListener(listener: DateItemClickListener) {
+        this.clickListener = listener
+        adapter.setClickListener(listener!!)
     }
 
     /**
@@ -736,6 +769,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * 通过按钮触发改变日历界面数据
      */
     private fun setNewData(year: Int, month: Int) {
+        oldDateItem = null
         dateList = CalendarUtils.getDayOfMonthList(year, month)
         for (index in 0..41) {
             //Log.e("日志","农历情况为："+Gson().toJson(dateList?.get(index)))

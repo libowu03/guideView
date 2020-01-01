@@ -41,6 +41,7 @@ class MainUiFrameActivity : AppCompatActivity() {
             override fun onPageScrolled(i: Int, v: Float, i1: Int) {
                 if (i1 == 0) {
                     if (i == 1){
+                        Log.e("日志","掘金")
                         (list!!.get(1).fragment as CustomFragment).showDialog()
                     }
                 }
