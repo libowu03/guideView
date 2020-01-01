@@ -42,6 +42,10 @@ public class CalendarAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    public List<String> getCalendar(){
+        return title;
+    }
+
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {

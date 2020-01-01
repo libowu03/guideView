@@ -50,6 +50,10 @@ public class CalendarRecAdapter extends RecyclerView.Adapter<CalendarRecAdapter.
         notifyDataSetChanged();
     }
 
+    public List<String> getTitle(){
+        return title;
+    }
+
     public void addTitleList(List<String> title){
         this.title.addAll(title);
         notifyDataSetChanged();

@@ -102,7 +102,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var selectTodayFestivalTextColor : Int = Color.WHITE
     //是否允许日期点击
     private var enableItemClick : Boolean = true
+    //点击监听器
     var clickListener:DateItemClickListener ?= null
+    //今天日期的index
+    private var currentDateIndex : Int = 0
 
     object Holiday{
         //节日
@@ -174,7 +177,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
 
             override fun onPageSelected(position: Int) {
-                Log.e("日志","页数为："+position)
+                var date = adapter.title.get(position).split("-")
+                calendarYearTextTv.text = "${date[0]}"
+                calendarMonthTextTv.text = "${date[1]}"
             }
 
         }))
@@ -191,6 +196,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var calendarViewTitle = mutableListOf<String>()
         for (year in 1901..2049){
             for (month in 1..12){
+                if (year == cal!!.get(Calendar.YEAR) && month == cal!!.get(Calendar.MONTH)+1){
+                    currentDateIndex = (year - 1901)*12 + month-1
+                }
                 calendarViewTitle.add("${year}-${month}")
             }
         }
@@ -201,6 +209,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         calendarViewContent.adapter = adapter
         pager = PagerSnapHelper()
         pager.attachToRecyclerView(calendarViewContent)
+        calendarViewContent.scrollToPosition(currentDateIndex)
 
         //设置周一至周日的字体颜色及大小
         for (index in 0..calendarWeekBar.childCount) {
