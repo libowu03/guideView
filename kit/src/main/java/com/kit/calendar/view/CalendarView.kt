@@ -999,7 +999,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
             calendarHeadBackToTodayTv -> {
                 //日历默认值(当前时间)
                /* updateDate()*/
-                calendarViewContent.scrollToPosition(currentDateIndex)
+                calendarMonthTextTv.setText("${cal!!.get(Calendar.MONTH)+1}")
+                calendarYearTextTv.setText("${cal!!.get(Calendar.YEAR)}")
+                calendarViewContent.scrollToPosition(adapter.title.indexOf("${cal!!.get(Calendar.YEAR)}-${cal!!.get(Calendar.MONTH)+1}"))
             }
         }
     }
