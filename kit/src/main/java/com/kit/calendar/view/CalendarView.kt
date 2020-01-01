@@ -192,7 +192,14 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
         adapter = CalendarRecAdapter()
-        adapter.setClickListener(clickListener)
+        adapter.setClickListener(object : DateItemClickListener{
+            override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
+                setDefaultCalendarFootInfo(dateItem)
+                clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index)
+            }
+
+        })
+
         var calendarViewTitle = mutableListOf<String>()
         for (year in 1901..2049){
             for (month in 1..12){
@@ -365,7 +372,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     fun setItemClickListener(clickListener: DateItemClickListener){
         this.clickListener = clickListener
-        adapter.setClickListener(clickListener)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -911,7 +917,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0) {
             calendarMonthNext -> {
-                if (currentMonth == 12) {
+              /*  if (currentMonth == 12) {
                     if (currentYear + 1 > 2099) {
                         return
                     }
@@ -920,10 +926,24 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 } else {
                     ++currentMonth
                 }
-                setNewData(currentYear, currentMonth)
+                setNewData(currentYear, currentMonth)*/
+                var year = (calendarYearTextTv.text.toString()).toInt()
+                var month = (calendarMonthTextTv.text.toString()).toInt()
+                if (month+1>12){
+                    month = 1
+                    year++
+                    if (year>=2050){
+                        return
+                    }
+                }else{
+                    month++
+                }
+                calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
+                calendarMonthTextTv.setText("${month}")
+                calendarYearTextTv.setText("${year}")
             }
             calendarMonthPre -> {
-                if (currentMonth == 1) {
+              /*  if (currentMonth == 1) {
                     if (currentYear - 1 < 1900) {
                         return
                     }
@@ -932,23 +952,54 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 } else {
                     --currentMonth
                 }
-                setNewData(currentYear, currentMonth)
+                setNewData(currentYear, currentMonth)*/
+                var year = (calendarYearTextTv.text.toString()).toInt()
+                var month = (calendarMonthTextTv.text.toString()).toInt()
+                if (month-1<1){
+                    month = 12
+                    year--
+                    if (year<1901){
+                        return
+                    }
+                }else{
+                    month--
+                }
+                calendarMonthTextTv.setText("${month}")
+                calendarYearTextTv.setText("${year}")
+                calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
             }
             calendarYearPre -> {
-                if (currentYear - 1 < 1900) {
+            /*    if (currentYear - 1 < 1900) {
                     return
                 }
-                setNewData(--currentYear, currentMonth)
+                setNewData(--currentYear, currentMonth)*/
+                var year = (calendarYearTextTv.text.toString()).toInt()
+                var month = (calendarMonthTextTv.text.toString()).toInt()
+                if (year-1 >=1901){
+                    year--
+                    calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
+                }
+                calendarMonthTextTv.setText("${month}")
+                calendarYearTextTv.setText("${year}")
             }
             calendarYearNext -> {
-                if (currentYear + 1 > 2099) {
+             /*   if (currentYear + 1 > 2099) {
                     return
                 }
-                setNewData(++currentYear, currentMonth)
+                setNewData(++currentYear, currentMonth)*/
+                var year = (calendarYearTextTv.text.toString()).toInt()
+                var month = (calendarMonthTextTv.text.toString()).toInt()
+                if (year+1 < 2050){
+                    year++
+                    calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
+                }
+                calendarMonthTextTv.setText("${month}")
+                calendarYearTextTv.setText("${year}")
             }
             calendarHeadBackToTodayTv -> {
                 //日历默认值(当前时间)
-                updateDate()
+               /* updateDate()*/
+                calendarViewContent.scrollToPosition(currentDateIndex)
             }
         }
     }
