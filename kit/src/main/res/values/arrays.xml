@@ -186,6 +186,7 @@
         <attr name="holidayTipTextSize" format="dimension"/>
         <!--节假日字体颜色-->
         <attr name="holidayTipTextColor" format="color"/>
+        <!--是否允许点击-->
         <attr name="enableItemClick" format="boolean"/>
 <!--        <attr name="clickItemDayTextColor" format="color"/>
         <attr name="clickItemFestivalTextColor" format="color"/>-->

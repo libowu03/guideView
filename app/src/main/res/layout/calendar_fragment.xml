@@ -5,16 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <com.kit.calendar.view.CalendarView
         android:id="@+id/calendar"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:enableFootLayout="true"
         android:padding="10dp"
         app:enableItemClick="true"
+        app:enableFootLayout="true"
         app:selectTodayDayTextColor="@color/colorRed"
         app:selectTodayFestivalTextColor="@color/colorRed"
         app:holidayTipTextColor="#232323"

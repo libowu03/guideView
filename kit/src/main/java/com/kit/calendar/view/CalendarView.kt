@@ -20,6 +20,7 @@ import com.kit.calendar.adapter.CalendarRecAdapter
 import com.kit.calendar.bean.CalendarAttribute
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
+import com.kit.calendar.listener.DatePagerChangeListener
 import com.kit.calendar.listener.PagerListener
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
@@ -106,6 +107,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var enableItemClick : Boolean = true
     //点击监听器
     var clickListener:DateItemClickListener ?= null
+    //滑动监听器
+    var pagerChangeListener:DatePagerChangeListener ?= null
     //今天日期的index
     private var currentDateIndex : Int = 0
     //日期组件的属性
@@ -139,6 +142,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * 初始化界面属性
      */
     private fun initArr(context: Context?, nothing: AttributeSet?, def: Int?) {
+        footDefaultFestivalTextSize = GuideViewUtils.dip2px(context,16f)
         val typedArray = context!!.theme.obtainStyledAttributes(nothing, R.styleable.CalendarView, def!!, 0)
         dateDayTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateDayTextSize, 16)
         dateFestivalTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateFestivalTextSize, 10)
@@ -198,6 +202,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 var date = adapter.title.get(position).split("-")
                 calendarYearTextTv.text = "${date[0]}"
                 calendarMonthTextTv.text = "${date[1]}"
+                pagerChangeListener?.let {
+                    pagerChangeListener!!.onDatePagerChange(date[0].toInt(),date[1].toInt(),CalendarUtils.getDayOfMonthList(date[0].toInt(), date[1].toInt()),position)
+                }
             }
 
         }))
@@ -305,6 +312,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
         this.clickListener = clickListener
     }
 
+    /**
+     * 设置日历滑动监听器
+     */
+    fun setDatePagerChangeListener(pagerChangeListener: DatePagerChangeListener){
+        this.pagerChangeListener = pagerChangeListener
+    }
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.let {
@@ -318,6 +332,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             var percentageHoliday = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
             var percentageWidth = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
             if (!isAuthorSetTextSize && headLayout ==0 && dateItemLayout == 0 && footLayout == 0){
+                isAuthorSetTextSize = true
                 if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
                    dateDayTextSize = (canvas.width * percentage).toInt()
                    dateFestivalTextSize = (canvas.width * percentageFestival).toInt()
@@ -373,7 +388,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 attrubute?.dateFestivalTextSize = dateFestivalTextSize
                 attrubute?.holidayTipTextSize = holidayTipTextSize
                 attrubute?.headWeekTextSize = headWeekTextSize
-                attrubute?.holidayTipTextSize = holidayTipTextSize
+                Log.e("日志","holidayTipTextSize大小为："+holidayTipTextSize)
                 adapter.setAttribute(attrubute)
                 calendarViewContent.scrollToPosition(currentDateIndex)
 
@@ -381,7 +396,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 var paddingPrecentage = 10 / (context.resources.displayMetrics.widthPixels*1.0)
                 var calendarBoxPadding = (canvas.width * paddingPrecentage).toInt()
                 calendarBox.setPadding(calendarBoxPadding,calendarBoxPadding,calendarBoxPadding,calendarBoxPadding)
-                isAuthorSetTextSize = true
             }
         }
     }

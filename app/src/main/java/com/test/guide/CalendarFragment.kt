@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.kit.calendar.view.CalendarView
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
+import com.kit.calendar.listener.DatePagerChangeListener
 import com.kit.calendar.utils.Lunar
 import kotlinx.android.synthetic.main.calendar_fragment.*
 
@@ -25,9 +26,8 @@ class CalendarFragment : Fragment(){
             override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
                 Log.e("日志","时间戳为："+dateItem.year)
             }
-
         })
-        //Log.e("日志","时间戳为："+calendar.getTodayDateInfo()?.timeMillis)
+
     }
 
 }

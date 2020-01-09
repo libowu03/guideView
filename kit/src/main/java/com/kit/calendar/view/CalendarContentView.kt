@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
+import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -15,6 +17,7 @@ import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils
+import com.kit.guide.utils.GuideViewUtils.*
 import kotlinx.android.synthetic.main.calendar_view.view.*
 import kotlinx.android.synthetic.main.calendar_week.view.*
 import java.util.*
@@ -143,16 +146,11 @@ class CalendarContentView : LinearLayout {
      * 设置日期
      */
     fun setDate(date:String){
-        Log.e("日志","孩子数量为："+calendarWeekBar.childCount)
-        for (i in 0..calendarWeekBar.childCount){
+        for (i in 0..(calendarWeekBar.childCount-1)){
             if (attribute?.headWeekTextSize != 16) {
-                if (calendarWeekBar.getChildAt(i) is TextView){
-                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize(GuideViewUtils.px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
-                }
+                (calendarWeekBar.getChildAt(i) as TextView).setTextSize(px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
             }else{
-                if (calendarWeekBar.getChildAt(i) is TextView){
-                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize((attribute?.headWeekTextSize)!!.toFloat())
-                }
+                (calendarWeekBar.getChildAt(i) as TextView).setTextSize((attribute?.headWeekTextSize)!!.toFloat())
             }
         }
         dateViewItem?.let {
@@ -165,13 +163,15 @@ class CalendarContentView : LinearLayout {
                 day.setText("${dateList?.get(item.index)?.day}")
                 festival.setText("${dateList?.get(item.index)?.lunar?._date}")
 
+                Log.e("日志","dateDayTextSize的值为："+attribute?.dateDayTextSize)
+                Log.e("日志","dateFestivalTextSize的值为："+attribute?.dateFestivalTextSize)
                 if (attribute?.dateDayTextSize != 16) {
-                    day.setTextSize(GuideViewUtils.px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
+                    day.setTextSize(COMPLEX_UNIT_PX, attribute?.dateDayTextSize!!.toFloat() )
                 }else{
                     day.setTextSize(attribute!!.dateDayTextSize.toFloat())
                 }
-                if (attribute?.dateDayTextSize != 10) {
-                    festival.setTextSize(GuideViewUtils.px2dip(context, attribute!!.dateFestivalTextSize.toFloat()).toFloat())
+                if (attribute?.dateFestivalTextSize != 10) {
+                    festival.setTextSize(COMPLEX_UNIT_PX,attribute!!.dateFestivalTextSize.toFloat())
                 }else{
                     festival.setTextSize(attribute!!.dateFestivalTextSize.toFloat())
                 }
@@ -190,22 +190,36 @@ class CalendarContentView : LinearLayout {
                     }
                 }
 
+                Log.e("日志","终极字体大小为："+attribute?.holidayTipTextSize)
                 if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.HOLIDAY){
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("休")
                     holiday.setTextColor(attribute!!.holidayTipTextColor)
-                    holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
+                    if (attribute!!.holidayTipTextSize.toFloat() == 8f){
+                        holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
+                    }else{
+                        holiday.setTextSize(TypedValue.COMPLEX_UNIT_PX,attribute!!.holidayTipTextSize.toFloat())
+                    }
                     holiday.visibility = View.VISIBLE
                 }else if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.WORK){
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("班")
                     holiday.setTextColor(attribute!!.holidayTipTextColor)
-                    holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
+                    if (attribute!!.holidayTipTextSize.toFloat() == 8f){
+                        holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
+                    }else{
+                        holiday.setTextSize(TypedValue.COMPLEX_UNIT_PX,attribute!!.holidayTipTextSize.toFloat())
+                    }
                     holiday.visibility = View.VISIBLE
 
                 }else{
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("班")
+                    if (attribute!!.holidayTipTextSize.toFloat() == 8f){
+                        holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
+                    }else{
+                        holiday.setTextSize(TypedValue.COMPLEX_UNIT_PX,attribute!!.holidayTipTextSize.toFloat())
+                    }
                     holiday.visibility = View.GONE
                 }
                 item.value.setOnClickListener(OnClickListener {
