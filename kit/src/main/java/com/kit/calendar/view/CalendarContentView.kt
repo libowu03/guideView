@@ -9,12 +9,14 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
+import com.kit.calendar.bean.CalendarAttribute
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils
 import kotlinx.android.synthetic.main.calendar_view.view.*
+import kotlinx.android.synthetic.main.calendar_week.view.*
 import java.util.*
 
 class CalendarContentView : LinearLayout {
@@ -24,6 +26,7 @@ class CalendarContentView : LinearLayout {
     private var cal: Calendar? = null
     private var date : String ?= null
     var clickListener:DateItemClickListener ?= null
+    var attribute:CalendarAttribute ?= null
 
     constructor(context: Context) : this(context, null)
 
@@ -32,12 +35,8 @@ class CalendarContentView : LinearLayout {
     constructor(context: Context?, nothing: AttributeSet?, def: Int?) : super(context, nothing, 0) {
         cal = Calendar.getInstance()
         initView()
-        initListener()
     }
 
-    private fun initListener() {
-
-    }
 
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.calendar_view_content,this,true)
@@ -144,6 +143,18 @@ class CalendarContentView : LinearLayout {
      * 设置日期
      */
     fun setDate(date:String){
+        Log.e("日志","孩子数量为："+calendarWeekBar.childCount)
+        for (i in 0..calendarWeekBar.childCount){
+            if (attribute?.headWeekTextSize != 16) {
+                if (calendarWeekBar.getChildAt(i) is TextView){
+                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize(GuideViewUtils.px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
+                }
+            }else{
+                if (calendarWeekBar.getChildAt(i) is TextView){
+                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize((attribute?.headWeekTextSize)!!.toFloat())
+                }
+            }
+        }
         dateViewItem?.let {
             this.date = date
             var dateResult = date.split("-")
@@ -154,42 +165,42 @@ class CalendarContentView : LinearLayout {
                 day.setText("${dateList?.get(item.index)?.day}")
                 festival.setText("${dateList?.get(item.index)?.lunar?._date}")
 
-                if (/*dateDayTextSize != 16*/true) {
-                    day.setTextSize(/*GuideViewUtils.px2dip(context, dateDayTextSize.toFloat()).toFloat()*/16f)
+                if (attribute?.dateDayTextSize != 16) {
+                    day.setTextSize(GuideViewUtils.px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
                 }else{
-                    day.setTextSize(/*dateDayTextSize.toFloat()*/16f)
+                    day.setTextSize(attribute!!.dateDayTextSize.toFloat())
                 }
-                if (true) {
-                    festival.setTextSize(/*GuideViewUtils.px2dip(context, dateFestivalTextSize.toFloat()).toFloat()*/10f)
+                if (attribute?.dateDayTextSize != 10) {
+                    festival.setTextSize(GuideViewUtils.px2dip(context, attribute!!.dateFestivalTextSize.toFloat()).toFloat())
                 }else{
-                    festival.setTextSize(/*dateFestivalTextSize.toFloat()*/16f)
+                    festival.setTextSize(attribute!!.dateFestivalTextSize.toFloat())
                 }
 
                 //设置字体颜色
                 if (!dateList?.get(item.index)?.isCurrentMonth!!) {
-                    day.setTextColor(/*notCurrentMonthDayTextColor!!*/Color.RED)
-                    festival.setTextColor(/*notCurrentMonthFestivalTextColor!!*/Color.RED)
+                    day.setTextColor(attribute!!.notCurrentMonthDayTextColor!!)
+                    festival.setTextColor(attribute!!.notCurrentMonthFestivalTextColor!!)
                 } else {
-                    day.setTextColor(/*currentMonthDayTextColor!!*/Color.GREEN)
-                    festival.setTextColor(/*currentMonthFestivalTextColor!!*/Color.GREEN)
+                    day.setTextColor(attribute!!.currentMonthDayTextColor!!)
+                    festival.setTextColor(attribute!!.currentMonthFestivalTextColor!!)
                     //是今天，则设置选中状态
                     if (dateList?.get(item.index)!!.year == cal?.get(Calendar.YEAR) && dateList?.get(item.index)!!.month == (cal?.get(Calendar.MONTH)!! +1) && dateList!!.get(item.index).day == cal?.get(Calendar.DAY_OF_MONTH)){
-                        day.setTextColor(/*selectTodayDayTextColor!!*/Color.GREEN)
-                        festival.setTextColor(/*selectTodayFestivalTextColor!!*/Color.GREEN)
+                        day.setTextColor(attribute!!.selectTodayDayTextColor)
+                        festival.setTextColor(attribute!!.selectTodayFestivalTextColor!!)
                     }
                 }
 
                 if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.HOLIDAY){
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("休")
-                    holiday.setTextColor(/*holidayTipTextColor*/Color.BLACK)
-                    holiday.setTextSize(/*holidayTipTextSize.toFloat()*/8f)
+                    holiday.setTextColor(attribute!!.holidayTipTextColor)
+                    holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
                     holiday.visibility = View.VISIBLE
                 }else if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.WORK){
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("班")
-                    holiday.setTextColor(/*holidayTipTextColor*/Color.BLUE)
-                    holiday.setTextSize(/*holidayTipTextSize.toFloat()*/8f)
+                    holiday.setTextColor(attribute!!.holidayTipTextColor)
+                    holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
                     holiday.visibility = View.VISIBLE
 
                 }else{
@@ -238,7 +249,7 @@ class CalendarContentView : LinearLayout {
             if (festivalResult.getSolaTerms() != null){
                 festival.setText(festivalResult.solaTerms.name)
             }
-
         }
     }
+
 }

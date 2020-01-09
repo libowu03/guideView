@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.kit.calendar.bean.CalendarAttribute;
 import com.kit.calendar.listener.DateItemClickListener;
 import com.kit.calendar.view.CalendarContentView;
 import com.kit.calendar.view.CalendarView;
@@ -17,11 +18,18 @@ import java.util.List;
 public class CalendarRecAdapter extends RecyclerView.Adapter<CalendarRecAdapter.Cra> {
     private List<String> title;
     private DateItemClickListener clickListener;
+    private CalendarAttribute attribute;
+
+    public CalendarRecAdapter(CalendarAttribute attribute){
+        this.attribute = attribute;
+    }
 
     @NonNull
     @Override
     public Cra onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new Cra(new CalendarContentView(viewGroup.getContext()));
+        CalendarContentView contentView = new CalendarContentView(viewGroup.getContext());
+        contentView.setAttribute(attribute);
+        return new Cra(contentView);
     }
 
     @Override
@@ -43,6 +51,12 @@ public class CalendarRecAdapter extends RecyclerView.Adapter<CalendarRecAdapter.
             return 0;
         }
         return title.size();
+    }
+
+
+    public void setAttribute(CalendarAttribute attribute) {
+        this.attribute = attribute;
+        notifyDataSetChanged();
     }
 
     public void setClickListener(DateItemClickListener clickListener){

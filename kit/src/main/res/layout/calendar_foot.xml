@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp"
     android:id="@+id/calendarFootBox"
+    android:background="@color/colorRed"
     android:layout_marginTop="10dp"
     android:orientation="vertical">
     <View

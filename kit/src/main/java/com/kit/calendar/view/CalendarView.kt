@@ -1,6 +1,7 @@
 package com.kit.calendar.view
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
@@ -8,14 +9,15 @@ import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
-import com.kit.calendar.adapter.CalendarAdapter
 import com.kit.calendar.adapter.CalendarRecAdapter
+import com.kit.calendar.bean.CalendarAttribute
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.listener.PagerListener
@@ -106,6 +108,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
     var clickListener:DateItemClickListener ?= null
     //今天日期的index
     private var currentDateIndex : Int = 0
+    //日期组件的属性
+    var attrubute:CalendarAttribute ?= null
 
     object Holiday{
         //节日
@@ -155,6 +159,20 @@ class CalendarView : LinearLayout, View.OnClickListener {
         selectTodayDayTextColor = typedArray.getColor(R.styleable.CalendarView_selectTodayDayTextColor, Color.WHITE)
         selectTodayFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_selectTodayFestivalTextColor, Color.WHITE)
         enableItemClick = typedArray.getBoolean(R.styleable.CalendarView_enableItemClick, true)
+        typedArray.recycle()
+        attrubute = CalendarAttribute(dateDayTextSize,
+                dateFestivalTextSize,
+                notCurrentMonthDayTextColor,
+                notCurrentMonthFestivalTextColor,
+                currentMonthDayTextColor,
+                currentMonthFestivalTextColor,
+                headWeekTextColor,
+                headWeekTextSize,
+                dateItemLayout,
+                holidayTipTextSize,
+                holidayTipTextColor,
+                selectTodayDayTextColor,
+                selectTodayFestivalTextColor,enableItemClick)
     }
 
     /**
@@ -191,13 +209,12 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
-        adapter = CalendarRecAdapter()
+        adapter = CalendarRecAdapter(attrubute)
         adapter.setClickListener(object : DateItemClickListener{
             override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
                 setDefaultCalendarFootInfo(dateItem)
                 clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index)
             }
-
         })
 
         var calendarViewTitle = mutableListOf<String>()
@@ -272,92 +289,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
             calendarFoot.addView(LayoutInflater.from(context).inflate(footLayout, this, false))
         }
 
-        for (index in 0..6) {
-            if (0 == dateItemLayout) {
-                var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
-                setDateData(calendarLineOne, view, 0, dateList, index)
-            } else {
-                var view = LayoutInflater.from(context).inflate(dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
-                llp.weight = 1f
-                llp.width = 0
-                view.layoutParams = llp
-                calendarLineOne.addView(view)
-                dateViewItem?.add(view)
-            }
-        }
-        for (index in 0..6) {
-            if (0 == dateItemLayout) {
-                var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
-                setDateData(calendarLineTwo, view, 7, dateList, index)
-            } else {
-                var view = LayoutInflater.from(context).inflate(dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
-                llp.weight = 1f
-                llp.width = 0
-                view.layoutParams = llp
-                calendarLineTwo.addView(view)
-                dateViewItem?.add(view)
-            }
-        }
-        for (index in 0..6) {
-            if (0 == dateItemLayout) {
-                var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
-                setDateData(calendarLineThree, view, 14, dateList, index)
-            } else {
-                var view = LayoutInflater.from(context).inflate(dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
-                llp.weight = 1f
-                llp.width = 0
-                view.layoutParams = llp
-                calendarLineThree.addView(view)
-                dateViewItem?.add(view)
-            }
-        }
-        for (index in 0..6) {
-            if (0 == dateItemLayout) {
-                var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
-                setDateData(calendarLineFour, view, 21, dateList, index)
-            } else {
-                var view = LayoutInflater.from(context).inflate(dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
-                llp.weight = 1f
-                llp.width = 0
-                view.layoutParams = llp
-                calendarLineFour.addView(view)
-                dateViewItem?.add(view)
-            }
-        }
-        for (index in 0..6) {
-            if (0 == dateItemLayout) {
-                var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
-                setDateData(calendarLineFive, view, 28, dateList, index)
-            } else {
-                var view = LayoutInflater.from(context).inflate(dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
-                llp.weight = 1f
-                llp.width = 0
-                view.layoutParams = llp
-                calendarLineFive.addView(view)
-                dateViewItem?.add(view)
-            }
-
-        }
-        for (index in 0..6) {
-            if (0 == dateItemLayout) {
-                var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
-                setDateData(calendarLineSix, view, 35, dateList, index)
-            } else {
-                var view = LayoutInflater.from(context).inflate(dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
-                llp.weight = 1f
-                llp.width = 0
-                view.layoutParams = llp
-                calendarLineSix.addView(view)
-                dateViewItem?.add(view)
-            }
-        }
-
         if (!enableHeadLayout) {
             hideHeadView()
         }
@@ -377,86 +308,74 @@ class CalendarView : LinearLayout, View.OnClickListener {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.let {
-            //标准请款下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)
+            //标准情况下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)
             if (context.resources.displayMetrics.widthPixels == canvas.width || isInEditMode){
                 isAuthorSetTextSize = true
                 return
             }
-            var percentage = 16 / SUITABLE_WIDTH
-            var percentageHoliday = 8 / SUITABLE_WIDTH
+            var percentage = GuideViewUtils.dip2px(context,16f) / SUITABLE_WIDTH
+            var percentageFestival = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
+            var percentageHoliday = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
+            var percentageWidth = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
             if (!isAuthorSetTextSize && headLayout ==0 && dateItemLayout == 0 && footLayout == 0){
                 if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
-                   var dateDayTextSize = (canvas.width * percentage)
-                   var dateFestivalTextSize = (canvas.width * percentage)
-                   var headWeekTextSize = (canvas.width * percentage)
-                   var holidayTextSize = (canvas.width * percentageHoliday)
-
-                    var dateItemView = getDateViewList()
-                    dateItemView?.let {
-                        for (item in dateItemView){
-                            var day = item.findViewById<TextView>(R.id.calendarDay)
-                            var festival = item.findViewById<TextView>(R.id.calendarFestivalOrLunar)
-                            var holiday = item.findViewById<TextView>(R.id.calendarHolidayStatus)
-                            day.textSize = dateDayTextSize
-                            festival.textSize = dateFestivalTextSize
-                            holiday.textSize = holidayTextSize
-                        }
-                    }
-
-                    for (index in 0..calendarWeekBar.childCount) {
-                        if (calendarWeekBar.getChildAt(index) is TextView) {
-                            (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
-                            if (headWeekTextSize != 16f) {
-                                (calendarWeekBar.getChildAt(index) as TextView).setTextSize(headWeekTextSize.toFloat())
-                            }
-                        }
-                    }
+                   dateDayTextSize = (canvas.width * percentage).toInt()
+                   dateFestivalTextSize = (canvas.width * percentageFestival).toInt()
+                   headWeekTextSize = (canvas.width * percentage).toInt()
+                   holidayTipTextSize = (canvas.width * percentageHoliday).toInt()
                 }
 
                 //设置头部字体
                 if (headLayout == 0 || isInEditMode){
-                    var percentage = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleOne_20)) / SUITABLE_WIDTH
-                    Log.e("日志","resour资源："+GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleOne_20)))
-                    var percentage10 = 10 / SUITABLE_WIDTH
+                    var percentage = resources.getDimensionPixelSize(R.dimen.titleTwo_16) / SUITABLE_WIDTH
+                    var percentage10 = resources.getDimensionPixelSize(R.dimen.titleOne_10) / SUITABLE_WIDTH
                     var headDate = (canvas.width * percentage).toInt()
-                    var headLunarDate = (canvas.width * percentage).toInt()
+                    var headLunarDate = (canvas.width * percentage10).toInt()
                     var headLayout10 = (canvas.width * percentage10).toInt()
-                    calendarHeadTime.setTextSize(headDate.toFloat())
-                    calendarHeadFestival.setTextSize(headLunarDate.toFloat())
-                    calendarHeadBackToTodayTv.setTextSize(headLunarDate.toFloat())
-                    calendarYearTextTv.setTextSize(headDate.toFloat())
-                    calendarMonthTextTv.setTextSize(headDate.toFloat())
-                    calendarYearPre.setTextSize(headDate.toFloat())
-                    calendarYearNext.setTextSize(headDate.toFloat())
-                    calendarMonthNext.setTextSize(headDate.toFloat())
-                    calendarMonthPre.setTextSize(headDate.toFloat())
-
+                    calendarHeadTime.setTextSize(TypedValue.COMPLEX_UNIT_PX,headDate.toFloat())
+                    calendarHeadFestival.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                    calendarHeadBackToTodayTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                    calendarYearTextTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                    calendarMonthTextTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                    calendarYearPre.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                    calendarYearNext.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                    calendarMonthNext.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                    calendarMonthPre.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
                     calendarBox.setPadding(headLayout10,headLayout10,headLayout10,headLayout10)
                 }
 
+
                 //设置尾部
                 if (footLayout == 0 || isInEditMode){
-                    var percentageFootTitle = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_12)) / SUITABLE_WIDTH
-                    var percentageFootContent = GuideViewUtils.px2dip(context,resources.getDimension(R.dimen.titleTwo_16)) / SUITABLE_WIDTH
+                    var percentageFootTitle = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
+                    var percentageFootContent = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
                     var percentageFootBox = GuideViewUtils.dip2px(context,110f) / SUITABLE_HEIGHT
                     var title12 = (canvas.width * percentageFootTitle).toInt()
                     var title16 = (canvas.width * percentageFootContent).toInt()
                     var titleBox = (canvas.width * percentageFootBox).toInt()
                     footDefaultFestivalTextSize = title16
-                    calendarFootLunarTitle.setTextSize(title12.toFloat())
-                    calendarFootFestivalTitle.setTextSize(title12.toFloat())
-                    calendarFootSolaTerms.setTextSize(title12.toFloat())
-                    calendarFootDate.setTextSize(title16.toFloat())
-                    calendarFootSolarTerms.setTextSize(title16.toFloat())
+                    calendarFootLunarTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
+                    calendarFootFestivalTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
+                    calendarFootSolaTerms.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
+                    calendarFootDate.setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
+                    calendarFootSolarTerms.setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
                     for (index in 0..calendarFootFestival.childCount-1){
-                        (calendarFootFestival.getChildAt(index) as TextView).setTextSize(title16.toFloat())
+                        (calendarFootFestival.getChildAt(index) as TextView).setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
                     }
-
+                    calendarFootBox.layoutParams = calendarFootBox.layoutParams
                     //设置尾部的高度到最适合的大小
                     var lp = calendarFootBox.layoutParams
-                    lp.height = GuideViewUtils.dip2px(context,titleBox.toFloat())
+                    lp.height = titleBox
                     calendarFootBox.layoutParams = lp
                 }
+
+                attrubute?.dateDayTextSize = dateDayTextSize
+                attrubute?.dateFestivalTextSize = dateFestivalTextSize
+                attrubute?.holidayTipTextSize = holidayTipTextSize
+                attrubute?.headWeekTextSize = headWeekTextSize
+                attrubute?.holidayTipTextSize = holidayTipTextSize
+                adapter.setAttribute(attrubute)
+                calendarViewContent.scrollToPosition(currentDateIndex)
 
                 //设置整个日历的padding
                 var paddingPrecentage = 10 / (context.resources.displayMetrics.widthPixels*1.0)
@@ -485,7 +404,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                             var festivalChild = item.split(",")
                             for (itemChild in festivalChild){
                                 var festival = TextView(context)
-                                festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                                festival.setTextSize(TypedValue.COMPLEX_UNIT_PX,footDefaultFestivalTextSize.toFloat())
                                 var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                                 lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                                 festival.layoutParams = lp
@@ -495,7 +414,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                             }
                         }else{
                             var festival = TextView(context)
-                            festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                            festival.setTextSize(TypedValue.COMPLEX_UNIT_PX,footDefaultFestivalTextSize.toFloat())
                             var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                             lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                             festival.layoutParams = lp
@@ -514,7 +433,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                             var festivalChild = item.split(",")
                             for (itemChild in festivalChild){
                                 var festival = TextView(context)
-                                festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                                festival.setTextSize(TypedValue.COMPLEX_UNIT_PX,footDefaultFestivalTextSize.toFloat())
                                 var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                                 lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                                 festival.layoutParams = lp
@@ -524,7 +443,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                             }
                         }else{
                             var festival = TextView(context)
-                            festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                            festival.setTextSize(TypedValue.COMPLEX_UNIT_PX,footDefaultFestivalTextSize.toFloat())
                             var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                             lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                             festival.layoutParams = lp
@@ -543,7 +462,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                             var festivalChild = item.split(",")
                             for (itemChild in festivalChild){
                                 var festival = TextView(context)
-                                festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                                festival.setTextSize(TypedValue.COMPLEX_UNIT_PX,footDefaultFestivalTextSize.toFloat())
                                 var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                                 lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                                 festival.layoutParams = lp
@@ -553,7 +472,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                             }
                         }else{
                             var festival = TextView(context)
-                            festival.setTextSize(footDefaultFestivalTextSize.toFloat())
+                            festival.setTextSize(TypedValue.COMPLEX_UNIT_PX,footDefaultFestivalTextSize.toFloat())
                             var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
                             lp.marginEnd = GuideViewUtils.dip2px(context,5f)
                             festival.layoutParams = lp
@@ -694,11 +613,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
 
         }
-    }
-
-    fun setOnDateItemClickListener(listener: DateItemClickListener) {
-        this.clickListener = listener
-        adapter.setClickListener(listener!!)
     }
 
     /**
