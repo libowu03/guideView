@@ -169,9 +169,11 @@ public class DateInfo {
             }
 
             //获取二十四节气
-            SolaTerms solaTerms = SolaTermsUtils.getSolarTerms(year,month,day);
-            festival.setSolaTerms(solaTerms);
-            festivalInfo = festival;
+            if (year <= 2100 && year >=1900){
+                SolaTerms solaTerms = SolaTermsUtils.getSolarTerms(year,month,day);
+                festival.setSolaTerms(solaTerms);
+                festivalInfo = festival;
+            }
             return festival;
         }
     }

@@ -92,8 +92,6 @@ class CalendarContentView : LinearLayout {
                 day.setText("${dateList?.get(item.index)?.day}")
                 festival.setText("${dateList?.get(item.index)?.lunar?._date}")
 
-                //Log.e("日志","dateDayTextSize的值为："+attribute?.dateDayTextSize)
-                //Log.e("日志","dateFestivalTextSize的值为："+attribute?.dateFestivalTextSize)
                 if (attribute?.dateDayTextSize != 16) {
                     day.setTextSize(COMPLEX_UNIT_PX, attribute?.dateDayTextSize!!.toFloat())
                 } else {
@@ -119,7 +117,6 @@ class CalendarContentView : LinearLayout {
                     }
                 }
 
-                //Log.e("日志","终极字体大小为："+attribute?.holidayTipTextSize)
                 if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.HOLIDAY) {
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("休")
@@ -133,7 +130,7 @@ class CalendarContentView : LinearLayout {
                 } else if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.WORK) {
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("班")
-                    holiday.setTextColor(attribute!!.holidayTipTextColor)
+                    holiday.setTextColor(attribute!!.workDayTipTextColor)
                     if (attribute!!.holidayTipTextSize.toFloat() == 8f) {
                         holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
                     } else {
@@ -144,6 +141,7 @@ class CalendarContentView : LinearLayout {
                 } else {
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("班")
+                    holiday.setTextColor(attribute!!.workDayTipTextColor)
                     if (attribute!!.holidayTipTextSize.toFloat() == 8f) {
                         holiday.setTextSize(attribute!!.holidayTipTextSize.toFloat())
                     } else {
@@ -168,6 +166,7 @@ class CalendarContentView : LinearLayout {
             }
         }
     }
+
 
     /**
      * 添加日期item到view中，添加允许添加自定义的view

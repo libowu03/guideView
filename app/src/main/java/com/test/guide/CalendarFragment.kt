@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import com.kit.calendar.view.CalendarView
 import com.kit.calendar.bean.DateInfo
@@ -29,6 +30,9 @@ class CalendarFragment : Fragment(){
                 Log.e("日志","时间戳为："+dateItem.year)
             }
         })
+       /* calendar.getHeadView().findViewById<Button>(R.id.jump).setOnClickListener {
+            calendar.jumpToDate(2150,2)
+        }*/
      /*   calendar.setDateSetListener(object : DateSetListener{
             override fun onDateSetListener(view: View, dateItem:DateInfo ,dateList: MutableList<DateInfo>, index: Int) {
                 var day = view.findViewById<TextView>(R.id.day)

@@ -16,9 +16,9 @@
         android:padding="10dp"
         app:enableItemClick="true"
         app:enableFootLayout="true"
-        app:selectTodayDayTextColor="@color/colorRed"
-        app:selectTodayFestivalTextColor="@color/colorRed"
-        app:holidayTipTextColor="#232323"
+        app:selectTodayDayTextColor="@color/colorPrimary"
+        app:selectTodayFestivalTextColor="@color/colorPrimary"
+        app:holidayTipTextColor="@color/colorRed"
         tools:layout_editor_absoluteX="0dp" />
 
 </LinearLayout>
