@@ -11,6 +11,7 @@ import com.kit.calendar.utils.SolaTermsUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,8 +32,11 @@ public class DateInfo {
         this.isCurrentMonth = isCurrentMonth;
         this.week = week;
         this.year = year;
-        this.lunar = lunar;
-        this.lunar = new Lunar(getCalendar());
+        if (getCalendar().get(Calendar.YEAR) >=2050 || getCalendar().get(Calendar.YEAR) <= 1900){
+            this.lunar = null;
+        }else {
+            this.lunar = new Lunar(getCalendar());
+        }
     }
 
     public int getWeek() {
@@ -124,27 +128,32 @@ public class DateInfo {
         }else {
             dayStr = String.valueOf(day);
         }
-        if (lunar.getDay() < 10){
-            lunarStr = "0"+lunar.getDay();
-        }else {
-            lunarStr = String.valueOf(lunar.getDay());
-        }
-        if (lunar.getMonth() < 10){
-            lunarMonthStr = "0"+lunar.getMonth();
-        }else {
-            lunarMonthStr = String.valueOf(lunar.getMonth());
+
+        if (lunar != null){
+            if (lunar.getDay() < 10){
+                lunarStr = "0"+lunar.getDay();
+            }else {
+                lunarStr = String.valueOf(lunar.getDay());
+            }
+            if (lunar.getMonth() < 10){
+                lunarMonthStr = "0"+lunar.getMonth();
+            }else {
+                lunarMonthStr = String.valueOf(lunar.getMonth());
+            }
         }
 
         HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap();
         if (festivalMap == null){
             return null;
         }else {
-            //获取农历节日
             Festival festival = new Festival();
-            String lunarFestival = festivalMap.get("N"+lunarMonthStr+lunarStr);
-            if (lunarFestival != null){
-                String[] lunarFestivalResult = lunarFestival.split(",");
-                festival.setLunarFestival(lunarFestivalResult);
+            //获取农历节日
+            if (lunar != null){
+                String lunarFestival = festivalMap.get("N"+lunarMonthStr+lunarStr);
+                if (lunarFestival != null){
+                    String[] lunarFestivalResult = lunarFestival.split(",");
+                    festival.setLunarFestival(null);
+                }
             }
             //获取要显示的节日
             String commentFestival = festivalMap.get("H"+monthStr+dayStr);

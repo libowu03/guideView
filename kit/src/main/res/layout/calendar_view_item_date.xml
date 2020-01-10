@@ -41,8 +41,7 @@
             android:id="@+id/calendarFestivalOrLunar"
             app:layout_constraintLeft_toLeftOf="@id/calendarDay"
             app:layout_constraintRight_toRightOf="@id/calendarDay"
-            android:textColor="@color/currentMonthColor"
-            android:text="冬至"/>
+            android:textColor="@color/currentMonthColor"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

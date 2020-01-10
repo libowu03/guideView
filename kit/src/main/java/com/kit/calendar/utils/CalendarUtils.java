@@ -7,6 +7,7 @@ import com.kit.calendar.view.CalendarView;
 import com.kit.calendar.bean.DateInfo;
 import com.kit.utils.Applications;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -137,15 +138,20 @@ public class CalendarUtils {
                 preYear = year;
             }
             String name = holidayMap.get(monthStr+dayStr);
+            //如果假期表中不存在此日期，表示此日为正常日
             if (name == null){
                 return CalendarView.Holiday.COMMON_DAY;
             }else {
+                //w为work的头字母，表示工作，以w开头的表示工作日
                 if (name.startsWith("w")){
                     return CalendarView.Holiday.WORK;
                 }else {
                     return CalendarView.Holiday.HOLIDAY;
                 }
             }
+        }catch (IOException e){
+            Log.e("kitViewError","reason============>未发现"+year+"_holiday.json");
+            return CalendarView.Holiday.COMMON_DAY;
         }catch (Exception e){
             Log.e("kitViewError","reason============>"+e.getLocalizedMessage());
             return CalendarView.Holiday.COMMON_DAY;

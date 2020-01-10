@@ -17,6 +17,7 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
+        android:id="@+id/calendarLunar"
         android:gravity="center_vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textSize="@dimen/titleTwo_16"
+            android:textSize="@dimen/titleTwo_12"
             android:textColor="@color/colorTitle"
             android:id="@+id/calendarFootDate"
             tools:text="2019/03/06"/>
@@ -63,7 +64,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/titleTwo_16"
+            android:textSize="@dimen/titleTwo_12"
             android:layout_marginLeft="10dp"
             android:textColor="@color/colorTitle"
             android:id="@+id/calendarFootFestival"
@@ -95,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:id="@+id/calendarFootSolarTerms"
-            android:textSize="@dimen/titleTwo_16"
+            android:textSize="@dimen/titleTwo_12"
             android:textColor="@color/colorTitle"
             tools:text="大雪"/>
     </LinearLayout>

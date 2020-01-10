@@ -124,6 +124,9 @@ public class Lunar {
      */
     public Lunar(Calendar cal)
     {
+        if (cal.get(Calendar.YEAR) >= 2050 || cal.get(Calendar.YEAR) <= 1900){
+            return;
+        }
         // cal.add(cal.get(Calendar.DAY_OF_MONTH),1);
         @SuppressWarnings(" unused ")
         int yearCyl, monCyl, dayCyl;

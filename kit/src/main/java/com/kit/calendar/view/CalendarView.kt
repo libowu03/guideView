@@ -21,6 +21,7 @@ import com.kit.calendar.bean.CalendarAttribute
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.listener.DatePagerChangeListener
+import com.kit.calendar.listener.DateSetListener
 import com.kit.calendar.listener.PagerListener
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
@@ -94,7 +95,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     //dateItem的view id
     private var dateItemLayout: Int = 0
     //默认尾部节日的字体大小
-    private var footDefaultFestivalTextSize = 16
+    private var footDefaultFestivalTextSize = 12
     //节假日提示文字大小
     private var holidayTipTextSize : Int= 8
     //节假日文字颜色
@@ -113,6 +114,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var currentDateIndex : Int = 0
     //日期组件的属性
     var attrubute:CalendarAttribute ?= null
+    //每项日期设置完后的监听器
+    var dateItemSetListener:DateSetListener ?= null
 
     object Holiday{
         //节日
@@ -121,6 +124,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
         const val WORK : Int = 0
         //普通日期，即不放假也不补班
         const val COMMON_DAY : Int = -1
+        //日期属性
+        var ATTRIBUTE : CalendarAttribute ?= null
     }
 
     constructor(context: Context) : this(context, null)
@@ -142,7 +147,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * 初始化界面属性
      */
     private fun initArr(context: Context?, nothing: AttributeSet?, def: Int?) {
-        footDefaultFestivalTextSize = GuideViewUtils.dip2px(context,16f)
+        footDefaultFestivalTextSize = GuideViewUtils.dip2px(context,12f)
         val typedArray = context!!.theme.obtainStyledAttributes(nothing, R.styleable.CalendarView, def!!, 0)
         dateDayTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateDayTextSize, 16)
         dateFestivalTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_dateFestivalTextSize, 10)
@@ -157,7 +162,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         footLayout = typedArray.getResourceId(R.styleable.CalendarView_calendarFootLayout, 0)
         enableFootLayout = typedArray.getBoolean(R.styleable.CalendarView_enableFootLayout, false)
         enableHeadLayout = typedArray.getBoolean(R.styleable.CalendarView_enableHeadLayout, true)
-        dateItemLayout = typedArray.getResourceId(R.styleable.CalendarView_dateItemLayout, 0)
+        dateItemLayout = typedArray.getResourceId(R.styleable.CalendarView_dateItemLayout, R.layout.calendar_view_item_date)
         holidayTipTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_holidayTipTextSize, 8)
         holidayTipTextColor = typedArray.getColor(R.styleable.CalendarView_holidayTipTextColor, Color.RED)
         selectTodayDayTextColor = typedArray.getColor(R.styleable.CalendarView_selectTodayDayTextColor, Color.WHITE)
@@ -177,6 +182,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 holidayTipTextColor,
                 selectTodayDayTextColor,
                 selectTodayFestivalTextColor,enableItemClick)
+        Holiday.ATTRIBUTE = attrubute
     }
 
     /**
@@ -223,9 +229,14 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index)
             }
         })
+        adapter.setDateSetListener(object : DateSetListener{
+            override fun onDateSetListener(custonView: View, dateItem:DateInfo, dateList: MutableList<DateInfo>, index: Int) {
+                dateItemSetListener?.onDateSetListener(custonView,dateItem,dateList,index)
+            }
+        })
 
         var calendarViewTitle = mutableListOf<String>()
-        for (year in 1901..2049){
+        for (year in /*1901..2049*/1900..2100){
             for (month in 1..12){
                 if (year == cal!!.get(Calendar.YEAR) && month == cal!!.get(Calendar.MONTH)+1){
                     currentDateIndex = (year - 1901)*12 + month-1
@@ -310,6 +321,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     fun setItemClickListener(clickListener: DateItemClickListener){
         this.clickListener = clickListener
+    }
+
+    /**
+     * 设置点击监听
+     */
+    fun setDateSetListener(dateSetListener: DateSetListener){
+        this.dateItemSetListener = dateSetListener
     }
 
     /**
@@ -407,7 +425,11 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
         var festivalList = dateInfo?.getFesitval()
         if (footLayout == 0){
-            calendarFootDate?.setText(dateInfo?.lunar.toString())
+            if (dateInfo?.lunar == null){
+                calendarLunar.visibility = View.GONE
+            }else{
+                calendarFootDate?.setText(dateInfo?.lunar.toString())
+            }
             festivalList?.let {
                 calendarFootFestival.removeAllViews()
                 //设置农历节日
@@ -845,24 +867,14 @@ class CalendarView : LinearLayout, View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0) {
             calendarMonthNext -> {
-              /*  if (currentMonth == 12) {
-                    if (currentYear + 1 > 2099) {
-                        return
-                    }
-                    currentYear++
-                    currentMonth = 1
-                } else {
-                    ++currentMonth
-                }
-                setNewData(currentYear, currentMonth)*/
                 var year = (calendarYearTextTv.text.toString()).toInt()
                 var month = (calendarMonthTextTv.text.toString()).toInt()
                 if (month+1>12){
                     month = 1
                     year++
-                    if (year>=2050){
+                    /*if (year>=2050){
                         return
-                    }
+                    }*/
                 }else{
                     month++
                 }
@@ -871,24 +883,14 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 calendarYearTextTv.setText("${year}")
             }
             calendarMonthPre -> {
-              /*  if (currentMonth == 1) {
-                    if (currentYear - 1 < 1900) {
-                        return
-                    }
-                    currentYear--
-                    currentMonth = 12
-                } else {
-                    --currentMonth
-                }
-                setNewData(currentYear, currentMonth)*/
                 var year = (calendarYearTextTv.text.toString()).toInt()
                 var month = (calendarMonthTextTv.text.toString()).toInt()
                 if (month-1<1){
                     month = 12
                     year--
-                    if (year<1901){
+                  /*  if (year<1901){
                         return
-                    }
+                    }*/
                 }else{
                     month--
                 }
@@ -897,16 +899,15 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
             }
             calendarYearPre -> {
-            /*    if (currentYear - 1 < 1900) {
-                    return
-                }
-                setNewData(--currentYear, currentMonth)*/
                 var year = (calendarYearTextTv.text.toString()).toInt()
                 var month = (calendarMonthTextTv.text.toString()).toInt()
-                if (year-1 >=1901){
+               /* if (year-1 >=1901){
                     year--
                     calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
-                }
+                }*/
+                year--
+                calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
+
                 calendarMonthTextTv.setText("${month}")
                 calendarYearTextTv.setText("${year}")
             }
@@ -917,10 +918,13 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 setNewData(++currentYear, currentMonth)*/
                 var year = (calendarYearTextTv.text.toString()).toInt()
                 var month = (calendarMonthTextTv.text.toString()).toInt()
-                if (year+1 < 2050){
+              /*  if (year+1 < 2050){
                     year++
                     calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
-                }
+                }*/
+                year++
+                calendarViewContent.scrollToPosition( adapter.title.indexOf("${year}-${month}") )
+
                 calendarMonthTextTv.setText("${month}")
                 calendarYearTextTv.setText("${year}")
             }
