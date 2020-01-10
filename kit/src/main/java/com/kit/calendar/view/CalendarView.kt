@@ -1,9 +1,9 @@
 package com.kit.calendar.view
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -70,6 +70,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private val SUITABLE_WIDTH : Float= 1080f
     //合适的高度
     private val SUITABLE_HEIGHT : Float = 1313f
+    private var enableCalendarScroll : Boolean = true
 
 
     //日期的文字大小
@@ -173,6 +174,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         selectTodayFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_selectTodayFestivalTextColor, Color.WHITE)
         enableItemClick = typedArray.getBoolean(R.styleable.CalendarView_enableItemClick, true)
         var workDayTipTextColor = typedArray.getColor(R.styleable.CalendarView_workDayTipTextColor, Color.GREEN)
+        enableCalendarScroll = typedArray.getBoolean(R.styleable.CalendarView_enableCalendarScroll, true)
         typedArray.recycle()
         attrubute = CalendarAttribute(dateDayTextSize,
                 dateFestivalTextSize,
@@ -231,15 +233,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }))
     }
 
-
     /**
-     * 初始化布局
+     * 初始化适配器
      */
-    private fun initView() {
-        currentPagerMonth = cal!!.get(Calendar.MONTH)+1
-        currentPagerYear = cal!!.get(Calendar.YEAR)
-
-        LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
+    fun initAdapter(){
         adapter = CalendarRecAdapter(attrubute)
         adapter.setClickListener(object : DateItemClickListener{
             override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
@@ -254,7 +251,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         })
 
         var calendarViewTitle = mutableListOf<String>()
-        for (year in /*1901..2049*/1900..2100){
+        for (year in 1900..2100){
             for (month in 1..12){
                 if (year == cal!!.get(Calendar.YEAR) && month == cal!!.get(Calendar.MONTH)+1){
                     currentDateIndex = (year - 1900)*12 + month-1
@@ -263,13 +260,37 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
         }
         adapter.setTitle(calendarViewTitle)
-        var manager = LinearLayoutManager(context)
+
+        var manager: LinearLayoutManager
+        if (enableCalendarScroll){
+            manager = LinearLayoutManager(context)
+        }else{
+            manager = object : LinearLayoutManager(context){
+                override fun canScrollHorizontally(): Boolean {
+                    return false
+                }
+
+                override fun canScrollVertically(): Boolean {
+                    return false
+                }
+            }
+        }
         manager.orientation = LinearLayoutManager.HORIZONTAL
         calendarViewContent.layoutManager = manager
         calendarViewContent.adapter = adapter
         pager = PagerSnapHelper()
         pager.attachToRecyclerView(calendarViewContent)
         calendarViewContent.scrollToPosition(currentDateIndex)
+    }
+
+    /**
+     * 初始化布局
+     */
+    private fun initView() {
+        currentPagerMonth = cal!!.get(Calendar.MONTH)+1
+        currentPagerYear = cal!!.get(Calendar.YEAR)
+        LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
+        initAdapter()
 
         //设置周一至周日的字体颜色及大小
         for (index in 0..calendarWeekBar.childCount) {
@@ -446,6 +467,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             if (dateInfo?.lunar == null){
                 calendarLunar.visibility = View.GONE
             }else{
+                calendarLunar.visibility = View.VISIBLE
                 calendarFootDate?.setText(dateInfo?.lunar.toString())
             }
             festivalList?.let {
@@ -844,12 +866,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
         return dateList
     }
 
-    /**
-     * 获取42宫格的view
-     */
-    fun getDateViewList(): MutableList<View>? {
-        return dateViewItem
-    }
 
     /**
      * 获取头部信息
@@ -923,6 +939,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     public fun backToToday(){
         jumpToDate(cal!!.get(Calendar.YEAR),cal!!.get(Calendar.MONTH)+1)
+        pagerChangeListener?.let {
+            pagerChangeListener!!.onDatePagerChange(cal!!.get(Calendar.YEAR),cal!!.get(Calendar.MONTH),CalendarUtils.getDayOfMonthList(cal!!.get(Calendar.YEAR), cal!!.get(Calendar.MONTH)),adapter.title.indexOf("${cal!!.get(Calendar.YEAR)}-${cal!!.get(Calendar.MONTH)}"))
+        }
     }
 
     /**
@@ -939,6 +958,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
         }
+        pagerChangeListener?.let {
+            pagerChangeListener!!.onDatePagerChange(currentPagerYear,currentPagerMonth,CalendarUtils.getDayOfMonthList(currentPagerYear, currentPagerMonth),adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}"))
+        }
     }
 
     /**
@@ -954,7 +976,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
         }
-
+        pagerChangeListener?.let {
+            pagerChangeListener!!.onDatePagerChange(currentPagerYear,currentPagerMonth,CalendarUtils.getDayOfMonthList(currentPagerYear, currentPagerMonth),adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}"))
+        }
     }
 
     /**
@@ -975,6 +999,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
         }
+        pagerChangeListener?.let {
+            pagerChangeListener!!.onDatePagerChange(currentPagerYear,currentPagerMonth,CalendarUtils.getDayOfMonthList(currentPagerYear, currentPagerMonth),adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}"))
+        }
+
     }
 
     /**
@@ -994,6 +1022,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
             jumpToDate(currentPagerYear,currentPagerMonth)
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
+        }
+        pagerChangeListener?.let {
+            pagerChangeListener!!.onDatePagerChange(currentPagerYear,currentPagerMonth,CalendarUtils.getDayOfMonthList(currentPagerYear, currentPagerMonth),adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}"))
         }
     }
 

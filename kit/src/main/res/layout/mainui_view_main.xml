@@ -33,6 +33,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:id="@+id/mainUiMenuBox"
+        android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical">
 
         <android.support.design.widget.NavigationView

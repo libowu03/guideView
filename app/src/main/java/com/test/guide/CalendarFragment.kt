@@ -33,6 +33,11 @@ class CalendarFragment : Fragment(){
        /* calendar.getHeadView().findViewById<Button>(R.id.jump).setOnClickListener {
             calendar.jumpToDate(2150,2)
         }*/
+        calendar.setDatePagerChangeListener(object : DatePagerChangeListener{
+            override fun onDatePagerChange(year: Int, month: Int, dateList: MutableList<DateInfo>, pagerIndex: Int) {
+                Log.e("日志","滑动-year:"+year+",month-:"+month)
+            }
+        })
      /*   calendar.setDateSetListener(object : DateSetListener{
             override fun onDateSetListener(view: View, dateItem:DateInfo ,dateList: MutableList<DateInfo>, index: Int) {
                 var day = view.findViewById<TextView>(R.id.day)

@@ -190,6 +190,8 @@
         <attr name="workDayTipTextColor" format="color"/>
         <!--是否允许点击-->
         <attr name="enableItemClick" format="boolean"/>
+        <!--是否支持左右滑动-->
+        <attr name="enableCalendarScroll" format="boolean"/>
 <!--        <attr name="clickItemDayTextColor" format="color"/>
         <attr name="clickItemFestivalTextColor" format="color"/>-->
     </declare-styleable>
