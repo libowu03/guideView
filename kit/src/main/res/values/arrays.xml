@@ -192,7 +192,7 @@
         <attr name="enableItemClick" format="boolean"/>
         <!--是否支持左右滑动-->
         <attr name="enableCalendarScroll" format="boolean"/>
-<!--        <attr name="clickItemDayTextColor" format="color"/>
-        <attr name="clickItemFestivalTextColor" format="color"/>-->
+        <!--点击日期时的背景-->
+        <attr name="itemClickBackground" format="reference|color"/>
     </declare-styleable>
 </resources>

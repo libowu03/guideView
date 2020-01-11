@@ -31,6 +31,7 @@ class CalendarContentView : LinearLayout {
     var clickListener: DateItemClickListener? = null
     var attribute: CalendarAttribute? = null
     var dateSetListener:DateSetListener ?= null
+    var oldView: View? = null
 
     constructor(context: Context) : this(context, null)
 
@@ -80,7 +81,8 @@ class CalendarContentView : LinearLayout {
                     try{
                         dateSetListener?.onDateSetListener(dateViewItem!!.get(item.index),dateList!!.get(item.index),dateList!!,item.index)
                         dateViewItem!!.get(item.index).setOnClickListener {
-                            clickListener?.onDateItemClickListener(dateViewItem!!.get(item.index),dateList!!.get(item.index),dateList!!,item.index)
+                            clickListener?.onDateItemClickListener(it,dateList!!.get(item.index),dateList!!,item.index,oldView)
+                            oldView = it
                         }
                     }catch (e:Exception){
                         Log.e("kitError","reason============>${e.message}")
@@ -154,7 +156,8 @@ class CalendarContentView : LinearLayout {
                 })
 
                 item.value.setOnClickListener {
-                    clickListener?.onDateItemClickListener(item.value, dateList!!.get(item.index), dateList!!, item.index)
+                    clickListener?.onDateItemClickListener(it, dateList!!.get(item.index), dateList!!, item.index,oldView)
+                    oldView = item.value
                 }
 
                 setFestival(item.index, dateList, festival)

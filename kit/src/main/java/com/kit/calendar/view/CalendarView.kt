@@ -3,6 +3,7 @@ package com.kit.calendar.view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
@@ -107,6 +108,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var selectTodayFestivalTextColor : Int = Color.WHITE
     //是否允许日期点击
     private var enableItemClick : Boolean = true
+    //点击日期时的背景
+    private var itemClickBackgroundColor:Int = 0
+    private var itemClickBackground:Drawable ?= null
+
     //点击监听器
     var clickListener:DateItemClickListener ?= null
     //滑动监听器
@@ -117,6 +122,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
     var attrubute:CalendarAttribute ?= null
     //每项日期设置完后的监听器
     var dateItemSetListener:DateSetListener ?= null
+    //上一次的点击view
+    var oldClickView:View ?= null
+    //普通dateitem的background
+    var itemBackground:Drawable ?= null
 
     //当前页面的月份
     var currentPagerMonth = 0
@@ -175,6 +184,11 @@ class CalendarView : LinearLayout, View.OnClickListener {
         enableItemClick = typedArray.getBoolean(R.styleable.CalendarView_enableItemClick, true)
         var workDayTipTextColor = typedArray.getColor(R.styleable.CalendarView_workDayTipTextColor, Color.GREEN)
         enableCalendarScroll = typedArray.getBoolean(R.styleable.CalendarView_enableCalendarScroll, true)
+        itemClickBackground = typedArray.getDrawable(R.styleable.CalendarView_enableCalendarScroll)
+        if (itemBackground == null){
+            itemClickBackgroundColor = typedArray.getColor(R.styleable.CalendarView_enableCalendarScroll,resources.getColor(R.color.colorAccent))
+        }
+
         typedArray.recycle()
         attrubute = CalendarAttribute(dateDayTextSize,
                 dateFestivalTextSize,
@@ -228,6 +242,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 pagerChangeListener?.let {
                     pagerChangeListener!!.onDatePagerChange(date[0].toInt(),date[1].toInt(),CalendarUtils.getDayOfMonthList(date[0].toInt(), date[1].toInt()),position)
                 }
+
+                oldClickView?.background = itemBackground
             }
 
         }))
@@ -239,9 +255,24 @@ class CalendarView : LinearLayout, View.OnClickListener {
     fun initAdapter(){
         adapter = CalendarRecAdapter(attrubute)
         adapter.setClickListener(object : DateItemClickListener{
-            override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
+            override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int,oldView: View?) {
                 setDefaultCalendarFootInfo(dateItem)
-                clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index)
+                if (oldClickView != currentView){
+                    oldClickView?.background = currentView.background
+                    itemBackground = currentView.background
+                    if (itemClickBackground != null){
+                        currentView.background = itemBackground
+                    }else{
+                        //如果itemClickBackground为空，默认使用drawable为背景而不是纯色作为背景，如果在itemClickBackgroundColor不等于默认颜色时，说明调用者已经设置过颜色，则使用纯色作为背景
+                        if (itemClickBackgroundColor == resources.getColor(R.color.colorAccent)){
+                            currentView.setBackgroundResource(R.drawable.calendar_select_bg)
+                        }else{
+                            currentView.setBackgroundColor(itemClickBackgroundColor)
+                        }
+                    }
+                }
+                clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index,oldClickView)
+                oldClickView = currentView
             }
         })
         adapter.setDateSetListener(object : DateSetListener{
@@ -577,137 +608,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
     }
 
-    /**
-     * 初始化时设置默认数据
-     */
-    private fun setDateData(parentView: LinearLayout, view: View, startIndex: Int, dateList: MutableList<DateInfo>?, index: Int) {
-        dateViewItem?.add(view)
-        //Log.e("日志","获取的农历为："+ dateList?.get(index)?.lunar!![2])
-        var day = view.findViewById<TextView>(R.id.calendarDay)
-        var festival = view.findViewById<TextView>(R.id.calendarFestivalOrLunar)
-        day.setText("${dateList?.get(startIndex + index)?.day}")
-        festival.setText("${dateList?.get(startIndex+index)?.lunar?._date}")
 
-        if (dateDayTextSize != 16) {
-            day.setTextSize(GuideViewUtils.px2dip(context, dateDayTextSize.toFloat()).toFloat())
-        }else{
-            day.setTextSize(dateDayTextSize.toFloat())
-        }
-        if (dateFestivalTextSize != 10) {
-            festival.setTextSize(GuideViewUtils.px2dip(context, dateFestivalTextSize.toFloat()).toFloat())
-        }else{
-            festival.setTextSize(dateFestivalTextSize.toFloat())
-        }
-
-        //设置字体颜色
-        if (!dateList?.get(startIndex + index)?.isCurrentMonth!!) {
-            day.setTextColor(notCurrentMonthDayTextColor!!)
-            festival.setTextColor(notCurrentMonthFestivalTextColor!!)
-        } else {
-            day.setTextColor(currentMonthDayTextColor!!)
-            festival.setTextColor(currentMonthFestivalTextColor!!)
-            //是今天，则设置选中状态
-//            Log.e("日志","状态："+(dateList?.get(startIndex+index).year == cal?.get(Calendar.YEAR))+","+(dateList?.get(startIndex+index).month == (cal?.get(Calendar.MONTH)!!))+","+(dateList?.get(startIndex+index).day == cal?.get(Calendar.DAY_OF_MONTH)))
-            if (dateList?.get(startIndex+index).year == cal?.get(Calendar.YEAR) && dateList?.get(startIndex+index).month == (cal?.get(Calendar.MONTH)!! +1) && dateList?.get(startIndex+index).day == cal?.get(Calendar.DAY_OF_MONTH)){
-                day.setTextColor(selectTodayDayTextColor!!)
-                festival.setTextColor(selectTodayFestivalTextColor!!)
-            }
-        }
-
-        if (dateList.get(startIndex+index).isHoliday == Holiday.HOLIDAY){
-            var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
-            holiday.setText("休")
-            holiday.setTextColor(holidayTipTextColor)
-            holiday.setTextSize(holidayTipTextSize.toFloat())
-            holiday.visibility = View.VISIBLE
-        }else if (dateList.get(startIndex+index).isHoliday == Holiday.WORK){
-            var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
-            holiday.setText("班")
-            holiday.setTextColor(holidayTipTextColor)
-            holiday.setTextSize(holidayTipTextSize.toFloat())
-            holiday.visibility = View.VISIBLE
-
-        }else{
-            var holiday = view.findViewById<TextView>(R.id.calendarHolidayStatus)
-            holiday.setText("班")
-            holiday.visibility = View.GONE
-        }
-        view.setOnClickListener(OnClickListener {
-            if (!enableItemClick){
-                return@OnClickListener
-            }
-            if (oldDateItem == view){
-                return@OnClickListener
-            }
-            festival.setTextColor(Color.WHITE)
-            day.setTextColor(Color.WHITE)
-            if (oldDateItem != null && getTodayDateView() != oldDateItem){
-                if (dateList.get(dateViewItem!!.indexOf(oldDateItem!!)).isCurrentMonth){
-                    oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(currentMonthFestivalTextColor)
-                    oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(currentMonthDayTextColor)
-                }else{
-                    oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(notCurrentMonthFestivalTextColor)
-                    oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(notCurrentMonthDayTextColor)
-                }
-            }
-            dateItemClickListener?.dateItemClickListener(startIndex + index, view, dateList?.get(startIndex + index))
-            oldDateItem = view
-            setDefaultCalendarFootInfo(dateList.get(startIndex+index))
-        })
-
-        setFestival(startIndex+index,dateList,festival)
-        parentView.addView(view)
-    }
-
-    /**
-     * 设置节日或节气
-     */
-    fun setFestival(index:Int,dateList:MutableList<DateInfo>?,festival:TextView){
-        var item = dateList?.get(index)
-        festival.setText(dateList?.get(index)?.lunar?._date)
-        var festivalResult = item?.getFesitval()
-        if (festivalResult != null){
-            var g = Gson()
-            if (festivalResult.getImportantFestival() != null){
-                //是否存在简称，有则优先显示简称
-                if (festivalResult.getImportantFestival()[0].contains("-")){
-                    festival.setText(festivalResult.getImportantFestival()[0].split("-")[0])
-                }else{
-                    festival.setText(festivalResult.getImportantFestival()[0])
-                }
-            }
-            if (festivalResult.getLunarFestival() != null){
-                //是否存在简称，有则优先显示简称
-                if (festivalResult.getLunarFestival()[0].contains("-")){
-                    festival.setText(festivalResult.getLunarFestival()[0].split("-")[0])
-                }else{
-                    festival.setText(festivalResult.getLunarFestival()[0])
-                }
-            }
-            if (festivalResult.getSolaTerms() != null){
-                festival.setText(festivalResult.solaTerms.name)
-            }
-
-        }
-    }
-
-    /**
-     * 获取当前时间的view
-     * @day 日期
-     */
-    fun getDayViewByDate(day: Int): View? {
-        if (day > 32 || day <= 0) {
-            return null
-        }
-        if (dateList != null) {
-            for (item in dateList!!.withIndex()) {
-                if (item.value.day == day && item.value.isCurrentMonth) {
-                    return dateViewItem!!.get(item.index)
-                }
-            }
-        }
-        return null
-    }
 
     /**
      * 获取当前时间的dateInfo
@@ -770,101 +671,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         return null
     }
 
-    /**
-     * 通过按钮触发改变日历界面数据
-     */
-    private fun setNewData(year: Int, month: Int) {
-        oldDateItem = null
-        dateList = CalendarUtils.getDayOfMonthList(year, month)
-        for (index in 0..41) {
-            //Log.e("日志","农历情况为："+Gson().toJson(dateList?.get(index)))
 
-            var view = dateViewItem?.get(index)
-            var day = view?.findViewById<TextView>(R.id.calendarDay)
-            var festival = view?.findViewById<TextView>(R.id.calendarFestivalOrLunar)
-            day?.setText("${dateList?.get(index)?.day}")
-            setFestival(index,dateList,festival!!)
-
-            //设置字体颜色
-            if (!dateList?.get(index)?.isCurrentMonth!!) {
-                day?.setTextColor(notCurrentMonthDayTextColor!!)
-                festival.setTextColor(notCurrentMonthFestivalTextColor!!)
-            } else {
-                day?.setTextColor(currentMonthDayTextColor!!)
-                festival.setTextColor(currentMonthFestivalTextColor!!)
-                if (dateList?.get(index)!!.year == cal?.get(Calendar.YEAR) && dateList?.get(index)!!.month == (cal?.get(Calendar.MONTH)!! +1) && dateList?.get(index)!!.day == cal?.get(Calendar.DAY_OF_MONTH)){
-                    day?.setTextColor(selectTodayDayTextColor!!)
-                    festival.setTextColor(selectTodayFestivalTextColor!!)
-                }
-            }
-
-            if (dateList!!.get(index).isHoliday == Holiday.HOLIDAY){
-                var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
-                holiday?.setText("休")
-                holiday?.setTextColor(holidayTipTextColor)
-                holiday?.visibility = View.VISIBLE
-            }else if (dateList!!.get(index).isHoliday == Holiday.WORK){
-                var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
-                holiday?.setText("班")
-                holiday?.setTextColor(holidayTipTextColor)
-                holiday?.visibility = View.VISIBLE
-
-            }else{
-                var holiday = view?.findViewById<TextView>(R.id.calendarHolidayStatus)
-                holiday?.visibility = View.GONE
-            }
-
-            view?.setOnClickListener(OnClickListener {
-                Log.e("日志","农历情况为："+Gson().toJson(dateList?.get(index)))
-
-                if (!enableItemClick){
-                    return@OnClickListener
-                }
-                if (oldDateItem == view){
-                    return@OnClickListener
-                }
-                festival!!.setTextColor(Color.WHITE)
-                day!!.setTextColor(Color.WHITE)
-                if (oldDateItem != null && getTodayDateView() != oldDateItem){
-                    if (dateList!!.get(dateViewItem!!.indexOf(oldDateItem!!)).isCurrentMonth){
-                        oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(currentMonthFestivalTextColor)
-                        oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(currentMonthDayTextColor)
-                    }else{
-                        oldDateItem!!.findViewById<TextView>(R.id.calendarFestivalOrLunar).setTextColor(notCurrentMonthFestivalTextColor)
-                        oldDateItem!!.findViewById<TextView>(R.id.calendarDay).setTextColor(notCurrentMonthDayTextColor)
-                    }
-                }
-                dateItemClickListener?.dateItemClickListener(index, view, dateList?.get(index)!!)
-                oldDateItem = view
-                setDefaultCalendarFootInfo(dateList!!.get(index))
-            })
-
-
-        }
-
-        //设置日期和时间
-        calendarMonthTextTv.setText("${currentMonth}")
-        calendarYearTextTv.setText("${currentYear}")
-    }
-
-
-    /**
-     * 更新到当前时间
-     */
-    fun updateDate() {
-        var cal = Calendar.getInstance()
-        currentMonth = cal.get(Calendar.MONTH) + 1
-        currentYear = cal.get(Calendar.YEAR)
-        dateList = CalendarUtils.getDayOfMonthList(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1)
-        setNewData(currentYear, currentMonth)
-    }
-
-    /**
-     * 获取当前日期的42宫格内容
-     */
-    fun getDateInfoList(): MutableList<DateInfo>? {
-        return dateList
-    }
 
 
     /**
@@ -1056,6 +863,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
     }
 
     interface OnDateItemClickListener {
-        fun dateItemClickListener(index: Int, currentView: View, dateInfo: DateInfo)
+        fun dateItemClickListener(index: Int, currentView: View, dateInfo: DateInfo,oldView:View)
     }
 }

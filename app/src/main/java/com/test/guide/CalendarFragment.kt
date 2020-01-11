@@ -1,5 +1,6 @@
 package com.test.guide
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -26,7 +27,7 @@ class CalendarFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
 
         calendar.setItemClickListener(object : DateItemClickListener{
-            override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
+            override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int,oldView: View?) {
                 Log.e("日志","时间戳为："+dateItem.year)
             }
         })
