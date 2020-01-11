@@ -63,6 +63,10 @@ public class CalendarAttribute {
      * 上班文字提示颜色
      */
     private int workDayTipTextColor;
+    /**
+     * 周栏布局
+     */
+    private int weekBarLayout;
 
     public CalendarAttribute(int dateDayTextSize,
                              int dateFestivalTextSize,
@@ -78,7 +82,8 @@ public class CalendarAttribute {
                              int selectTodayDayTextColor,
                              int selectTodayFestivalTextColor,
                              boolean enableItemClick,
-                             int wrokDayTipTextColor) {
+                             int wrokDayTipTextColor,
+                             int weekBarLayout) {
         this.dateDayTextSize = dateDayTextSize;
         this.dateFestivalTextSize = dateFestivalTextSize;
         this.notCurrentMonthDayTextColor = notCurrentMonthDayTextColor;
@@ -94,6 +99,15 @@ public class CalendarAttribute {
         this.selectTodayFestivalTextColor = selectTodayFestivalTextColor;
         this.enableItemClick = enableItemClick;
         this.workDayTipTextColor = wrokDayTipTextColor;
+        this.weekBarLayout = weekBarLayout;
+    }
+
+    public int getWeekBarLayout() {
+        return weekBarLayout;
+    }
+
+    public void setWeekBarLayout(int weekBarLayout) {
+        this.weekBarLayout = weekBarLayout;
     }
 
     public int getWorkDayTipTextColor() {

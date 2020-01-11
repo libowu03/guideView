@@ -10,12 +10,12 @@
 
     <com.kit.calendar.view.CalendarView
         android:id="@+id/calendar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="10dp"
         app:enableItemClick="true"
-        app:enableFootLayout="true"
+        app:enableFootLayout="false"
         app:selectTodayDayTextColor="@color/colorPrimary"
         app:selectTodayFestivalTextColor="@color/colorPrimary"
         app:holidayTipTextColor="@color/colorRed"

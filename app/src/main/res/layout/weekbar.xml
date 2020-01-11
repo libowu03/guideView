@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:text="周一"
+        android:textColor="@color/weekBarTextColor"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:text="周二"
+        android:textColor="@color/weekBarTextColor"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:text="周三"
+        android:textColor="@color/weekBarTextColor"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:text="周四"
+        android:textColor="@color/weekBarTextColor"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:text="周五"
+        android:textColor="@color/weekBarTextColor"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:text="周六"
+        android:textColor="@color/weekBarTextColor"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:text="周日"
+        android:textColor="@color/weekBarTextColor"
+        android:gravity="center"/>
+
+</LinearLayout>

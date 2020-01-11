@@ -188,6 +188,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         if (itemBackground == null){
             itemClickBackgroundColor = typedArray.getColor(R.styleable.CalendarView_enableCalendarScroll,resources.getColor(R.color.colorAccent))
         }
+        var weekBarLayout = typedArray.getResourceId(R.styleable.CalendarView_weekBarLayout,R.layout.calendar_week)
 
         typedArray.recycle()
         attrubute = CalendarAttribute(dateDayTextSize,
@@ -202,7 +203,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 holidayTipTextSize,
                 holidayTipTextColor,
                 selectTodayDayTextColor,
-                selectTodayFestivalTextColor,enableItemClick,workDayTipTextColor)
+                selectTodayFestivalTextColor,enableItemClick,workDayTipTextColor,weekBarLayout)
         Holiday.ATTRIBUTE = attrubute
     }
 
@@ -324,16 +325,19 @@ class CalendarView : LinearLayout, View.OnClickListener {
         initAdapter()
 
         //设置周一至周日的字体颜色及大小
-        for (index in 0..calendarWeekBar.childCount) {
-            if (calendarWeekBar.getChildAt(index) is TextView) {
-                (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
-                if (headWeekTextSize != 16) {
-                    (calendarWeekBar.getChildAt(index) as TextView).setTextSize(GuideViewUtils.px2dip(context, headWeekTextSize!!.toFloat()).toFloat())
-                }else{
-                    (calendarWeekBar.getChildAt(index) as TextView).setTextSize(headWeekTextSize.toFloat())
+        calendarWeekBar?.let{
+            for (index in 0..calendarWeekBar.childCount) {
+                if (calendarWeekBar.getChildAt(index) is TextView) {
+                    (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
+                    if (headWeekTextSize != 16) {
+                        (calendarWeekBar.getChildAt(index) as TextView).setTextSize(GuideViewUtils.px2dip(context, headWeekTextSize!!.toFloat()).toFloat())
+                    }else{
+                        (calendarWeekBar.getChildAt(index) as TextView).setTextSize(headWeekTextSize.toFloat())
+                    }
                 }
             }
         }
+
 
         //日历默认值(当前时间)
         var cal = Calendar.getInstance()

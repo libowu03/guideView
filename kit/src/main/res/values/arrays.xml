@@ -194,5 +194,7 @@
         <attr name="enableCalendarScroll" format="boolean"/>
         <!--点击日期时的背景-->
         <attr name="itemClickBackground" format="reference|color"/>
+        <!--自定义顶部星期栏-->
+        <attr name="weekBarLayout" format="reference"/>
     </declare-styleable>
 </resources>

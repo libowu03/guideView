@@ -18,6 +18,13 @@ import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils.px2dip
 import kotlinx.android.synthetic.main.calendar_view.view.*
+import kotlinx.android.synthetic.main.calendar_view.view.calendarLineFive
+import kotlinx.android.synthetic.main.calendar_view.view.calendarLineFour
+import kotlinx.android.synthetic.main.calendar_view.view.calendarLineOne
+import kotlinx.android.synthetic.main.calendar_view.view.calendarLineSix
+import kotlinx.android.synthetic.main.calendar_view.view.calendarLineThree
+import kotlinx.android.synthetic.main.calendar_view.view.calendarLineTwo
+import kotlinx.android.synthetic.main.calendar_view_content.view.*
 import kotlinx.android.synthetic.main.calendar_week.view.*
 import java.lang.Exception
 import java.util.*
@@ -64,13 +71,16 @@ class CalendarContentView : LinearLayout {
      */
     fun setDate(date: String,dateSetListener: DateSetListener?) {
         this.dateSetListener = dateSetListener
-        for (i in 0..(calendarWeekBar.childCount - 1)) {
-            if (attribute?.headWeekTextSize != 16) {
-                (calendarWeekBar.getChildAt(i) as TextView).setTextSize(px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
-            } else {
-                (calendarWeekBar.getChildAt(i) as TextView).setTextSize((attribute?.headWeekTextSize)!!.toFloat())
+        if (attribute!!.weekBarLayout == R.layout.calendar_week){
+            for (i in 0..(calendarWeekBar.childCount - 1)) {
+                if (attribute?.headWeekTextSize != 16) {
+                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize(px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
+                } else {
+                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize((attribute?.headWeekTextSize)!!.toFloat())
+                }
             }
         }
+
         dateViewItem?.let {
             this.date = date
             var dateResult = date.split("-")
@@ -175,16 +185,24 @@ class CalendarContentView : LinearLayout {
      * 添加日期item到view中，添加允许添加自定义的view
      */
     private fun addItemView() {
+        //添加周栏
+        if (CalendarView.Holiday.ATTRIBUTE?.weekBarLayout == R.layout.calendar_week){
+            var weekBar = LayoutInflater.from(context).inflate(R.layout.calendar_week,this,false)
+            calendarWeekBarBox.addView(weekBar)
+        }else{
+            var weekBar = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.weekBarLayout,this,false)
+            calendarWeekBarBox.addView(weekBar)
+        }
         for (index in 0..6) {
             if (CalendarView.Holiday.ATTRIBUTE?.dateItemLayout == R.layout.calendar_view_item_date) {
                 var view = LayoutInflater.from(context).inflate(R.layout.calendar_view_item_date, this, false)
                 setDateData(calendarLineOne, view, index)
             } else {
                 var view = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
+               /* var llp = view.layoutParams as LinearLayout.LayoutParams
                 llp.weight = 1f
                 llp.width = 0
-                view.layoutParams = llp
+                view.layoutParams = llp*/
                 calendarLineOne.addView(view)
                 dateViewItem?.add(view)
             }
@@ -195,10 +213,10 @@ class CalendarContentView : LinearLayout {
                 setDateData(calendarLineTwo, view, 6 + index)
             } else {
                  var view = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.dateItemLayout, this, false)
-                 var llp = view.layoutParams as LinearLayout.LayoutParams
+             /*    var llp = view.layoutParams as LinearLayout.LayoutParams
                  llp.weight = 1f
                  llp.width = 0
-                 view.layoutParams = llp
+                 view.layoutParams = llp*/
                  calendarLineTwo.addView(view)
                  dateViewItem?.add(view)
             }
@@ -209,10 +227,10 @@ class CalendarContentView : LinearLayout {
                 setDateData(calendarLineThree, view, 12 + index)
             } else {
                 var view = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.dateItemLayout, this, false)
-                var llp = view.layoutParams as LinearLayout.LayoutParams
+             /*   var llp = view.layoutParams as LinearLayout.LayoutParams
                 llp.weight = 1f
                 llp.width = 0
-                view.layoutParams = llp
+                view.layoutParams = llp*/
                 calendarLineThree.addView(view)
                 dateViewItem?.add(view)
             }
@@ -223,10 +241,10 @@ class CalendarContentView : LinearLayout {
                 setDateData(calendarLineFour, view, 18 + index)
             } else {
                  var view = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.dateItemLayout, this, false)
-                 var llp = view.layoutParams as LinearLayout.LayoutParams
+               /*  var llp = view.layoutParams as LinearLayout.LayoutParams
                  llp.weight = 1f
                  llp.width = 0
-                 view.layoutParams = llp
+                 view.layoutParams = llp*/
                  calendarLineFour.addView(view)
                  dateViewItem?.add(view)
             }
@@ -237,10 +255,10 @@ class CalendarContentView : LinearLayout {
                 setDateData(calendarLineFive, view, 24 + index)
             } else {
                  var view = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.dateItemLayout, this, false)
-                 var llp = view.layoutParams as LinearLayout.LayoutParams
+               /*  var llp = view.layoutParams as LinearLayout.LayoutParams
                  llp.weight = 1f
                  llp.width = 0
-                 view.layoutParams = llp
+                 view.layoutParams = llp*/
                  calendarLineFive.addView(view)
                  dateViewItem?.add(view)
             }
@@ -252,10 +270,10 @@ class CalendarContentView : LinearLayout {
                 setDateData(calendarLineSix, view, 30 + index)
             } else {
                  var view = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.dateItemLayout, this, false)
-                 var llp = view.layoutParams as LinearLayout.LayoutParams
+                /* var llp = view.layoutParams as LinearLayout.LayoutParams
                  llp.weight = 1f
                  llp.width = 0
-                 view.layoutParams = llp
+                 view.layoutParams = llp*/
                  calendarLineSix.addView(view)
                  dateViewItem?.add(view)
             }
