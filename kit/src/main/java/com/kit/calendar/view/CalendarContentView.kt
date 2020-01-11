@@ -191,6 +191,9 @@ class CalendarContentView : LinearLayout {
             calendarWeekBarBox.addView(weekBar)
         }else{
             var weekBar = LayoutInflater.from(context).inflate(CalendarView.Holiday.ATTRIBUTE!!.weekBarLayout,this,false)
+            if (weekBar == null){
+                weekBar = LayoutInflater.from(context).inflate(R.layout.calendar_week,this,false)
+            }
             calendarWeekBarBox.addView(weekBar)
         }
         for (index in 0..6) {

@@ -39,6 +39,7 @@ class CalendarFragment : Fragment(){
                 Log.e("日志","滑动-year:"+year+",month-:"+month)
             }
         })
+        calendar.jumpToDate(2080,3)
      /*   calendar.setDateSetListener(object : DateSetListener{
             override fun onDateSetListener(view: View, dateItem:DateInfo ,dateList: MutableList<DateInfo>, index: Int) {
                 var day = view.findViewById<TextView>(R.id.day)

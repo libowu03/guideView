@@ -350,7 +350,14 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
         //设置头部
         if (headLayout != 0) {
-            calendarHead.addView(LayoutInflater.from(context).inflate(headLayout, this, false))
+            var headView = LayoutInflater.from(context).inflate(headLayout, this, false);
+            if (headView == null){
+                calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head, this, false))
+                headLayout = R.layout.calendar_head
+            }else{
+                calendarHead.addView(headView)
+            }
+
         } else {
             calendarHead.addView(LayoutInflater.from(context).inflate(R.layout.calendar_head, this, false))
             //设置当前头部的日期
@@ -375,8 +382,15 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
         //设置尾部
         if (footLayout == 0) {
-            calendarFoot.addView(LayoutInflater.from(context).inflate(R.layout.calendar_foot, this, false))
-            setDefaultCalendarFootInfo(getTodayDateInfo()!!)
+            var footView = LayoutInflater.from(context).inflate(R.layout.calendar_foot, this, false)
+            if (footView == null){
+                calendarFoot.addView(LayoutInflater.from(context).inflate(footLayout, this, false))
+                footLayout = R.layout.calendar_foot
+            }else{
+                calendarFoot.addView(LayoutInflater.from(context).inflate(R.layout.calendar_foot, this, false))
+                setDefaultCalendarFootInfo(getTodayDateInfo()!!)
+            }
+
         } else {
             calendarFoot.addView(LayoutInflater.from(context).inflate(footLayout, this, false))
         }
