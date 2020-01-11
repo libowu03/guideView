@@ -7,6 +7,7 @@ import com.kit.calendar.view.CalendarView;
 import com.kit.calendar.bean.DateInfo;
 import com.kit.utils.Applications;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,7 +22,6 @@ import java.util.List;
 public class CalendarUtils {
     public static final int[] commonYearMonthDayNum = new int[]{31,28,31,30,31,30,31,31,30,31,30,31};
     public static final int[] leapYearMonthDayNum = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
-    public static final HashMap<Integer,String> lunarCn = new HashMap<>();
     public static final HashMap<Integer,String> weekCn = new HashMap<>();
     public static HashMap<String,String>  holidayMap;
     private static HashMap<String,String> festival;
@@ -32,36 +32,6 @@ public class CalendarUtils {
 
 
     static {
-        lunarCn.put(1,"初一");
-        lunarCn.put(2,"初二");
-        lunarCn.put(3,"初三");
-        lunarCn.put(4,"初四");
-        lunarCn.put(5,"初五");
-        lunarCn.put(6,"初六");
-        lunarCn.put(7,"初七");
-        lunarCn.put(8,"初八");
-        lunarCn.put(9,"初九");
-        lunarCn.put(10,"初十");
-        lunarCn.put(11,"十一");
-        lunarCn.put(12,"十二");
-        lunarCn.put(13,"十三");
-        lunarCn.put(14,"十四");
-        lunarCn.put(15,"十五");
-        lunarCn.put(16,"十六");
-        lunarCn.put(17,"十七");
-        lunarCn.put(18,"十八");
-        lunarCn.put(19,"十九");
-        lunarCn.put(20,"二十");
-        lunarCn.put(21,"廿一");
-        lunarCn.put(22,"廿二");
-        lunarCn.put(23,"廿三");
-        lunarCn.put(24,"廿四");
-        lunarCn.put(25,"廿五");
-        lunarCn.put(26,"廿六");
-        lunarCn.put(27,"廿七");
-        lunarCn.put(28,"廿八");
-        lunarCn.put(29,"廿九");
-        lunarCn.put(30,"三十");
         weekCn.put(0,"星期日,周日,日");
         weekCn.put(1,"星期一,周一,一");
         weekCn.put(2,"星期二,周二,二");
@@ -98,8 +68,10 @@ public class CalendarUtils {
         try{
             if (festival == null){
                 Gson gson = new Gson();
-                InputStream festivalSteam = Applications.context().getResources().getAssets().open("calendar/festival.json");
-                festival = gson.fromJson(new InputStreamReader(festivalSteam),HashMap.class);
+                //InputStream festivalSteam = Applications.context().getResources().getAssets().open("calendar/festival.json");
+                FileInputStream fileInputStream = Applications.context().openFileInput("festival.json");
+                festival = gson.fromJson(new InputStreamReader(fileInputStream),HashMap.class);
+                fileInputStream.close();
                 return festival;
             }
             return festival;
@@ -133,8 +105,9 @@ public class CalendarUtils {
 
             if (holidayMap == null || year != preYear){
                 Gson gson = new Gson();
-                InputStream festivalSteam = Applications.context().getResources().getAssets().open("calendar/"+year+"_holiday.json");
-                holidayMap = gson.fromJson(new InputStreamReader(festivalSteam),HashMap.class);
+                FileInputStream fileInputStream = Applications.context().openFileInput(year+"_holiday.json");
+                holidayMap = gson.fromJson(new InputStreamReader(fileInputStream),HashMap.class);
+                fileInputStream.close();
                 preYear = year;
             }
             String name = holidayMap.get(monthStr+dayStr);

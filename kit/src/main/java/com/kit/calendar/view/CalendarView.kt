@@ -154,117 +154,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         initArr(context, nothing, def)
         initView()
         initListener()
-        downloadNetData()
     }
 
 
-    /**
-     * 下载网络数据到本地，下载的内容主要是节日表格，放假信息这些内容
-     */
-    private fun downloadNetData() {
-        var fileName = "hello.txt"
-        var content = "[\n" +
-                "    {\n" +
-                "        \"fileName\":\"2018_holiday.json\",\n" +
-                "        \"data\":{\n" +
-                "            \"1001\":\"国庆节\",\n" +
-                "            \"1002\":\"国庆节\",\n" +
-                "            \"1003\":\"国庆节\",\n" +
-                "            \"1004\":\"国庆节\",\n" +
-                "            \"1005\":\"国庆节\",\n" +
-                "            \"1006\":\"国庆节\",\n" +
-                "            \"1007\":\"国庆节\",\n" +
-                "            \"0101\":\"元旦\",\n" +
-                "            \"0211\":\"w春节\",\n" +
-                "            \"0215\":\"春节\",\n" +
-                "            \"0216\":\"春节\",\n" +
-                "            \"0217\":\"春节\",\n" +
-                "            \"0218\":\"春节\",\n" +
-                "            \"0219\":\"春节\",\n" +
-                "            \"0220\":\"春节\",\n" +
-                "            \"0221\":\"春节\",\n" +
-                "            \"0224\":\"w春节\",\n" +
-                "            \"0405\":\"清明节\",\n" +
-                "            \"0406\":\"清明节\",\n" +
-                "            \"0407\":\"清明节\",\n" +
-                "            \"0408\":\"w清明节\",\n" +
-                "            \"0428\":\"w劳动节\",\n" +
-                "            \"0429\":\"劳动节\",\n" +
-                "            \"0430\":\"劳动节\",\n" +
-                "            \"0501\":\"劳动节\",\n" +
-                "            \"0616\":\"端午节\",\n" +
-                "            \"0617\":\"端午节\",\n" +
-                "            \"0618\":\"端午节\",\n" +
-                "            \"0922\":\"中秋节\",\n" +
-                "            \"0923\":\"中秋节\",\n" +
-                "            \"0924\":\"中秋节\",\n" +
-                "            \"0929\":\"w国庆节\",\n" +
-                "            \"0930\":\"w国庆节\"\n" +
-                "        }\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"fileName\":\"2019_holiday.json\",\n" +
-                "        \"data\":{\n" +
-                "            \"1001\":\"国庆节\",\n" +
-                "            \"1002\":\"国庆节\",\n" +
-                "            \"1003\":\"国庆节\",\n" +
-                "            \"1004\":\"国庆节\",\n" +
-                "            \"1005\":\"国庆节\",\n" +
-                "            \"1006\":\"国庆节\",\n" +
-                "            \"1007\":\"国庆节\",\n" +
-                "            \"0101\":\"元旦\",\n" +
-                "            \"0211\":\"w春节\",\n" +
-                "            \"0215\":\"春节\",\n" +
-                "            \"0216\":\"春节\",\n" +
-                "            \"0217\":\"春节\",\n" +
-                "            \"0218\":\"春节\",\n" +
-                "            \"0219\":\"春节\",\n" +
-                "            \"0220\":\"春节\",\n" +
-                "            \"0221\":\"春节\",\n" +
-                "            \"0224\":\"w春节\",\n" +
-                "            \"0405\":\"清明节\",\n" +
-                "            \"0406\":\"清明节\",\n" +
-                "            \"0407\":\"清明节\",\n" +
-                "            \"0408\":\"w清明节\",\n" +
-                "            \"0428\":\"w劳动节\",\n" +
-                "            \"0429\":\"劳动节\",\n" +
-                "            \"0430\":\"劳动节\",\n" +
-                "            \"0501\":\"劳动节\",\n" +
-                "            \"0616\":\"端午节\",\n" +
-                "            \"0617\":\"端午节\",\n" +
-                "            \"0618\":\"端午节\",\n" +
-                "            \"0922\":\"中秋节\",\n" +
-                "            \"0923\":\"中秋节\",\n" +
-                "            \"0924\":\"中秋节\",\n" +
-                "            \"0929\":\"w国庆节\",\n" +
-                "            \"0930\":\"w国庆节\"\n" +
-                "        }\n" +
-                "    }\n" +
-                "]"
-
-        var json = JSONArray(content)
-        for (i in 0..json.length()-1){
-            var name = json.getJSONObject(i).getString("fileName")
-            Log.e("日志","输出的内容为："+name)
-            var fos:FileOutputStream
-            try{
-                fos = context.openFileOutput(name,Context.MODE_PRIVATE)
-                fos.write(json.getJSONObject(i).getJSONObject("data").toString().toByteArray())
-                fos.close()
-            }catch (e:Exception){
-                Log.e("kitError","reason==============>"+e.localizedMessage)
-            }
-        }
-
-      /*  var fos:FileOutputStream
-        try{
-            fos = context.openFileOutput(fileName,Context.MODE_PRIVATE)
-            fos.write(content.toByteArray())
-            fos.close()
-        }catch (e:Exception){
-            Log.e("kitError","reason==============>"+e.localizedMessage)
-        }*/
-    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -877,9 +769,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     public fun backToToday(){
         jumpToDate(cal!!.get(Calendar.YEAR),cal!!.get(Calendar.MONTH)+1)
-        pagerChangeListener?.let {
-            pagerChangeListener!!.onDatePagerChange(cal!!.get(Calendar.YEAR),cal!!.get(Calendar.MONTH),CalendarUtils.getDayOfMonthList(cal!!.get(Calendar.YEAR), cal!!.get(Calendar.MONTH)),adapter.title.indexOf("${cal!!.get(Calendar.YEAR)}-${cal!!.get(Calendar.MONTH)}"))
-        }
+        pagerChangeListener?.onDatePagerChange(cal!!.get(Calendar.YEAR),cal!!.get(Calendar.MONTH)+1,CalendarUtils.getDayOfMonthList(cal!!.get(Calendar.YEAR), cal!!.get(Calendar.MONTH)+1),adapter.title.indexOf("${cal!!.get(Calendar.YEAR)}-${cal!!.get(Calendar.MONTH)+1}"))
     }
 
     /**
