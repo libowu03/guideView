@@ -35,13 +35,14 @@ class CalendarFragment : Fragment() {
             }
         })
 
-        //42宫格设置数据时的监听，每个宫格设置完数据后会调用回调此监听器，可在这个方法中进行一些自定义样式设置。如果已经设置了42宫格自定义样式，这个方法一定要调用，调用此监听器填充数据给自定义布局
+        //42宫格设置数据时的监听，每个宫格设置完数据后会调用回调此监听器，可在这个方法中进行一些自定义样式设置。
+        // 如果已经设置了42宫格自定义样式，这个方法一定要调用，调用此监听器填充数据给自定义布局
         calendar.setDateSetListener(object : DateSetListener {
             override fun onDateSetListener(view: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
 
             }
         })
-        /*  //跳转到某一个日期
+       /*   //跳转到某一个日期，这里是跳转到2150年的6月份
           calendar.jumpToDate(2150,6)
           //跳转到下一个月
           calendar.nextMonth()
