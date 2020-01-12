@@ -1,6 +1,7 @@
 package com.kit.calendar.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kit.calendar.bean.CalendarConstants;
@@ -84,6 +85,7 @@ public class CalendarUtils {
                 FileInputStream fileInputStream = application.openFileInput("festival.json");
                 festival = gson.fromJson(new InputStreamReader(fileInputStream),HashMap.class);
                 fileInputStream.close();
+                //Log.e("日志","内容输出："+gson.toJson(festival));
                 return festival;
             }
             return festival;

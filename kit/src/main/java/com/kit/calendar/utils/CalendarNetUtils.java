@@ -25,8 +25,8 @@ import static com.kit.calendar.bean.CalendarConstants.CALENDAR_L_TITLE;
 public class CalendarNetUtils {
     //这两个地址是直接使用ip访问的，域名备案比较麻烦，没有备案，希望下载的此项目的小伙伴不要拿这个ip干什么。
     // 如果学生需要拿服务器测试某些内容，可以直接联系我，我可以开一个权限访问服务器，如果有ip滥用的情况，我会直接关掉此台服务器，希望大家可以相互信任。
-    public final static String URL_FESTIVAL = "http://114.116.149.238:8080/getHoliday";
-    public final static String URL_HOLIDAY = "http://114.116.149.238:8080/getFestival";
+    public final static String URL_FESTIVAL = "http://114.116.149.238:8080/getFestival";
+    public final static String URL_HOLIDAY = "http://114.116.149.238:8080/getHoliday";
     private static ThreadPoolExecutor threadPoolExecutor;
 
 
@@ -38,6 +38,12 @@ public class CalendarNetUtils {
     public static void getHolidayAndFestival(String customFestivalUrl, String customHoliday, final Application application, boolean isSkipIfHaveCache){
         if (application == null){
             return;
+        }
+        if (customFestivalUrl == null){
+            customFestivalUrl = URL_FESTIVAL;
+        }
+        if (customHoliday == null){
+            customHoliday = URL_HOLIDAY;
         }
 
         if (threadPoolExecutor == null){
@@ -135,5 +141,13 @@ public class CalendarNetUtils {
      */
     public static void getHolidayAndFestival(Application application){
         getHolidayAndFestival(null,null,application,true);
+    }
+
+    /**
+     * 使用默认连接配置
+     * @param application
+     */
+    public static void getHolidayAndFestival(Application application,boolean isSkipIfHaveCache){
+        getHolidayAndFestival(null,null,application,isSkipIfHaveCache);
     }
 }

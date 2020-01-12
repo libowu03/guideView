@@ -9,6 +9,7 @@ import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.listener.DatePagerChangeListener
 import com.kit.calendar.listener.DateSetListener
+import com.kit.calendar.utils.CalendarNetUtils
 import kotlinx.android.synthetic.main.calendar_fragment.*
 
 class CalendarFragment : Fragment() {
@@ -19,7 +20,7 @@ class CalendarFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        // CalendarNetUtils.getHolidayAndFestival(activity?.application)
+         CalendarNetUtils.getHolidayAndFestival(activity?.application,false)
 
         //42宫格点击事件监听
         calendar.setItemClickListener(object : DateItemClickListener {

@@ -21,7 +21,6 @@ public class DateInfo {
     private int month;
     private int year;
     private boolean isCurrentMonth;
-    private int holidayStatus;
     private int week;
     private Festival festivalInfo;
     private Lunar lunar;
@@ -182,6 +181,7 @@ public class DateInfo {
                 festival.setSolaTerms(solaTerms);
                 festivalInfo = festival;
             }
+
             return festival;
         }
     }
