@@ -35,11 +35,8 @@ public class CalendarNetUtils {
      * @param customFestivalUrl 获取节日信息的网络地址
      * @param customHoliday 获取放假信息的网络地址
      */
-    public static void getHolidayAndFestival(String customFestivalUrl, String customHoliday, final Context application, boolean isSkipIfHaveCache,View view){
+    public static void getHolidayAndFestival(String customFestivalUrl, String customHoliday, final Application application, boolean isSkipIfHaveCache){
         if (application == null){
-            return;
-        }
-        if (view != null && view.isInEditMode()){
             return;
         }
 
@@ -136,15 +133,7 @@ public class CalendarNetUtils {
      * 使用默认连接配置
      * @param application
      */
-    public static void getHolidayAndFestival(Context application){
-        getHolidayAndFestival(null,null,application,true,null);
-    }
-
-    /**
-     * 使用默认连接配置
-     * @param application
-     */
-    public static void getHolidayAndFestival(Context application, View view){
-        getHolidayAndFestival(null,null,application,true,view);
+    public static void getHolidayAndFestival(Application application){
+        getHolidayAndFestival(null,null,application,true);
     }
 }

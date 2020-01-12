@@ -26,6 +26,8 @@
         app:notCurrentMonthFestivalTextColor="@color/lineColor"
         app:headWeekTextColor="@color/colorTitle"
         app:headWeekTextSize="@dimen/titleTwo_12"
+        app:weekBarLayout="@layout/weekbar"
+        app:dateItemLayout="@layout/text"
         app:selectTodayDayTextColor="@color/colorPrimary"
         app:selectTodayFestivalTextColor="@color/colorPrimary"
         tools:layout_editor_absoluteX="0dp" />
