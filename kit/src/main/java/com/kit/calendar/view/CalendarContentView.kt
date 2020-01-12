@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.kit.calendar.bean.CalendarAttribute
 import com.kit.calendar.bean.CalendarConstants
 import com.kit.calendar.bean.DateInfo
+import com.kit.calendar.bean.Festival
 import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.listener.DateSetListener
 import com.kit.calendar.utils.CalendarUtils
@@ -76,9 +77,11 @@ class CalendarContentView : LinearLayout {
         if (attribute!!.weekBarLayout == R.layout.calendar_week){
             for (i in 0..(calendarWeekBar.childCount - 1)) {
                 if (attribute?.headWeekTextSize != 16) {
-                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize(px2dip(context, attribute?.dateDayTextSize!!.toFloat()).toFloat())
+                    (calendarWeekBar.getChildAt(i) as TextView).setTextSize(COMPLEX_UNIT_PX, attribute?.headWeekTextSize!!.toFloat())
+                    (calendarWeekBar.getChildAt(i) as TextView).setTextColor(attribute!!.headWeekTextColor)
                 } else {
                     (calendarWeekBar.getChildAt(i) as TextView).setTextSize((attribute?.headWeekTextSize)!!.toFloat())
+                    (calendarWeekBar.getChildAt(i) as TextView).setTextColor(attribute!!.headWeekTextColor)
                 }
             }
         }
@@ -125,13 +128,13 @@ class CalendarContentView : LinearLayout {
                     day.setTextColor(attribute!!.currentMonthDayTextColor!!)
                     festival.setTextColor(attribute!!.currentMonthFestivalTextColor!!)
                     //是今天，则设置选中状态
-                    if (dateList?.get(item.index)!!.year == cal?.get(Calendar.YEAR) && dateList?.get(item.index)!!.month == (cal?.get(Calendar.MONTH)!! + 1) && dateList!!.get(item.index).day == cal?.get(Calendar.DAY_OF_MONTH)) {
+                    if (dateList?.get(item.index)!!.year == cal?.get(Calendar.YEAR) && dateList?.get(item.index)!!.month == (cal?.get(Calendar.MONTH)!! + 1) && dateList!!.get(item.index).day == cal?.get(Calendar.DAY_OF_MONTH) && attribute!!.isSelectToday) {
                         day.setTextColor(attribute!!.selectTodayDayTextColor)
                         festival.setTextColor(attribute!!.selectTodayFestivalTextColor!!)
                     }
                 }
 
-                if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.HOLIDAY) {
+                if (dateList!!.get(item.index).isHoliday(context) == CalendarView.Holiday.HOLIDAY) {
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("休")
                     holiday.setTextColor(attribute!!.holidayTipTextColor)
@@ -141,7 +144,7 @@ class CalendarContentView : LinearLayout {
                         holiday.setTextSize(COMPLEX_UNIT_PX, attribute!!.holidayTipTextSize.toFloat())
                     }
                     holiday.visibility = View.VISIBLE
-                } else if (dateList!!.get(item.index).isHoliday == CalendarView.Holiday.WORK) {
+                } else if (dateList!!.get(item.index).isHoliday(context) == CalendarView.Holiday.WORK) {
                     var holiday = item.value.findViewById<TextView>(R.id.calendarHolidayStatus)
                     holiday.setText("班")
                     holiday.setTextColor(attribute!!.workDayTipTextColor)
@@ -291,7 +294,7 @@ class CalendarContentView : LinearLayout {
     fun setFestival(index: Int, dateList: MutableList<DateInfo>?, festival: TextView) {
         var item = dateList?.get(index)
         festival.setText(dateList?.get(index)?.lunar?._date)
-        var festivalResult = item?.getFesitval()
+        var  festivalResult = item?.getFesitval(context)
         //同一日期可能存在多个节日，优先获取数组的第一个节日
         if (festivalResult != null) {
             if (festivalResult.getImportantFestival() != null) {

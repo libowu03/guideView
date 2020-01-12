@@ -67,6 +67,7 @@ public class CalendarAttribute {
      * 周栏布局
      */
     private int weekBarLayout;
+    private boolean isSelectToday;
 
     public CalendarAttribute(int dateDayTextSize,
                              int dateFestivalTextSize,
@@ -83,7 +84,8 @@ public class CalendarAttribute {
                              int selectTodayFestivalTextColor,
                              boolean enableItemClick,
                              int wrokDayTipTextColor,
-                             int weekBarLayout) {
+                             int weekBarLayout,
+                             boolean isSelectToday) {
         this.dateDayTextSize = dateDayTextSize;
         this.dateFestivalTextSize = dateFestivalTextSize;
         this.notCurrentMonthDayTextColor = notCurrentMonthDayTextColor;
@@ -100,6 +102,15 @@ public class CalendarAttribute {
         this.enableItemClick = enableItemClick;
         this.workDayTipTextColor = wrokDayTipTextColor;
         this.weekBarLayout = weekBarLayout;
+        this.isSelectToday = isSelectToday;
+    }
+
+    public boolean isSelectToday() {
+        return isSelectToday;
+    }
+
+    public void setSelectToday(boolean selectToday) {
+        isSelectToday = selectToday;
     }
 
     public int getWeekBarLayout() {

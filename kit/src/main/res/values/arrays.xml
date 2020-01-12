@@ -160,7 +160,7 @@
         <attr name="notCurrentMonthFestivalTextColor" format="color"/>
         <!--当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期-->
         <attr name="currentMonthDayTextColor" format="color"/>
-        <!--非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期-->
+        <!--当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期-->
         <attr name="currentMonthFestivalTextColor" format="color"/>
         <!--日历的顶部周一至周日的字体颜色-->
         <attr name="headWeekTextColor" format="color"/>

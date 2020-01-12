@@ -4,14 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-
-import com.kit.calendar.bean.CalendarConstants;
-import com.kit.utils.Applications;
+import android.view.View;
 import com.kit.utils.L;
 
 import org.json.JSONArray;
-
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,13 +22,12 @@ import okhttp3.Response;
 
 import static com.kit.calendar.bean.CalendarConstants.CALENDAR_L_TITLE;
 
-public class CalendarConfig {
+public class CalendarNetUtils {
     //这两个地址是直接使用ip访问的，域名备案比较麻烦，没有备案，希望下载的此项目的小伙伴不要拿这个ip干什么。
     // 如果学生需要拿服务器测试某些内容，可以直接联系我，我可以开一个权限访问服务器，如果有ip滥用的情况，我会直接关掉此台服务器，希望大家可以相互信任。
     public final static String URL_FESTIVAL = "http://114.116.149.238:8080/getHoliday";
     public final static String URL_HOLIDAY = "http://114.116.149.238:8080/getFestival";
     private static ThreadPoolExecutor threadPoolExecutor;
-    public static boolean OPEN_DEBUG = false;
 
 
     /**
@@ -40,15 +35,19 @@ public class CalendarConfig {
      * @param customFestivalUrl 获取节日信息的网络地址
      * @param customHoliday 获取放假信息的网络地址
      */
-    public static void getHolidayAndFestival(String customFestivalUrl, String customHoliday, final Application application,boolean isSkipIfHaveCache){
+    public static void getHolidayAndFestival(String customFestivalUrl, String customHoliday, final Context application, boolean isSkipIfHaveCache,View view){
         if (application == null){
             return;
         }
+        if (view != null && view.isInEditMode()){
+            return;
+        }
+
         if (threadPoolExecutor == null){
             threadPoolExecutor = new ThreadPoolExecutor(3,5,1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(100));
         }
 
-        final SharedPreferences sp = application.getSharedPreferences("CalendarConfig",Application.MODE_PRIVATE);
+        final SharedPreferences sp = application.getSharedPreferences("CalendarNetUtils",Application.MODE_PRIVATE);
 
         if (!sp.getBoolean("hadInitFestival",false) || !isSkipIfHaveCache){
             //获取节日信息
@@ -137,7 +136,15 @@ public class CalendarConfig {
      * 使用默认连接配置
      * @param application
      */
-    public static void getHolidayAndFestival(Application application){
-        getHolidayAndFestival(null,null,application,true);
+    public static void getHolidayAndFestival(Context application){
+        getHolidayAndFestival(null,null,application,true,null);
+    }
+
+    /**
+     * 使用默认连接配置
+     * @param application
+     */
+    public static void getHolidayAndFestival(Context application, View view){
+        getHolidayAndFestival(null,null,application,true,view);
     }
 }

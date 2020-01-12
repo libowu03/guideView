@@ -1,6 +1,6 @@
 package com.kit.calendar.utils;
 
-import android.util.Log;
+import android.content.Context;
 
 import com.google.gson.Gson;
 import com.kit.calendar.bean.CalendarConstants;
@@ -11,7 +11,6 @@ import com.kit.utils.L;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,11 +70,18 @@ public class CalendarUtils {
      * @return
      */
     public static HashMap<String,String> getFestivalMap(){
+       return getFestivalMap(null);
+    }
+
+    public static HashMap<String,String> getFestivalMap(Context application){
+        if (application == null){
+            application = Applications.context();
+        }
         try{
             if (festival == null){
                 Gson gson = new Gson();
                 //InputStream festivalSteam = Applications.context().getResources().getAssets().open("calendar/festival.json");
-                FileInputStream fileInputStream = Applications.context().openFileInput("festival.json");
+                FileInputStream fileInputStream = application.openFileInput("festival.json");
                 festival = gson.fromJson(new InputStreamReader(fileInputStream),HashMap.class);
                 fileInputStream.close();
                 return festival;
@@ -95,6 +101,13 @@ public class CalendarUtils {
      * @return
      */
     public static int isHoliday(int year,int month,int day){
+       return isHoliday(year,month,day,null);
+    }
+
+    public static int isHoliday(int year, int month, int day, Context application){
+        if (application == null){
+            application = Applications.context();
+        }
         try{
             String monthStr;
             String dayStr;
@@ -111,7 +124,7 @@ public class CalendarUtils {
 
             if (holidayMap == null || year != preYear){
                 Gson gson = new Gson();
-                FileInputStream fileInputStream = Applications.context().openFileInput(year+"_holiday.json");
+                FileInputStream fileInputStream = application.openFileInput(year+"_holiday.json");
                 holidayMap = gson.fromJson(new InputStreamReader(fileInputStream),HashMap.class);
                 fileInputStream.close();
                 preYear = year;

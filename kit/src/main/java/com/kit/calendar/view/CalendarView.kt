@@ -4,19 +4,15 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.google.gson.Gson
 import com.kit.calendar.adapter.CalendarRecAdapter
 import com.kit.calendar.bean.CalendarAttribute
 import com.kit.calendar.bean.DateInfo
@@ -31,9 +27,6 @@ import kotlinx.android.synthetic.main.calendar_foot.view.*
 import kotlinx.android.synthetic.main.calendar_head.view.*
 import kotlinx.android.synthetic.main.calendar_view.view.*
 import kotlinx.android.synthetic.main.calendar_week.view.*
-import org.json.JSONArray
-import java.io.FileOutputStream
-import java.lang.Exception
 import java.util.*
 
 /**
@@ -173,7 +166,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         notCurrentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthDayTextColor, context.resources.getColor(R.color.notCurrentMonthColor))
         notCurrentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_notCurrentMonthFestivalTextColor, context.resources.getColor(R.color.notCurrentMonthColor))
         currentMonthDayTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthDayTextColor, context.resources.getColor(R.color.currentMonthColor))
-        currentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthDayTextColor, context.resources.getColor(R.color.currentMonthColor))
+        currentMonthFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_currentMonthFestivalTextColor, context.resources.getColor(R.color.currentMonthColor))
         headWeekTextColor = typedArray.getColor(R.styleable.CalendarView_headWeekTextColor, context.resources.getColor(R.color.weekBarTextColor))
         headWeekTextSize = typedArray.getDimensionPixelSize(R.styleable.CalendarView_headWeekTextSize, 16)
         selectToday = typedArray.getBoolean(R.styleable.CalendarView_selectToday, true)
@@ -208,7 +201,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 holidayTipTextSize,
                 holidayTipTextColor,
                 selectTodayDayTextColor,
-                selectTodayFestivalTextColor,enableItemClick,workDayTipTextColor,weekBarLayout)
+                selectTodayFestivalTextColor,enableItemClick,workDayTipTextColor,weekBarLayout,selectToday)
         Holiday.ATTRIBUTE = attrubute
     }
 
@@ -329,21 +322,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
         LayoutInflater.from(context).inflate(R.layout.calendar_view, this, true)
         initAdapter()
 
-        //设置周一至周日的字体颜色及大小
-        calendarWeekBar?.let{
-            for (index in 0..calendarWeekBar.childCount) {
-                if (calendarWeekBar.getChildAt(index) is TextView) {
-                    (calendarWeekBar.getChildAt(index) as TextView).setTextColor(headWeekTextColor!!)
-                    if (headWeekTextSize != 16) {
-                        (calendarWeekBar.getChildAt(index) as TextView).setTextSize(GuideViewUtils.px2dip(context, headWeekTextSize!!.toFloat()).toFloat())
-                    }else{
-                        (calendarWeekBar.getChildAt(index) as TextView).setTextSize(headWeekTextSize.toFloat())
-                    }
-                }
-            }
-        }
-
-
         //日历默认值(当前时间)
         var cal = Calendar.getInstance()
         currentMonth = cal.get(Calendar.MONTH) + 1
@@ -371,7 +349,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             calendarHeadTime.setText("${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-${cal.get(Calendar.DAY_OF_MONTH)}")
             //设置日期下面的农历或节日
             calendarHeadFestival.setText("农历："+getTodayDateInfo()?.lunar.toString())
-            var festivalInfo = getTodayDateInfo()?.getFesitval()
+            var  festivalInfo = getTodayDateInfo()?.getFesitval(context)
             if (festivalInfo != null){
                 if (festivalInfo.getImportantFestival() != null){
                     calendarHeadFestival.setText(festivalInfo.getImportantFestival()[0])
@@ -516,7 +494,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * @param dateInfo 日期详情
      */
     private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
-        var festivalList = dateInfo?.getFesitval()
+        var festivalList = dateInfo?.getFesitval(context)
         if (footLayout == 0){
             if (dateInfo?.lunar == null){
                 calendarLunar.visibility = View.GONE
@@ -633,23 +611,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
 
 
-    /**
-     * 获取当前时间的dateInfo
-     * @day 日期
-     */
-    fun getDateInfoByDate(day: Int): DateInfo? {
-        if (day > 32 || day <= 0) {
-            return null
-        }
-        if (dateList != null) {
-            for (item in dateList!!.withIndex()) {
-                if (item.value.day == day && item.value.isCurrentMonth) {
-                    return item.value!!
-                }
-            }
-        }
-        return null
-    }
 
     /**
      * 获取当前时间的dateInfo
@@ -674,26 +635,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
         return null
     }
-
-    /**
-     * 获取当前时间的dateInfo
-     * @day 日期
-     */
-    fun getTodayDateView(): View? {
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        if (day > 32 || day <= 0) {
-            return null
-        }
-        if (dateList != null) {
-            for (item in dateList!!.withIndex()) {
-                if (item.value.day == day && item.value.isCurrentMonth) {
-                    return dateViewItem!!.get(item.index)
-                }
-            }
-        }
-        return null
-    }
-
 
 
 

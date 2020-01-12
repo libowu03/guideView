@@ -14,12 +14,20 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="10dp"
-        app:enableItemClick="false"
         app:enableCalendarScroll="false"
-        app:enableFootLayout="true"
+        app:enableFootLayout="false"
+        app:enableItemClick="false"
+        app:holidayTipTextColor="#FF69B4"
+        app:selectToday="true"
+        app:enableHeadLayout="false"
+        app:currentMonthDayTextColor="@color/colorAccent"
+        app:currentMonthFestivalTextColor="@color/colorAccent"
+        app:notCurrentMonthDayTextColor="@color/lineColor"
+        app:notCurrentMonthFestivalTextColor="@color/lineColor"
+        app:headWeekTextColor="@color/colorTitle"
+        app:headWeekTextSize="@dimen/titleTwo_12"
         app:selectTodayDayTextColor="@color/colorPrimary"
         app:selectTodayFestivalTextColor="@color/colorPrimary"
-        app:holidayTipTextColor="@color/colorRed"
         tools:layout_editor_absoluteX="0dp" />
 
 </LinearLayout>

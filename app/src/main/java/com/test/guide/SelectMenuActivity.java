@@ -22,7 +22,6 @@ public class SelectMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_menu);
-        L.isDebug = true;
         sendToGuide = findViewById(R.id.sendToGuide);
         sendToPagerCard = findViewById(R.id.sendToPagerCard);
         sendToSuperTab = findViewById(R.id.sendToSuperTab);

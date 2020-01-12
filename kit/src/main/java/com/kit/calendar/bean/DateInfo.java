@@ -87,12 +87,16 @@ public class DateInfo {
         return lunar;
     }
 
+    public int isHoliday() {
+        return CalendarUtils.isHoliday(year,month,day);
+    }
+
     /**
      * 获取日期是不是节假日
      * @return
      */
-    public int isHoliday() {
-        return CalendarUtils.isHoliday(year,month,day);
+    public int isHoliday(Context application) {
+        return CalendarUtils.isHoliday(year,month,day,application);
     }
 
     /**
@@ -111,6 +115,10 @@ public class DateInfo {
      * @return 节日的对象
      */
     public Festival getFesitval(){
+       return getFesitval(null);
+    }
+
+    public Festival getFesitval(Context application){
         if (festivalInfo != null){
             return festivalInfo;
         }
@@ -142,7 +150,7 @@ public class DateInfo {
             }
         }
 
-        HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap();
+        HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap(application);
         if (festivalMap == null){
             return null;
         }else {
