@@ -26,7 +26,7 @@ class CalendarFragment : Fragment(){
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        CalendarConfig.getHolidayAndFestival(CalendarConfig.URL_HOLIDAY,CalendarConfig.URL_FESTIVAL,activity?.application,true)
+        CalendarConfig.getHolidayAndFestival(activity?.application)
 
         calendar.setItemClickListener(object : DateItemClickListener{
             override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int,oldView: View?) {

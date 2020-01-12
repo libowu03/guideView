@@ -290,6 +290,7 @@ class CalendarContentView : LinearLayout {
         var item = dateList?.get(index)
         festival.setText(dateList?.get(index)?.lunar?._date)
         var festivalResult = item?.getFesitval()
+        //同一日期可能存在多个节日，优先获取数组的第一个节日
         if (festivalResult != null) {
             if (festivalResult.getImportantFestival() != null) {
                 //是否存在简称，有则优先显示简称

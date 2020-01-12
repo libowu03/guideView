@@ -12,6 +12,9 @@ import org.json.JSONArray;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,6 +27,7 @@ public class CalendarConfig {
     // 如果学生需要拿服务器测试某些内容，可以直接联系我，我可以开一个权限访问服务器，如果有ip滥用的情况，我会直接关掉此台服务器，希望大家可以相互信任。
     public final static String URL_FESTIVAL = "http://114.116.149.238:8080/getHoliday";
     public final static String URL_HOLIDAY = "http://114.116.149.238:8080/getFestival";
+    private static ThreadPoolExecutor threadPoolExecutor;
 
 
     /**
@@ -34,6 +38,9 @@ public class CalendarConfig {
     public static void getHolidayAndFestival(String customFestivalUrl, String customHoliday, final Application application,boolean isSkipIfHaveCache){
         if (application == null){
             return;
+        }
+        if (threadPoolExecutor == null){
+            threadPoolExecutor = new ThreadPoolExecutor(3,5,1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(100));
         }
 
         final SharedPreferences sp = application.getSharedPreferences("CalendarConfig",Application.MODE_PRIVATE);
@@ -56,19 +63,15 @@ public class CalendarConfig {
                     String result = response.body().string();
                     //将数据写入本地
                     try{
-                        JSONArray jsonArray = new JSONArray(result);
-                        for (int i=0;i<jsonArray.length()-1;i++){
-                            FileOutputStream fileInputStream = application.openFileOutput("festival.json", Context.MODE_PRIVATE);
-                            fileInputStream.write(jsonArray.getJSONObject(i).getJSONObject("data").toString().getBytes());
-                            fileInputStream.close();
-                        }
+                        FileOutputStream fileInputStream = application.openFileOutput("festival.json", Context.MODE_PRIVATE);
+                        fileInputStream.write(result.getBytes());
+                        fileInputStream.close();
 
                         SharedPreferences.Editor editor = sp.edit();
                         editor.putBoolean("hadInitFestival",true);
                         editor.apply();
-
                     }catch (Exception e){
-                        Log.e("日志","写入数据失败："+e.getLocalizedMessage());
+                        Log.e("日志","写入节日失败："+e.getLocalizedMessage());
                     }
                 }
             });
@@ -92,12 +95,24 @@ public class CalendarConfig {
                     String result = response.body().string();
                     //将数据写入本地
                     try{
-                        JSONArray jsonArray = new JSONArray(result);
-                        for (int i=0;i<jsonArray.length()-1;i++){
-                            String name = jsonArray.getJSONObject(i).getString("fileName");
-                            FileOutputStream fileInputStream = application.openFileOutput(name, Context.MODE_PRIVATE);
-                            fileInputStream.write(jsonArray.getJSONObject(i).getJSONObject("data").toString().getBytes());
-                            fileInputStream.close();
+                        final JSONArray jsonArray = new JSONArray(result);
+                        for (int i=0;i<jsonArray.length();i++){
+                            final String name = jsonArray.getJSONObject(i).getString("fileName");
+                            Log.e("日志","名字为："+name);
+                            final byte[] data = jsonArray.getJSONObject(i).getJSONObject("data").toString().getBytes();
+                            Runnable runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    try{
+                                        FileOutputStream fileInputStream = application.openFileOutput(name, Context.MODE_PRIVATE);
+                                        fileInputStream.write(data);
+                                        fileInputStream.close();
+                                    }catch (Exception e){
+                                        Log.e("日志","写入假期失败："+e.getLocalizedMessage());
+                                    }
+                                }
+                            };
+                            threadPoolExecutor.execute(runnable);
                         }
 
                         SharedPreferences.Editor editor = sp.edit();
@@ -105,7 +120,7 @@ public class CalendarConfig {
                         editor.apply();
 
                     }catch (Exception e){
-                        Log.e("日志","写入数据失败："+e.getLocalizedMessage());
+                        Log.e("日志","写入假期失败："+e.getLocalizedMessage());
                     }
                 }
             });

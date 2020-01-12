@@ -15,7 +15,7 @@
         android:background="@color/white"
         android:padding="10dp"
         app:enableItemClick="true"
-        app:enableFootLayout="false"
+        app:enableFootLayout="true"
         app:selectTodayDayTextColor="@color/colorPrimary"
         app:selectTodayFestivalTextColor="@color/colorPrimary"
         app:holidayTipTextColor="@color/colorRed"

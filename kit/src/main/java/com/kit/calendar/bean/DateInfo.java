@@ -152,7 +152,7 @@ public class DateInfo {
                 String lunarFestival = festivalMap.get("N"+lunarMonthStr+lunarStr);
                 if (lunarFestival != null){
                     String[] lunarFestivalResult = lunarFestival.split(",");
-                    festival.setLunarFestival(null);
+                    festival.setLunarFestival(lunarFestivalResult);
                 }
             }
             //获取要显示的节日

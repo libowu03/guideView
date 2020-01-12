@@ -601,8 +601,8 @@ public class SolaTermsUtils {
                 return new SolaTerms("大暑","N"+getDaShu(year));
             }
         }else if (lunarMonth == 8){
-            if (dateStr.equals(getLiChun(year))){
-                return new SolaTerms("立春","N"+getLiChun(year));
+            if (dateStr.equals(getLiQiu(year))){
+                return new SolaTerms("立秋","N"+getLiQiu(year));
             }
             if (dateStr.equals(getChuShu(year))){
                 return new SolaTerms("处暑","N"+getChuShu(year));
@@ -615,8 +615,8 @@ public class SolaTermsUtils {
                 return new SolaTerms("秋分","N"+getQiuFen(year));
             }
         }else if (lunarMonth == 10){
-            if (dateStr.equals(getBaiLu(year))){
-                return new SolaTerms("白露","N"+getBaiLu(year));
+            if (dateStr.equals(getHanLu(year))){
+                return new SolaTerms("寒露","N"+getHanLu(year));
             }
             if (dateStr.equals(getShuangJiang(year))){
                 return new SolaTerms("霜降","N"+getShuangJiang(year));
