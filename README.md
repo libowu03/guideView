@@ -2,6 +2,7 @@
 原本此项目为新手引导的高亮区控件，后面有加入了一个宫格控件，用于方便的进行分页宫格显示。一下为此项目的模块说明：
 1. 新手引导的高亮控件
 2. pagerCard控件，一个简单好用的宫格控件
+3.calendarView,一款允许高度自定义的日历控件。允许定义样式，允许获取公历、农历信息，允许获取节假日信息。节假日信息默认使用默认接口获取，也可以传入自己的编写的接口地址获取节假日信息，不过格式要符合该控件的样式。
 
 
 #### 安装教程
@@ -139,6 +140,76 @@ paerCard控件的目的是方便的编写一个可以分页的宫格控件（也
  bean.add(new PagerCardBean("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569647607838&di=daadb04b3c41ab14c6a4eb5ebdb4f5ce&imgtype=0&src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D432aef2ac35c1038247ecec28211931c%2Fd4628535e5dde7113a95acc6a2efce1b9d1661bf.jpg").setName("dqq"));
  //this为监听器，2,3分别代表宫格的行数和列数，行数设置为-1时表示不进行分页显示，即有多少内容就显示多少。
  pagerCardView.setCardContent(bean,getSupportFragmentManager(),2,3,this);
+```
+
+#### calendarView使用说明
+* xml属性介绍
+|属性名称|属性作用|
+|-------|:--------:|
+|dateDayTextSize|日期的文字大小|
+|dateFestivalTextSize|日期下面的节日或农历文字大小|
+|notCurrentMonthDayTextColor|非当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期|
+|notCurrentMonthFestivalTextColor|非当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期|
+|currentMonthDayTextColor|当前月份日期的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期|
+|currentMonthFestivalTextColor|当前月份农历或节日的文字颜色，此日历插件分为三个部分，前面部分为上个月日期，当前日期和下一个月的日期|
+|headWeekTextColor|日历的顶部周一至周日的字体颜色|
+|headWeekTextSize|日历顶部周一至周六的字体大小|
+|selectToday|是否默认选中当前时间，默认值为true|
+|selectTodayDayTextColor|默认选中的字体颜色|
+|selectTodayFestivalTextColor|默认选中状态的节日字体颜色|
+|calendarHeadLayout|头部布局|
+|calendarFootLayout|底部布局|
+|enableHeadLayout|是否打开头部支持|
+|enableFootLayout|是否打开尾部支持|
+|dateItemLayout|42宫格的样式|
+|holidayTipTextSize|节假日字体大小设置|
+|holidayTipTextColor|节假日字体颜色|
+|workDayTipTextColor|上班提示颜色|
+|enableItemClick|是否允许42宫格点击|
+|enableCalendarScroll|是否允许滑动切换日期|
+|itemClickBackground|点击42宫格时的背景|
+|weekBarLayout|自定义周栏布局|
+
+* 示例代码如下：
+```
+ CalendarConfig.getHolidayAndFestival(activity?.application)
+
+        //42宫格点击事件监听
+        calendar.setItemClickListener(object : DateItemClickListener{
+            override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int,oldView: View?) {
+               
+            }
+        })
+        
+        //日期切换时的监听器
+        calendar.setDatePagerChangeListener(object : DatePagerChangeListener{
+            override fun onDatePagerChange(year: Int, month: Int, dateList: MutableList<DateInfo>, pagerIndex: Int) {
+                
+            }
+        })
+        
+        //42宫格设置数据时的监听，每个宫格设置完数据后会调用回调此监听器，可在这个方法中进行一些自定义样式设置。如果已经设置了42宫格自定义样式，这个方法一定要调用，调用此监听器填充数据给自定义布局
+        calendar.setDateSetListener(object : DateSetListener{
+            override fun onDateSetListener(view: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int) {
+                
+            }
+        })
+        //跳转到某一个日期
+        calendar.jumpToDate(2150,6)
+        //跳转到下一个月
+        calendar.nextMonth()
+        //跳转到上一个月
+        calendar.preMonth()
+        //跳转到下一年
+        calendar.nextYear()
+        //跳转到上一年
+        calendar.preYear()
+        //获取头部布局
+        calendar.getHeadView()
+        //获取尾部布局
+        calendar.getFootView()
+        //获取今日的日期信息
+        calendar.getTodayDateInfo()
 ```
 
 #### 更新历史说明
