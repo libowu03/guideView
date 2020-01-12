@@ -189,9 +189,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         enableItemClick = typedArray.getBoolean(R.styleable.CalendarView_enableItemClick, true)
         var workDayTipTextColor = typedArray.getColor(R.styleable.CalendarView_workDayTipTextColor, Color.GREEN)
         enableCalendarScroll = typedArray.getBoolean(R.styleable.CalendarView_enableCalendarScroll, true)
-        itemClickBackground = typedArray.getDrawable(R.styleable.CalendarView_enableCalendarScroll)
+        itemClickBackground = typedArray.getDrawable(R.styleable.CalendarView_itemClickBackground)
         if (itemBackground == null){
-            itemClickBackgroundColor = typedArray.getColor(R.styleable.CalendarView_enableCalendarScroll,resources.getColor(R.color.colorAccent))
+            itemClickBackgroundColor = typedArray.getColor(R.styleable.CalendarView_itemClickBackground,resources.getColor(R.color.colorAccent))
         }
         var weekBarLayout = typedArray.getResourceId(R.styleable.CalendarView_weekBarLayout,R.layout.calendar_week)
 
@@ -499,7 +499,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 attrubute?.dateFestivalTextSize = dateFestivalTextSize
                 attrubute?.holidayTipTextSize = holidayTipTextSize
                 attrubute?.headWeekTextSize = headWeekTextSize
-                Log.e("日志","holidayTipTextSize大小为："+holidayTipTextSize)
+                //Log.e("日志","holidayTipTextSize大小为："+holidayTipTextSize)
                 adapter.setAttribute(attrubute)
                 calendarViewContent.scrollToPosition(currentDateIndex)
 

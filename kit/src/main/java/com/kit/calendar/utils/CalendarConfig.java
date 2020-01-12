@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.kit.calendar.bean.CalendarConstants;
 import com.kit.utils.Applications;
+import com.kit.utils.L;
 
 import org.json.JSONArray;
 
@@ -22,12 +24,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.kit.calendar.bean.CalendarConstants.CALENDAR_L_TITLE;
+
 public class CalendarConfig {
     //这两个地址是直接使用ip访问的，域名备案比较麻烦，没有备案，希望下载的此项目的小伙伴不要拿这个ip干什么。
     // 如果学生需要拿服务器测试某些内容，可以直接联系我，我可以开一个权限访问服务器，如果有ip滥用的情况，我会直接关掉此台服务器，希望大家可以相互信任。
     public final static String URL_FESTIVAL = "http://114.116.149.238:8080/getHoliday";
     public final static String URL_HOLIDAY = "http://114.116.149.238:8080/getFestival";
     private static ThreadPoolExecutor threadPoolExecutor;
+    public static boolean OPEN_DEBUG = false;
 
 
     /**
@@ -55,7 +60,7 @@ public class CalendarConfig {
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.e("日志","访问失败："+e.getLocalizedMessage());
+                    L.e(CALENDAR_L_TITLE,"节日网络数据访问失败："+e.getLocalizedMessage());
                 }
 
                 @Override
@@ -71,7 +76,7 @@ public class CalendarConfig {
                         editor.putBoolean("hadInitFestival",true);
                         editor.apply();
                     }catch (Exception e){
-                        Log.e("日志","写入节日失败："+e.getLocalizedMessage());
+                        L.e(CALENDAR_L_TITLE,"网络节日数据写入失败："+e.getLocalizedMessage());
                     }
                 }
             });
@@ -87,7 +92,7 @@ public class CalendarConfig {
             okHttpClientTwo.newCall(requestTwo).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.e("日志","访问失败："+e.getLocalizedMessage());
+                    L.e(CALENDAR_L_TITLE,"假期网络数据访问失败："+e.getLocalizedMessage());
                 }
 
                 @Override
@@ -108,7 +113,7 @@ public class CalendarConfig {
                                         fileInputStream.write(data);
                                         fileInputStream.close();
                                     }catch (Exception e){
-                                        Log.e("日志","写入假期失败："+e.getLocalizedMessage());
+                                        L.e(CALENDAR_L_TITLE,"假期数据写入失败："+e.getLocalizedMessage());
                                     }
                                 }
                             };
@@ -120,7 +125,7 @@ public class CalendarConfig {
                         editor.apply();
 
                     }catch (Exception e){
-                        Log.e("日志","写入假期失败："+e.getLocalizedMessage());
+                        L.e(CALENDAR_L_TITLE,"假期数据写入失败："+e.getLocalizedMessage());
                     }
                 }
             });

@@ -3,9 +3,11 @@ package com.kit.calendar.utils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.kit.calendar.bean.CalendarConstants;
 import com.kit.calendar.view.CalendarView;
 import com.kit.calendar.bean.DateInfo;
 import com.kit.utils.Applications;
+import com.kit.utils.L;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,15 +21,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 日历帮助了，用于获取42宫格内容及读取假期，节日信息
+ * @author libowu
+ */
 public class CalendarUtils {
     public static final int[] commonYearMonthDayNum = new int[]{31,28,31,30,31,30,31,31,30,31,30,31};
     public static final int[] leapYearMonthDayNum = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
     public static final HashMap<Integer,String> weekCn = new HashMap<>();
     public static HashMap<String,String>  holidayMap;
     private static HashMap<String,String> festival;
-    private int year_ganZhi;
+   /* private int year_ganZhi;
     private int month_ganZhi;
-    private int day_ganZhi;
+    private int day_ganZhi;*/
     private static int preYear;
 
 
@@ -76,7 +82,7 @@ public class CalendarUtils {
             }
             return festival;
         }catch (Exception e){
-            Log.e("kitViewError","reason============>"+e.getLocalizedMessage());
+            L.e(CalendarConstants.CALENDAR_L_TITLE,"读取节日文件出错："+e.getLocalizedMessage());
             return null;
         }
     }
@@ -123,10 +129,10 @@ public class CalendarUtils {
                 }
             }
         }catch (IOException e){
-            Log.e("kitViewError","reason============>未发现"+year+"_holiday.json");
+            L.e(CalendarConstants.CALENDAR_L_TITLE,"未发现假期文件："+year+"_holiday.json");
             return CalendarView.Holiday.COMMON_DAY;
         }catch (Exception e){
-            Log.e("kitViewError","reason============>"+e.getLocalizedMessage());
+            L.e(CalendarConstants.CALENDAR_L_TITLE,"读取假期文件失败："+e.getLocalizedMessage());
             return CalendarView.Holiday.COMMON_DAY;
         }
     }
@@ -183,6 +189,7 @@ public class CalendarUtils {
         int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
         System.out.println("星期为："+w);
 
+        //上一个月的日期信息
         List<DateInfo> list = new ArrayList<>();
         int week = 0;
         for (int i=w-1;i>=0;i--){
@@ -198,6 +205,7 @@ public class CalendarUtils {
             }
         }
 
+        //当前日期的信息
         for (int i=1;i<=currentMonthDay;i++){
             week++;
             list.add(new DateInfo(i,month,year,true,week));
@@ -207,6 +215,7 @@ public class CalendarUtils {
 
         }
 
+        //下一个月的假期信息
         int nextLength = 42 - list.size();
         for (int i=1;i<=nextLength;i++){
             week++;
@@ -273,20 +282,20 @@ public class CalendarUtils {
             0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0, 0x0a4d0, 0x1d0b6,
             0x0d250, 0x0d520, 0x0dd45, 0x0b5a0, 0x056d0, 0x055b2, 0x049b0,
             0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0};
-    /**
+  /*  *//**
      * 记录天干的信息
-     */
+     *//*
     private String[] gan_info = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛",
             "壬", "癸"};
     private String[] zhi_info = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未",
             "申", "酉", "戌", "亥"};
 
-    /**
+    *//**
      * 获取农历某年的总天数
      *
      * @param year
      * @return
-     */
+     *//*
     private int daysOfYear(int year) {
         int sum = 348;
         for (int i = 0x8000; i > 0x8; i >>= 1) {
@@ -302,12 +311,12 @@ public class CalendarUtils {
         return sum + daysOfLeapMonth;
     }
 
-    /**
+    *//**
      * 初始化年月日对应的天干地支
      * @param year
      * @param month
      * @param day
-     */
+     *//*
     public void initGanZhi(int year, int month, int day) {
         //获取现在的时间
         Calendar calendar_now = Calendar.getInstance();
@@ -379,21 +388,21 @@ public class CalendarUtils {
         }
     }
 
-    /**
+    *//**
      * 将年月日转化为天干地支的显示方法
      * @param index
      * @return
-     */
+     *//*
     private String ganZhi(int index) {
         return gan_info[index % 10] + zhi_info[index % 12];
     }
 
-    /**
+    *//**
      * 获取天干地支
      * @return
-     */
+     *//*
     public String getGanZhi() {
         return "农历" + ganZhi(year_ganZhi) + "年 " + ganZhi(month_ganZhi) + "月 " + ganZhi(day_ganZhi) + "日";
-    }
+    }*/
 
 }

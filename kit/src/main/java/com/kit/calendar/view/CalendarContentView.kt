@@ -11,12 +11,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
 import com.kit.calendar.bean.CalendarAttribute
+import com.kit.calendar.bean.CalendarConstants
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.listener.DateSetListener
 import com.kit.calendar.utils.CalendarUtils
 import com.kit.guide.R
 import com.kit.guide.utils.GuideViewUtils.px2dip
+import com.kit.utils.L
 import kotlinx.android.synthetic.main.calendar_view.view.*
 import kotlinx.android.synthetic.main.calendar_view.view.calendarLineFive
 import kotlinx.android.synthetic.main.calendar_view.view.calendarLineFour
@@ -95,7 +97,7 @@ class CalendarContentView : LinearLayout {
                             oldView = it
                         }
                     }catch (e:Exception){
-                        Log.e("kitError","reason============>${e.message}")
+                        L.e(CalendarConstants.CALENDAR_L_TITLE,"reason============>${e.message}")
                     }
                     continue
                 }
