@@ -171,6 +171,51 @@ paerCard控件的目的是方便的编写一个可以分页的宫格控件（也
 |itemClickBackground|点击42宫格时的背景|
 |weekBarLayout|自定义周栏布局|
 
+* 自定义方案：
+  + weekBarLayout：自定义周栏，传入一个周栏布局（比如：app:weekBarLayout="@layout/test"）
+  + calendarFootLayout：自定义日历底部，传入自定义布局（比如：app:calendarFootLayout="@layout/test"）
+  + calendarHeadLayout：自定义日历头部，传入自定义布局（比如：app:calendarFootLayout="@layout/test"）
+  + dateItemLayout：自定义宫格样式，传入自定义布局（比如：app:calendarFootLayout="@layout/test"）
+
+* 节假日信息获取
+  + 尽早调用CalendarNetUtils.getHolidayAndFestival(Application)方法或此方法的重载方法，目的是将网络节假日信息下载到本地，保存地址为/data/data/appId名称/file文件夹下。
+  + 如果需要自己写一个后台发放节假日信息，节假日信息格式必须按照下面的示例来返回<br>
+    放假信息示例：(w:要补班的日期，日历上显示“班”)
+    ```
+    [
+    {
+        "fileName":"2020_holiday.json",
+        "data":{
+            "0627":"端午节",
+            "0628":"w端午节",
+            "0927":"w国庆节,w中秋节"
+        }
+    },
+    {
+        "fileName":"2019_holiday.json",
+        "data":{
+            "1001":"国庆节",
+            "0929":"w国庆节"
+        }
+    },
+    {
+        "fileName":"2018_holiday.json",
+        "data":{
+            "0211":"w春节",
+            "0215":"春节"
+        }
+    }
+    ]
+    ```
+    节日信息示例：(H:在日历上要显示的假期；N：农历假期，默认日历中优先级最高；L：存在的节日，但是不会显示到日历上，默认优先级最低)
+    ```
+    {
+    "H0101":"元旦",
+    "N1208":"腊八节",
+    "L0124":"国际麻风节"
+    }
+    ```
+
 * 示例代码如下：
 ```
  CalendarConfig.getHolidayAndFestival(activity?.application)
@@ -214,6 +259,10 @@ paerCard控件的目的是方便的编写一个可以分页的宫格控件（也
 ```
 
 #### 更新历史说明
+* v1.0.7
+  + 日历组件支持左右切换
+  + 暴露更多的方法供给外部调用者调用，实现更高的自定义
+  + 节日、放假信息存放在服务器，默认情况使用默认链接获取，但是支持使用自建服务器链接获取节假日信息。
 * v1.0.6
   + 添加一个日历控件，允许自定义头部，尾部，中间的item等内容，本日历控件支持农历
 * v1.0.5
