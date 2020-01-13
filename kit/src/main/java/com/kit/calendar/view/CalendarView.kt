@@ -423,7 +423,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
             var percentageFestival = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
             var percentageHoliday = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
             var percentageWidth = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
-            if (!isAuthorSetTextSize && headLayout ==0 && dateItemLayout == 0 && footLayout == 0){
+            if (!isAuthorSetTextSize && (headLayout ==0 || headLayout == R.layout.calendar_head) && (dateItemLayout == 0 || dateItemLayout == R.layout.calendar_view_item_date) && (footLayout == 0 || footLayout == R.layout.calendar_foot)){
                 isAuthorSetTextSize = true
                 if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
                    dateDayTextSize = (canvas.width * percentage).toInt()
