@@ -234,9 +234,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 var date = adapter.title.get(position).split("-")
                 calendarYearTextTv?.text = "${date[0]}"
                 calendarMonthTextTv?.text = "${date[1]}"
-
-                var maxYear = adapter.title.get(adapter.title.size-1).split("-")[1].toInt()
-                var minYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
+                var maxYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
+                var minYear = adapter.title.get(0).split("-")[0].toInt()
                 //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造
                 if( ((maxYear - date[0].toInt()) < RELOAD_NUM || (date[0].toInt() - minYear) < RELOAD_NUM)) {
                     jumpToDate(date[0].toInt(),date[1].toInt())
@@ -835,6 +834,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * 跳转到指定年月
      */
     public fun jumpToDate(year:Int,month:Int){
+        Log.e("日志","执行jump")
         var maxYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
         var minYear = adapter.title.get(0).split("-")[0].toInt()
         //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造

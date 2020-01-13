@@ -202,7 +202,7 @@ public class CalendarUtils {
         }
         cal.setTime(date);
         int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
-        System.out.println("星期为："+w);
+        //System.out.println("星期为："+w);
 
         //上一个月的日期信息
         List<DateInfo> list = new ArrayList<>();
