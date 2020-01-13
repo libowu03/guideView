@@ -15,7 +15,7 @@ allprojects {
 }
 
 dependencies {
-	        implementation 'com.github.libowu03:guideview:v1.0.5'
+	        implementation 'com.github.libowu03:guideview:v1.0.7.1'
 }
 
   
