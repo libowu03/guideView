@@ -414,7 +414,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.let {
-            //标准情况下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)
+            //标准情况下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)。预览模式下无法自动调节，只能改为预览模式下跳过字体自适应功能
             if (context.resources.displayMetrics.widthPixels == canvas.width || isInEditMode){
                 isAuthorSetTextSize = true
                 return
@@ -433,7 +433,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 }
 
                 //设置头部字体
-                if (headLayout == 0 || isInEditMode){
+                if (headLayout == 0 || headLayout == R.layout.calendar_head){
                     var percentage = resources.getDimensionPixelSize(R.dimen.titleTwo_16) / SUITABLE_WIDTH
                     var percentage10 = resources.getDimensionPixelSize(R.dimen.titleOne_10) / SUITABLE_WIDTH
                     var headDate = (canvas.width * percentage).toInt()
@@ -453,7 +453,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
 
                 //设置尾部
-                if (footLayout == 0 || isInEditMode){
+                if (footLayout == 0 || footLayout == R.layout.calendar_foot){
                     var percentageFootTitle = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
                     var percentageFootContent = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
                     var percentageFootBox = GuideViewUtils.dip2px(context,110f) / SUITABLE_HEIGHT
