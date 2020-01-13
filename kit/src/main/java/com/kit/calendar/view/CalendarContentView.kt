@@ -32,6 +32,10 @@ import kotlinx.android.synthetic.main.calendar_week.view.*
 import java.lang.Exception
 import java.util.*
 
+/**
+ * 日历的主体view
+ * @author libowu
+ */
 class CalendarContentView : LinearLayout {
 
     var dateViewItem: MutableList<View>? = null

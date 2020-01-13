@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.kit.calendar.adapter.CalendarRecAdapter
 import com.kit.calendar.bean.CalendarAttribute
+import com.kit.calendar.bean.CalendarConstants.*
 import com.kit.calendar.bean.DateInfo
 import com.kit.calendar.listener.DateItemClickListener
 import com.kit.calendar.listener.DatePagerChangeListener
@@ -228,8 +229,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
 
             override fun onPageSelected(position: Int) {
-                var calendar:CalendarContentView = manager?.findViewByPosition(position) as CalendarContentView
-                Log.e("日志","长度输出:"+calendar.dateViewItem!!.size)
+               /* var calendar:CalendarContentView = manager?.findViewByPosition(position) as CalendarContentView
+                Log.e("日志","长度输出:"+calendar.dateViewItem!!.size)*/
                 var date = adapter.title.get(position).split("-")
                 calendarYearTextTv?.text = "${date[0]}"
                 calendarMonthTextTv?.text = "${date[1]}"
@@ -237,7 +238,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 var maxYear = adapter.title.get(adapter.title.size-1).split("-")[1].toInt()
                 var minYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
                 //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造
-                if( ((maxYear - date[0].toInt()) < 30 || (date[0].toInt() - minYear) < 30)) {
+                if( ((maxYear - date[0].toInt()) < RELOAD_NUM || (date[0].toInt() - minYear) < RELOAD_NUM)) {
                     jumpToDate(date[0].toInt(),date[1].toInt())
                 }
 
@@ -285,10 +286,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
         })
 
         var calendarViewTitle = mutableListOf<String>()
-        for (year in 1900..2100){
-            for (month in 1..12){
+        for (year in cal!!.get(Calendar.YEAR)- YEAR_DURATION..cal!!.get(Calendar.YEAR)+ YEAR_DURATION){
+            for (month in MIN_MONTH..MAX_MONTH){
                 if (year == cal!!.get(Calendar.YEAR) && month == cal!!.get(Calendar.MONTH)+1){
-                    currentDateIndex = (year - 1900)*12 + month-1
+                    currentDateIndex = (year - (cal!!.get(Calendar.YEAR)- YEAR_DURATION))* MAX_MONTH + month-1
                 }
                 calendarViewTitle.add("${year}-${month}")
             }
@@ -740,6 +741,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * 返回到今天的日期
      */
     public fun backToToday(){
+        currentPagerYear = cal!!.get(Calendar.YEAR)
+        currentPagerMonth = cal!!.get(Calendar.MONTH)+1
         jumpToDate(cal!!.get(Calendar.YEAR),cal!!.get(Calendar.MONTH)+1)
         pagerChangeListener?.onDatePagerChange(cal!!.get(Calendar.YEAR),cal!!.get(Calendar.MONTH)+1,CalendarUtils.getDayOfMonthList(cal!!.get(Calendar.YEAR), cal!!.get(Calendar.MONTH)+1),adapter.title.indexOf("${cal!!.get(Calendar.YEAR)}-${cal!!.get(Calendar.MONTH)+1}"))
     }
@@ -753,7 +756,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var maxYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
         var minYear = adapter.title.get(0).split("-")[0].toInt()
         //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造
-        if( ((maxYear - currentPagerYear) < 30 || (currentPagerYear - minYear) < 30)) {
+        if( ((maxYear - currentPagerYear) < RELOAD_NUM || (currentPagerYear - minYear) < RELOAD_NUM)) {
             jumpToDate(currentPagerYear,currentPagerMonth)
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
@@ -771,7 +774,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var maxYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
         var minYear = adapter.title.get(0).split("-")[0].toInt()
         //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造
-        if( ((maxYear - currentPagerYear) < 30 || (currentPagerYear - minYear) < 30)) {
+        if( ((maxYear - currentPagerYear) < RELOAD_NUM || (currentPagerYear - minYear) < RELOAD_NUM)) {
             jumpToDate(currentPagerYear,currentPagerMonth)
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
@@ -786,7 +789,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
      */
     public fun preMonth(){
         if (currentPagerMonth-1<1){
-            currentPagerMonth = 12
+            currentPagerMonth = MAX_MONTH
             currentPagerYear--
         }else{
             currentPagerMonth--
@@ -794,7 +797,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var maxYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
         var minYear = adapter.title.get(0).split("-")[0].toInt()
         //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造
-        if( ((maxYear - currentPagerYear) < 30 || (currentPagerYear - minYear) < 30)) {
+        if( ((maxYear - currentPagerYear) < RELOAD_NUM || (currentPagerYear - minYear) < RELOAD_NUM)) {
             jumpToDate(currentPagerYear,currentPagerMonth)
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
@@ -809,8 +812,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * 跳转到下一个月
      */
     public fun nextMonth(){
-        if (currentPagerMonth+1>12){
-            currentPagerMonth = 1
+        if (currentPagerMonth+1> MAX_MONTH){
+            currentPagerMonth = MIN_MONTH
             currentPagerYear++
         }else{
             currentPagerMonth++
@@ -818,7 +821,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var maxYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
         var minYear = adapter.title.get(0).split("-")[0].toInt()
         //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造
-        if( ((maxYear - currentPagerYear) < 30 || (currentPagerYear - minYear) < 30)) {
+        if( ((maxYear - currentPagerYear) < RELOAD_NUM || (currentPagerYear - minYear) < RELOAD_NUM)) {
             jumpToDate(currentPagerYear,currentPagerMonth)
         }else{
             calendarViewContent.scrollToPosition( adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}") )
@@ -835,15 +838,15 @@ class CalendarView : LinearLayout, View.OnClickListener {
         var maxYear = adapter.title.get(adapter.title.size-1).split("-")[0].toInt()
         var minYear = adapter.title.get(0).split("-")[0].toInt()
         //如果该年份已经存在于适配器中且年份不处于边缘值时，直接使用现有的数据，否则重新构造
-        if( adapter.title.contains("${year}-${month}") && !((maxYear - year) < 30 || (year - minYear) < 30)){
+        if( adapter.title.contains("${year}-${month}") && !((maxYear - year) < RELOAD_NUM || (year - minYear) < RELOAD_NUM)){
             var index = adapter.title.indexOf("${year}-${month}")
             calendarViewContent.scrollToPosition(index)
         }else{
             var calendarViewTitle = mutableListOf<String>()
-            for (y in year-100..year+100){
-                for (m in 1..12){
+            for (y in year-YEAR_DURATION..year+YEAR_DURATION){
+                for (m in MIN_MONTH..MAX_MONTH){
                     if (y == year && m == month){
-                        currentDateIndex = (y - (year-100))*12 + m-1
+                        currentDateIndex = (y - (year-(year-YEAR_DURATION)))* MAX_MONTH + m-1
                         currentPagerMonth = m
                         currentPagerYear = y
                     }

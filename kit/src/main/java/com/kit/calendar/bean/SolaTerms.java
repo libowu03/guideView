@@ -1,6 +1,13 @@
 package com.kit.calendar.bean;
 
+/**
+ * 节气信息
+ * @author libowu
+ */
 public class SolaTerms {
+    /**
+     * 节气名称
+     */
     private String name;
     private String date;
 

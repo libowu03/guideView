@@ -16,13 +16,38 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * 日期信息
+ * @author libowu
+ */
 public class DateInfo {
+    /**
+     * 天
+     */
     private int day;
+    /**
+     * 月
+     */
     private int month;
+    /**
+     * 年
+     */
     private int year;
+    /**
+     * 是不是当前月份的日期
+     */
     private boolean isCurrentMonth;
+    /**
+     * 周
+     */
     private int week;
+    /**
+     * 节日信息,里面包含：要显示的节日，农历节日，有但不现实的节日，节气
+     */
     private Festival festivalInfo;
+    /**
+     * 农历信息
+     */
     private Lunar lunar;
 
     public DateInfo(int day, int month, int year ,boolean isCurrentMonth,int week) {

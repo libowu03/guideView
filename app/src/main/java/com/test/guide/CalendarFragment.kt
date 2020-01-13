@@ -14,6 +14,9 @@ import com.kit.calendar.listener.DateSetListener
 import com.kit.calendar.utils.CalendarNetUtils
 import kotlinx.android.synthetic.main.calendar_fragment.*
 
+/**
+ * 日期测试用的fragment
+ */
 class CalendarFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

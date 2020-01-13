@@ -6,6 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+/**
+ * recyclerview的监听器
+ * @author libowu
+ */
 public class PagerListener extends RecyclerView.OnScrollListener {
     private OnPageChangeListener onPageChangeListener;
     private PagerSnapHelper pagerSnapHelper;
