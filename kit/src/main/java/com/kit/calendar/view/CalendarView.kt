@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.calendar_foot.view.*
 import kotlinx.android.synthetic.main.calendar_head.view.*
 import kotlinx.android.synthetic.main.calendar_view.view.*
 import kotlinx.android.synthetic.main.calendar_week.view.*
+import java.lang.Exception
 import java.util.*
 
 /**
@@ -36,6 +38,7 @@ import java.util.*
  * 冬至撸代码，别有一番风味
  */
 class CalendarView : LinearLayout, View.OnClickListener {
+    private var manager: LinearLayoutManager ?= null
     private lateinit var pager: PagerSnapHelper
     private lateinit var adapter: CalendarRecAdapter
     private var footLayout: Int = 0
@@ -225,6 +228,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
             }
 
             override fun onPageSelected(position: Int) {
+                var calendar:CalendarContentView = manager?.findViewByPosition(position) as CalendarContentView
+                Log.e("日志","长度输出:"+calendar.dateViewItem!!.size)
                 var date = adapter.title.get(position).split("-")
                 calendarYearTextTv?.text = "${date[0]}"
                 calendarMonthTextTv?.text = "${date[1]}"
@@ -244,7 +249,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
                 oldClickView?.background = itemBackground
             }
-
         }))
     }
 
@@ -291,7 +295,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
         }
         adapter.setTitle(calendarViewTitle)
 
-        var manager: LinearLayoutManager
         if (enableCalendarScroll){
             manager = LinearLayoutManager(context)
         }else{
@@ -305,7 +308,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 }
             }
         }
-        manager.orientation = LinearLayoutManager.HORIZONTAL
+        manager!!.orientation = LinearLayoutManager.HORIZONTAL
         calendarViewContent.layoutManager = manager
         calendarViewContent.adapter = adapter
         pager = PagerSnapHelper()
@@ -706,6 +709,34 @@ class CalendarView : LinearLayout, View.OnClickListener {
     }
 
     /**
+     * 获取当前日历界面的date信息
+     * 这个方法绘制完日历后立即执行可能返回内容为空值，因为可能recyclerview还没有填充完就进行获取，此时是没法获取到的
+     */
+    fun getCurrentPagerDateList():MutableList<DateInfo>?{
+        try{
+            var view:CalendarContentView =manager?.findViewByPosition(adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}")) as CalendarContentView
+            return view?.dateList
+        }catch (e:Exception){
+            Log.e("日志","出现错误："+e.localizedMessage)
+            return null
+        }
+    }
+
+    /**
+     * 获取当前日历界面的42宫格view
+     * 这个方法绘制完日历后立即执行可能返回内容为空值，因为可能recyclerview还没有填充完就进行获取，此时是没法获取到的
+     */
+    fun getCurrentPagerDateView():MutableList<View>?{
+        try{
+            var view:CalendarContentView =manager?.findViewByPosition(adapter.title.indexOf("${currentPagerYear}-${currentPagerMonth}")) as CalendarContentView
+            return view?.dateViewItem
+        }catch (e:Exception){
+            Log.e("日志","出现错误："+e.localizedMessage)
+            return null
+        }
+    }
+
+    /**
      * 返回到今天的日期
      */
     public fun backToToday(){
@@ -822,6 +853,8 @@ class CalendarView : LinearLayout, View.OnClickListener {
             adapter.setTitle(calendarViewTitle)
             calendarViewContent.scrollToPosition(currentDateIndex)
         }
+        calendarMonthTextTv?.setText("${currentPagerMonth}")
+        calendarYearTextTv?.setText("${currentPagerYear}")
     }
 
     interface OnDateItemClickListener {

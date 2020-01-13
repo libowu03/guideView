@@ -3,12 +3,14 @@ package com.kit.calendar.listener;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 public class PagerListener extends RecyclerView.OnScrollListener {
     private OnPageChangeListener onPageChangeListener;
     private PagerSnapHelper pagerSnapHelper;
-    private int oldPosition = -1;//防止同一Position多次触发
+    //防止同一Position多次触发
+    private int oldPosition = -1;
 
 
     public PagerListener(PagerSnapHelper pagerSnapHelper,OnPageChangeListener onPageChangeListener){
@@ -39,7 +41,8 @@ public class PagerListener extends RecyclerView.OnScrollListener {
         if (onPageChangeListener != null) {
             onPageChangeListener.onScrollStateChanged(recyclerView, newState);
             //newState == RecyclerView.SCROLL_STATE_IDLE 当滚动停止时触发防止在滚动过程中不停触发
-            if (newState == RecyclerView.SCROLL_STATE_IDLE && oldPosition != position) {
+            if (/*newState == RecyclerView.SCROLL_STATE_IDLE && */oldPosition != position) {
+                Log.e("日志","触发");
                 oldPosition = position;
                 onPageChangeListener.onPageSelected(position);
             }

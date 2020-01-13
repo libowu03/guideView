@@ -204,7 +204,7 @@ public class DateInfo {
     }
 
     /**
-     * 获取时间戳
+     * 获取时间戳,输出单位为毫秒
      * @return
      */
     public long getTimeMillis(){

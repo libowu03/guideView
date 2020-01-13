@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="10dp"
-        app:enableCalendarScroll="false"
+        app:enableCalendarScroll="true"
         app:enableFootLayout="false"
         app:enableItemClick="false"
         app:holidayTipTextColor="#FF69B4"

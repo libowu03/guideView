@@ -34,10 +34,10 @@ import java.util.*
 
 class CalendarContentView : LinearLayout {
 
-    private var dateViewItem: MutableList<View>? = null
-    private var dateList: MutableList<DateInfo>? = null
-    private var cal: Calendar? = null
-    private var date: String? = null
+    var dateViewItem: MutableList<View>? = null
+    var dateList: MutableList<DateInfo>? = null
+    var cal: Calendar? = null
+    var date: String? = null
     var clickListener: DateItemClickListener? = null
     var attribute: CalendarAttribute? = null
     var dateSetListener:DateSetListener ?= null
@@ -186,6 +186,8 @@ class CalendarContentView : LinearLayout {
     }
 
 
+
+
     /**
      * 添加日期item到view中，添加允许添加自定义的view
      */
@@ -318,5 +320,7 @@ class CalendarContentView : LinearLayout {
             }
         }
     }
+
+    //fun MutableList<View
 
 }

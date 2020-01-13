@@ -2,6 +2,7 @@ package com.kit.calendar.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -49,6 +50,7 @@ public class CalendarRecAdapter extends RecyclerView.Adapter<CalendarRecAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull Cra cra, int i) {
+        //Log.e("日志","输出："+i);
         ((CalendarContentView) cra.itemView).setClickListener(clickListener);
         ((CalendarContentView) cra.itemView).setDate(title.get(i),dateSetListener);
         LinearLayout.LayoutParams llpResult = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

@@ -105,7 +105,7 @@ public class CalendarNetUtils {
                         final JSONArray jsonArray = new JSONArray(result);
                         for (int i=0;i<jsonArray.length();i++){
                             final String name = jsonArray.getJSONObject(i).getString("fileName");
-                            Log.e("日志","名字为："+name);
+                            //Log.e("日志","名字为："+name);
                             final byte[] data = jsonArray.getJSONObject(i).getJSONObject("data").toString().getBytes();
                             Runnable runnable = new Runnable() {
                                 @Override

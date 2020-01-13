@@ -1,7 +1,9 @@
 package com.test.guide
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +45,14 @@ class CalendarFragment : Fragment() {
 
             }
         })
+     /*   var handle = Handler()
+        handle.postDelayed(Runnable {
+            var list = calendar.getCurrentPagerDateList()
+            for (item in list!!){
+                Log.e("日志","循环内容为："+item.day)
+            }
+        },3000)*/
+
        /*   //跳转到某一个日期，这里是跳转到2150年的6月份
           calendar.jumpToDate(2150,6)
           //跳转到下一个月
