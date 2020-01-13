@@ -1,23 +1,20 @@
 package com.kit.calendar.bean;
 
-import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.kit.calendar.utils.CalendarUtils;
 import com.kit.calendar.utils.Lunar;
 import com.kit.calendar.utils.SolaTermsUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Year;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
 /**
  * 日期信息
+ *
  * @author libowu
  */
 public class DateInfo {
@@ -50,15 +47,15 @@ public class DateInfo {
      */
     private Lunar lunar;
 
-    public DateInfo(int day, int month, int year ,boolean isCurrentMonth,int week) {
+    public DateInfo(int day, int month, int year, boolean isCurrentMonth, int week) {
         this.day = day;
         this.month = month;
         this.isCurrentMonth = isCurrentMonth;
         this.week = week;
         this.year = year;
-        if (getCalendar().get(Calendar.YEAR) >=2050 || getCalendar().get(Calendar.YEAR) <= 1900){
+        if (getCalendar().get(Calendar.YEAR) >= 2050 || getCalendar().get(Calendar.YEAR) <= 1900) {
             this.lunar = null;
-        }else {
+        } else {
             this.lunar = new Lunar(getCalendar());
         }
     }
@@ -70,7 +67,6 @@ public class DateInfo {
     public void setWeek(int week) {
         this.week = week;
     }
-
 
 
     public boolean isCurrentMonth() {
@@ -112,23 +108,28 @@ public class DateInfo {
     }
 
     public int isHoliday() {
-        return CalendarUtils.isHoliday(year,month,day);
+        return CalendarUtils.isHoliday(year, month, day);
     }
 
     /**
      * 获取日期是不是节假日
-     * @return
+     *
+     * @return 返回类型，可能返回下面三个中的一个：
+     * {@link com.kit.calendar.view.CalendarView.Holiday.HOLIDAY},
+     * {@link com.kit.calendar.view.CalendarView.Holiday.WORK},
+     * {@link com.kit.calendar.view.CalendarView.Holiday.COMMON_DAY}
      */
     public int isHoliday(Context application) {
-        return CalendarUtils.isHoliday(year,month,day,application);
+        return CalendarUtils.isHoliday(year, month, day, application);
     }
 
     /**
      * 获取周的中文
-     * @return
+     *
+     * @return 放回数组，数组中存放3个值，比如：星期日,周日,日
      */
     public String[] getWeekCn() {
-        if (CalendarUtils.weekCn != null && CalendarUtils.weekCn.get(week) != null){
+        if (CalendarUtils.weekCn != null && CalendarUtils.weekCn.get(week) != null) {
             return CalendarUtils.weekCn.get(week).split(",");
         }
         return null;
@@ -136,73 +137,74 @@ public class DateInfo {
 
     /**
      * 获取节日
+     *
      * @return 节日的对象
      */
-    public Festival getFesitval(){
-       return getFesitval(null);
+    public Festival getFesitval() {
+        return getFesitval(null);
     }
 
-    public Festival getFesitval(Context application){
-        if (festivalInfo != null){
+    public Festival getFesitval(Context application) {
+        if (festivalInfo != null) {
             return festivalInfo;
         }
         String monthStr = null;
         String dayStr;
         String lunarStr = null;
         String lunarMonthStr = null;
-        if (month < 10){
-            monthStr = "0"+month;
-        }else {
+        if (month < 10) {
+            monthStr = "0" + month;
+        } else {
             monthStr = String.valueOf(month);
         }
-        if (day < 10){
-            dayStr = "0"+day;
-        }else {
+        if (day < 10) {
+            dayStr = "0" + day;
+        } else {
             dayStr = String.valueOf(day);
         }
 
-        if (lunar != null){
-            if (lunar.getDay() < 10){
-                lunarStr = "0"+lunar.getDay();
-            }else {
+        if (lunar != null) {
+            if (lunar.getDay() < 10) {
+                lunarStr = "0" + lunar.getDay();
+            } else {
                 lunarStr = String.valueOf(lunar.getDay());
             }
-            if (lunar.getMonth() < 10){
-                lunarMonthStr = "0"+lunar.getMonth();
-            }else {
+            if (lunar.getMonth() < 10) {
+                lunarMonthStr = "0" + lunar.getMonth();
+            } else {
                 lunarMonthStr = String.valueOf(lunar.getMonth());
             }
         }
 
-        HashMap<String,String> festivalMap = CalendarUtils.getFestivalMap(application);
-        if (festivalMap == null){
+        HashMap<String, String> festivalMap = CalendarUtils.getFestivalMap(application);
+        if (festivalMap == null) {
             return null;
-        }else {
+        } else {
             Festival festival = new Festival();
             //获取农历节日
-            if (lunar != null){
-                String lunarFestival = festivalMap.get("N"+lunarMonthStr+lunarStr);
-                if (lunarFestival != null){
+            if (lunar != null) {
+                String lunarFestival = festivalMap.get("N" + lunarMonthStr + lunarStr);
+                if (lunarFestival != null) {
                     String[] lunarFestivalResult = lunarFestival.split(",");
                     festival.setLunarFestival(lunarFestivalResult);
                 }
             }
             //获取要显示的节日
-            String commentFestival = festivalMap.get("H"+monthStr+dayStr);
-            if (commentFestival != null){
-                String[] commentFestivalResult =  commentFestival.split(",");
+            String commentFestival = festivalMap.get("H" + monthStr + dayStr);
+            if (commentFestival != null) {
+                String[] commentFestivalResult = commentFestival.split(",");
                 festival.setImportantFestival(commentFestivalResult);
             }
             //获取其他节日，即存在的节日，但存在感不是很强的节日
-            String otherFestival = festivalMap.get("L"+monthStr+dayStr);
-            if (otherFestival != null){
-                String[] otherFestivalResult =  otherFestival.split(",");
+            String otherFestival = festivalMap.get("L" + monthStr + dayStr);
+            if (otherFestival != null) {
+                String[] otherFestivalResult = otherFestival.split(",");
                 festival.setOtherFestival(otherFestivalResult);
             }
 
             //获取二十四节气
-            if (year <= 2100 && year >=1900){
-                SolaTerms solaTerms = SolaTermsUtils.getSolarTerms(year,month,day);
+            if (year <= 2100 && year >= 1900) {
+                SolaTerms solaTerms = SolaTermsUtils.getSolarTerms(year, month, day);
                 festival.setSolaTerms(solaTerms);
                 festivalInfo = festival;
             }
@@ -213,9 +215,10 @@ public class DateInfo {
 
     /**
      * 获取calendar
+     *
      * @return
      */
-    public Calendar getCalendar(){
+    public Calendar getCalendar() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
@@ -230,9 +233,10 @@ public class DateInfo {
 
     /**
      * 获取时间戳,输出单位为毫秒
+     *
      * @return
      */
-    public long getTimeMillis(){
+    public long getTimeMillis() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -245,9 +249,10 @@ public class DateInfo {
 
     /**
      * 获取date
+     *
      * @return
      */
-    public Date getDate(){
+    public Date getDate() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -260,19 +265,20 @@ public class DateInfo {
 
     /**
      * 获取yyyy-MM-dd格式的时间
+     *
      * @return
      */
-    private String getDateStr(){
+    private String getDateStr() {
         String month;
         String day;
-        if (this.month < 10){
-            month = "0"+this.month;
-        }else {
+        if (this.month < 10) {
+            month = "0" + this.month;
+        } else {
             month = String.valueOf(this.month);
         }
-        if (this.day < 10){
-            day = "0"+this.day;
-        }else {
+        if (this.day < 10) {
+            day = "0" + this.day;
+        } else {
             day = String.valueOf(this.day);
         }
         return year + "-" + month + "-" + day;
