@@ -1,7 +1,7 @@
 package com.test.guide;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -11,7 +11,6 @@ import com.kit.calendar.listener.DateItemClickListener;
 import com.kit.calendar.listener.DatePagerChangeListener;
 import com.kit.calendar.listener.DateSetListener;
 import com.kit.calendar.view.CalendarView;
-import com.kit.utils.L;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

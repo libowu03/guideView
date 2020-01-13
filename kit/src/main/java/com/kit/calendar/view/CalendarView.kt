@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PagerSnapHelper
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
@@ -39,8 +39,8 @@ import java.util.*
  * 冬至撸代码，别有一番风味
  */
 class CalendarView : LinearLayout, View.OnClickListener {
-    private var manager: LinearLayoutManager ?= null
-    private lateinit var pager: PagerSnapHelper
+    private var manager: androidx.recyclerview.widget.LinearLayoutManager?= null
+    private lateinit var pager: androidx.recyclerview.widget.PagerSnapHelper
     private lateinit var adapter: CalendarRecAdapter
     private var footLayout: Int = 0
     private var headLayout: Int = 0
@@ -157,6 +157,94 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        var width = MeasureSpec.getSize(widthMeasureSpec)
+        var height = MeasureSpec.getSize(heightMeasureSpec)
+        authoSetSize(width,height)
+    }
+
+    /**
+     * 自动设置字体大小，布局高度等
+     */
+    private fun authoSetSize(width:Int,height:Int){
+        if (width == 0 || height == 0){
+            return
+        }
+        //标准情况下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)。预览模式下无法自动调节，只能改为预览模式下跳过字体自适应功能
+        if (context.resources.displayMetrics.widthPixels == width || isInEditMode){
+            isAuthorSetTextSize = true
+            return
+        }
+        var percentage = GuideViewUtils.dip2px(context,16f) / SUITABLE_WIDTH
+        var percentageFestival = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
+        var percentageHoliday = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
+        var percentageWidth = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
+        if (!isAuthorSetTextSize && (headLayout ==0 || headLayout == R.layout.calendar_head) && (dateItemLayout == 0 || dateItemLayout == R.layout.calendar_view_item_date) && (footLayout == 0 || footLayout == R.layout.calendar_foot)){
+            Log.e("日志","执行重写")
+            isAuthorSetTextSize = true
+            if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
+                dateDayTextSize = (width * percentage).toInt()
+                dateFestivalTextSize = (width * percentageFestival).toInt()
+                headWeekTextSize = (width * percentage).toInt()
+                holidayTipTextSize = (width * percentageHoliday).toInt()
+            }
+
+            //设置头部字体
+            if (headLayout == 0 || headLayout == R.layout.calendar_head){
+                var percentage = resources.getDimensionPixelSize(R.dimen.titleTwo_16) / SUITABLE_WIDTH
+                var percentage10 = resources.getDimensionPixelSize(R.dimen.titleOne_10) / SUITABLE_WIDTH
+                var headDate = (width * percentage).toInt()
+                var headLunarDate = (width * percentage10).toInt()
+                var headLayout10 = (width * percentage10).toInt()
+                calendarHeadTime.setTextSize(TypedValue.COMPLEX_UNIT_PX,headDate.toFloat())
+                calendarHeadFestival.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarHeadBackToTodayTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarYearTextTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarMonthTextTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarYearPre.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarYearNext.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarMonthNext.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarMonthPre.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
+                calendarBox.setPadding(headLayout10,headLayout10,headLayout10,headLayout10)
+            }
+
+
+            //设置尾部
+            if (footLayout == 0 || footLayout == R.layout.calendar_foot){
+                var percentageFootTitle = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
+                var percentageFootContent = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
+                var percentageFootBox = GuideViewUtils.dip2px(context,110f) / SUITABLE_HEIGHT
+                var title12 = (width * percentageFootTitle).toInt()
+                var title16 = (width * percentageFootContent).toInt()
+                var titleBox = (width * percentageFootBox).toInt()
+                footDefaultFestivalTextSize = title16
+                calendarFootLunarTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
+                calendarFootFestivalTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
+                calendarFootSolaTerms.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
+                calendarFootDate.setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
+                calendarFootSolarTerms.setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
+                for (index in 0..calendarFootFestival.childCount-1){
+                    (calendarFootFestival.getChildAt(index) as TextView).setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
+                }
+                calendarFootBox.layoutParams = calendarFootBox.layoutParams
+                //设置尾部的高度到最适合的大小
+                var lp = calendarFootBox.layoutParams
+                lp.height = titleBox
+                calendarFootBox.layoutParams = lp
+            }
+
+            attrubute?.dateDayTextSize = dateDayTextSize
+            attrubute?.dateFestivalTextSize = dateFestivalTextSize
+            attrubute?.holidayTipTextSize = holidayTipTextSize
+            attrubute?.headWeekTextSize = headWeekTextSize
+            //Log.e("日志","holidayTipTextSize大小为："+holidayTipTextSize)
+            adapter.setAttribute(attrubute)
+            calendarViewContent.scrollToPosition(currentDateIndex)
+
+            //设置整个日历的padding
+            var paddingPrecentage = 10 / (context.resources.displayMetrics.widthPixels*1.0)
+            var calendarBoxPadding = (width * paddingPrecentage).toInt()
+            calendarBox.setPadding(calendarBoxPadding,calendarBoxPadding,calendarBoxPadding,calendarBoxPadding)
+        }
     }
 
     /**
@@ -220,11 +308,11 @@ class CalendarView : LinearLayout, View.OnClickListener {
         calendarHeadBackToTodayTv?.setOnClickListener(this)
 
         calendarViewContent.addOnScrollListener(PagerListener(pager,object : PagerListener.OnPageChangeListener {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: androidx.recyclerview.widget.RecyclerView?, newState: Int) {
 
             }
 
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView?, dx: Int, dy: Int) {
 
             }
 
@@ -296,9 +384,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         adapter.setTitle(calendarViewTitle)
 
         if (enableCalendarScroll){
-            manager = LinearLayoutManager(context)
+            manager = androidx.recyclerview.widget.LinearLayoutManager(context)
         }else{
-            manager = object : LinearLayoutManager(context){
+            manager = object : androidx.recyclerview.widget.LinearLayoutManager(context){
                 override fun canScrollHorizontally(): Boolean {
                     return false
                 }
@@ -308,10 +396,10 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 }
             }
         }
-        manager!!.orientation = LinearLayoutManager.HORIZONTAL
+        manager!!.orientation = androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
         calendarViewContent.layoutManager = manager
         calendarViewContent.adapter = adapter
-        pager = PagerSnapHelper()
+        pager = androidx.recyclerview.widget.PagerSnapHelper()
         pager.attachToRecyclerView(calendarViewContent)
         calendarViewContent.scrollToPosition(currentDateIndex)
     }
@@ -413,83 +501,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.let {
-            //标准情况下满屏宽度时使用16的字体是合适的，就用16在全宽下的比例来计算最合适的字体大小(只在屏幕宽度与当前画布宽度不同时调用)。预览模式下无法自动调节，只能改为预览模式下跳过字体自适应功能
-            if (context.resources.displayMetrics.widthPixels == canvas.width || isInEditMode){
-                isAuthorSetTextSize = true
-                return
-            }
-            var percentage = GuideViewUtils.dip2px(context,16f) / SUITABLE_WIDTH
-            var percentageFestival = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
-            var percentageHoliday = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
-            var percentageWidth = GuideViewUtils.dip2px(context,8f) / SUITABLE_WIDTH
-            if (!isAuthorSetTextSize && (headLayout ==0 || headLayout == R.layout.calendar_head) && (dateItemLayout == 0 || dateItemLayout == R.layout.calendar_view_item_date) && (footLayout == 0 || footLayout == R.layout.calendar_foot)){
-                isAuthorSetTextSize = true
-                if (dateDayTextSize ==16 && dateFestivalTextSize == 10 && headWeekTextSize == 16){
-                   dateDayTextSize = (canvas.width * percentage).toInt()
-                   dateFestivalTextSize = (canvas.width * percentageFestival).toInt()
-                   headWeekTextSize = (canvas.width * percentage).toInt()
-                   holidayTipTextSize = (canvas.width * percentageHoliday).toInt()
-                }
-
-                //设置头部字体
-                if (headLayout == 0 || headLayout == R.layout.calendar_head){
-                    var percentage = resources.getDimensionPixelSize(R.dimen.titleTwo_16) / SUITABLE_WIDTH
-                    var percentage10 = resources.getDimensionPixelSize(R.dimen.titleOne_10) / SUITABLE_WIDTH
-                    var headDate = (canvas.width * percentage).toInt()
-                    var headLunarDate = (canvas.width * percentage10).toInt()
-                    var headLayout10 = (canvas.width * percentage10).toInt()
-                    calendarHeadTime.setTextSize(TypedValue.COMPLEX_UNIT_PX,headDate.toFloat())
-                    calendarHeadFestival.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarHeadBackToTodayTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarYearTextTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarMonthTextTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarYearPre.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarYearNext.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarMonthNext.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarMonthPre.setTextSize(TypedValue.COMPLEX_UNIT_PX,headLunarDate.toFloat())
-                    calendarBox.setPadding(headLayout10,headLayout10,headLayout10,headLayout10)
-                }
-
-
-                //设置尾部
-                if (footLayout == 0 || footLayout == R.layout.calendar_foot){
-                    var percentageFootTitle = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
-                    var percentageFootContent = resources.getDimensionPixelSize(R.dimen.titleTwo_12) / SUITABLE_WIDTH
-                    var percentageFootBox = GuideViewUtils.dip2px(context,110f) / SUITABLE_HEIGHT
-                    var title12 = (canvas.width * percentageFootTitle).toInt()
-                    var title16 = (canvas.width * percentageFootContent).toInt()
-                    var titleBox = (canvas.width * percentageFootBox).toInt()
-                    footDefaultFestivalTextSize = title16
-                    calendarFootLunarTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
-                    calendarFootFestivalTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
-                    calendarFootSolaTerms.setTextSize(TypedValue.COMPLEX_UNIT_PX,title12.toFloat())
-                    calendarFootDate.setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
-                    calendarFootSolarTerms.setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
-                    for (index in 0..calendarFootFestival.childCount-1){
-                        (calendarFootFestival.getChildAt(index) as TextView).setTextSize(TypedValue.COMPLEX_UNIT_PX,title16.toFloat())
-                    }
-                    calendarFootBox.layoutParams = calendarFootBox.layoutParams
-                    //设置尾部的高度到最适合的大小
-                    var lp = calendarFootBox.layoutParams
-                    lp.height = titleBox
-                    calendarFootBox.layoutParams = lp
-                }
-
-                attrubute?.dateDayTextSize = dateDayTextSize
-                attrubute?.dateFestivalTextSize = dateFestivalTextSize
-                attrubute?.holidayTipTextSize = holidayTipTextSize
-                attrubute?.headWeekTextSize = headWeekTextSize
-                //Log.e("日志","holidayTipTextSize大小为："+holidayTipTextSize)
-                adapter.setAttribute(attrubute)
-                calendarViewContent.scrollToPosition(currentDateIndex)
-
-                //设置整个日历的padding
-                var paddingPrecentage = 10 / (context.resources.displayMetrics.widthPixels*1.0)
-                var calendarBoxPadding = (canvas.width * paddingPrecentage).toInt()
-                calendarBox.setPadding(calendarBoxPadding,calendarBoxPadding,calendarBoxPadding,calendarBoxPadding)
-            }
-        }
     }
 
     /**
@@ -863,4 +874,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
     interface OnDateItemClickListener {
         fun dateItemClickListener(index: Int, currentView: View, dateInfo: DateInfo,oldView:View)
     }
+
+
 }

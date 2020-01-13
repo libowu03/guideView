@@ -3,12 +3,12 @@ package com.kit.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import java.lang.reflect.Method;
 
-import static android.support.constraint.Constraints.TAG;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class Applications {
 
