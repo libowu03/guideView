@@ -16,6 +16,8 @@ allprojects {
 
 dependencies {
 	        implementation 'com.github.libowu03:guideview:v1.0.7.1'
+		implementation 'androidx.recyclerview:recyclerview:1.0.0'
+                implementation 'com.google.code.gson:gson:2.8.6'
 }
 
   
