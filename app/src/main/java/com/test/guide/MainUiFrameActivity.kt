@@ -21,6 +21,7 @@ class MainUiFrameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main_ui_frame)
         list = mutableListOf()
         list?.add(TabContent(MainUiDefaultFragment(), "冬月").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
+        list?.add(TabContent(PagerCarFragment(), "分页").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
         list?.add(TabContent(CustomFragment(), "腊月").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
         list?.add(TabContent(CalendarFragment(), "日历").setTabIcon(R.mipmap.my_off).setTabSelectIcon(R.mipmap.my_on))
         mainui.setFragmentsList(list)
@@ -40,9 +41,8 @@ class MainUiFrameActivity : AppCompatActivity() {
 
             override fun onPageScrolled(i: Int, v: Float, i1: Int) {
                 if (i1 == 0) {
-                    if (i == 1){
-                        Log.e("日志","掘金")
-                        (list!!.get(1).fragment as CustomFragment).showDialog()
+                    if (i == 2){
+                        (list!!.get(2).fragment as CustomFragment).showDialog()
                     }
                 }
             }

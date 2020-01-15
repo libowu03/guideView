@@ -1,6 +1,7 @@
 package com.kit.calendar.bean;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 
 public class CalendarAttribute {
     /**
@@ -67,6 +68,11 @@ public class CalendarAttribute {
      * 周栏布局
      */
     private int weekBarLayout;
+    /**
+     * 当前日期的背景,可能为int类型，也可能为Drawable；类型
+     */
+    private Drawable selectToayBackground;
+
     private boolean isSelectToday;
 
     public CalendarAttribute(int dateDayTextSize,
@@ -85,7 +91,8 @@ public class CalendarAttribute {
                              boolean enableItemClick,
                              int wrokDayTipTextColor,
                              int weekBarLayout,
-                             boolean isSelectToday) {
+                             boolean isSelectToday,
+                             Drawable selectToayBackground) {
         this.dateDayTextSize = dateDayTextSize;
         this.dateFestivalTextSize = dateFestivalTextSize;
         this.notCurrentMonthDayTextColor = notCurrentMonthDayTextColor;
@@ -103,6 +110,15 @@ public class CalendarAttribute {
         this.workDayTipTextColor = wrokDayTipTextColor;
         this.weekBarLayout = weekBarLayout;
         this.isSelectToday = isSelectToday;
+        this.selectToayBackground = selectToayBackground;
+    }
+
+    public Drawable getSelectToayBackground() {
+        return selectToayBackground;
+    }
+
+    public void setSelectToayBackground(Drawable selectToayBackground) {
+        this.selectToayBackground = selectToayBackground;
     }
 
     public boolean isSelectToday() {

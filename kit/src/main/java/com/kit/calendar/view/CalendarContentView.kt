@@ -100,8 +100,10 @@ class CalendarContentView : LinearLayout {
                     try{
                         dateSetListener?.onDateSetListener(dateViewItem!!.get(item.index),dateList!!.get(item.index),dateList!!,item.index)
                         dateViewItem!!.get(item.index).setOnClickListener {
-                            clickListener?.onDateItemClickListener(it,dateList!!.get(item.index),dateList!!,item.index,oldView)
-                            oldView = it
+                           if (attribute!!.isEnableItemClick){
+                               clickListener?.onDateItemClickListener(it,dateList!!.get(item.index),dateList!!,item.index,oldView)
+                               oldView = it
+                           }
                         }
                     }catch (e:Exception){
                         L.e(CalendarConstants.CALENDAR_L_TITLE,"reason============>${e.message}")
@@ -135,6 +137,7 @@ class CalendarContentView : LinearLayout {
                     if (dateList?.get(item.index)!!.year == cal?.get(Calendar.YEAR) && dateList?.get(item.index)!!.month == (cal?.get(Calendar.MONTH)!! + 1) && dateList!!.get(item.index).day == cal?.get(Calendar.DAY_OF_MONTH) && attribute!!.isSelectToday) {
                         day.setTextColor(attribute!!.selectTodayDayTextColor)
                         festival.setTextColor(attribute!!.selectTodayFestivalTextColor!!)
+                        item.value.background = attribute!!.selectToayBackground
                     }
                 }
 
@@ -175,8 +178,10 @@ class CalendarContentView : LinearLayout {
                 })
 
                 item.value.setOnClickListener {
-                    clickListener?.onDateItemClickListener(it, dateList!!.get(item.index), dateList!!, item.index,oldView)
-                    oldView = item.value
+                    if (attribute!!.isEnableItemClick){
+                        clickListener?.onDateItemClickListener(it, dateList!!.get(item.index), dateList!!, item.index,oldView)
+                        oldView = item.value
+                    }
                 }
 
                 setFestival(item.index, dateList, festival)

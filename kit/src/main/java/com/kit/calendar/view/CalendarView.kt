@@ -108,8 +108,6 @@ class CalendarView : LinearLayout, View.OnClickListener {
     private var selectTodayFestivalTextColor : Int = Color.WHITE
     //是否允许日期点击
     private var enableItemClick : Boolean = true
-    //点击日期时的背景
-    private var itemClickBackgroundColor:Int = 0
     private var itemClickBackground:Drawable ?= null
 
     //点击监听器
@@ -273,11 +271,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
         selectTodayFestivalTextColor = typedArray.getColor(R.styleable.CalendarView_selectTodayFestivalTextColor, Color.WHITE)
         enableItemClick = typedArray.getBoolean(R.styleable.CalendarView_enableItemClick, true)
         var workDayTipTextColor = typedArray.getColor(R.styleable.CalendarView_workDayTipTextColor, Color.GREEN)
+        val selectTodayBackgroundResource = typedArray.getDrawable(R.styleable.CalendarView_selectTodayBackground)
         enableCalendarScroll = typedArray.getBoolean(R.styleable.CalendarView_enableCalendarScroll, true)
         itemClickBackground = typedArray.getDrawable(R.styleable.CalendarView_itemClickBackground)
-        if (itemBackground == null){
-            itemClickBackgroundColor = typedArray.getColor(R.styleable.CalendarView_itemClickBackground,resources.getColor(R.color.colorAccent))
-        }
         var weekBarLayout = typedArray.getResourceId(R.styleable.CalendarView_weekBarLayout,R.layout.calendar_week)
 
         typedArray.recycle()
@@ -293,7 +289,7 @@ class CalendarView : LinearLayout, View.OnClickListener {
                 holidayTipTextSize,
                 holidayTipTextColor,
                 selectTodayDayTextColor,
-                selectTodayFestivalTextColor,enableItemClick,workDayTipTextColor,weekBarLayout,selectToday)
+                selectTodayFestivalTextColor,enableItemClick,workDayTipTextColor,weekBarLayout,selectToday,selectTodayBackgroundResource)
         Holiday.ATTRIBUTE = attrubute
     }
 
@@ -347,23 +343,19 @@ class CalendarView : LinearLayout, View.OnClickListener {
         adapter = CalendarRecAdapter(attrubute)
         adapter.setClickListener(object : DateItemClickListener{
             override fun onDateItemClickListener(currentView: View, dateItem: DateInfo, dateList: MutableList<DateInfo>, index: Int,oldView: View?) {
-                setDefaultCalendarFootInfo(dateItem)
-                if (oldClickView != currentView){
+                if (oldClickView != currentView && !(dateItem.day == cal!!.get(Calendar.DAY_OF_MONTH) && dateItem.month == cal!!.get(Calendar.MONTH)+1 && dateItem.year == cal!!.get(Calendar.YEAR))){
                     oldClickView?.background = currentView.background
                     itemBackground = currentView.background
                     if (itemClickBackground != null){
-                        currentView.background = itemBackground
-                    }else{
-                        //如果itemClickBackground为空，默认使用drawable为背景而不是纯色作为背景，如果在itemClickBackgroundColor不等于默认颜色时，说明调用者已经设置过颜色，则使用纯色作为背景
-                        if (itemClickBackgroundColor == resources.getColor(R.color.colorAccent)){
-                            currentView.setBackgroundResource(R.drawable.calendar_select_bg)
-                        }else{
-                            currentView.setBackgroundColor(itemClickBackgroundColor)
-                        }
+                        currentView.background = itemClickBackground
                     }
+                    clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index,oldClickView)
+                    oldClickView = currentView
+                }else{
+                    clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index,currentView)
+                    oldClickView = oldClickView
                 }
-                clickListener?.onDateItemClickListener(currentView,dateItem,dateList,index,oldClickView)
-                oldClickView = currentView
+                setDefaultCalendarFootInfo(dateItem)
             }
         })
         adapter.setDateSetListener(object : DateSetListener{
@@ -508,6 +500,9 @@ class CalendarView : LinearLayout, View.OnClickListener {
      * @param dateInfo 日期详情
      */
     private fun setDefaultCalendarFootInfo(dateInfo:DateInfo){
+        if (!enableFootLayout){
+            return
+        }
         var festivalList = dateInfo?.getFesitval(context)
         if (footLayout == 0){
             if (dateInfo?.lunar == null){
